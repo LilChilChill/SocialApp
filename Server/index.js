@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const http = require('http')
 const userRoute = require('./Routes/userRoute')
 const friendsRoute = require('./Routes/friendRoute')
+const feedRoute = require('./Routes/feedRoute')
 
 const app = express()
 module.exports = app
@@ -13,6 +14,7 @@ app.use(express.json())
 app.use(cors())
 app.use("/api/users", userRoute)
 app.use("/api/friends", friendsRoute)
+app.use("/api/feeds", feedRoute)
 
 const server = http.createServer(app)
 
