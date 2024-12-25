@@ -51,7 +51,7 @@ body, ul, li, a{
   /* Main Container */
   .main-container {
     display: flex;
-    margin:20px 75px;
+    margin: 150px 75px;
   }
   
   /* Sidebar */
@@ -59,12 +59,13 @@ body, ul, li, a{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 200px;
+    height: auto;
+    max-width: 400px;
+    min-width: 200px;
     background-color: #ffffff;
     border-radius: 20px;
     border: 20px;
     padding: 10px;
-    height: 100vh;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
   }
   
@@ -87,20 +88,61 @@ body, ul, li, a{
     flex: 1;
     padding: 20px;
   }
+
+  .feed-container {
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .post-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .post-form textarea {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+  }
+  
+  .post-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .post-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
   
   .post {
-    background-color: #ffffff;
-    padding: 15px;
-    margin-bottom: 15px;
+    background-color: #fff;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .post-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  .post img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
   }
+  
   
   .avatar {
     width: 40px;
@@ -126,3 +168,143 @@ body, ul, li, a{
   }
 /* */
 
+.container {
+  max-width: 1000px;
+  height: 100px;
+  margin: 0 auto;
+  background: rgba(179, 176, 176, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  top: 50px;
+  min-height: auto; 
+  margin-bottom: 100px;
+}
+
+.user-info {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 65%;
+}
+
+.user-info p {
+  margin: 5px 0;
+  padding-left: 20px;
+}
+
+.update-form {
+  display: none;
+  margin-top: 20px;
+}
+
+.update-form input,
+.update-form select {
+  width: calc(100% - 10px);
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.update-form input:focus,
+.update-form select:focus {
+  border-color: #5cb85c; 
+}
+
+.btn {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+  background-color: #4cae4c;
+  transform: scale(1.05); 
+}
+
+#userAvatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 20px auto;
+  display: block;
+}
+/* From Uiverse.io by cssbuttons-io */ 
+.button {
+  position: absolute;
+  top: 130%;
+  left: 80%;
+  padding: 12px 24px;
+  border: 1px solid #4f4f4f;
+  border-radius: 4px;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  font-size: 19px;
+  cursor: pointer;
+  color: black;
+  z-index: 1;
+}
+
+.button:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #39bda7;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button:hover {
+  color: #ffffff;
+  border: 1px solid #39bda7;
+}
+
+.button:hover:before {
+  top: -35%;
+  background-color: #39bda7;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button:hover:after {
+  top: -45%;
+  background-color: #39bda7;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+
+@media (max-width: 600px) {
+  .container {
+      padding: 10px;
+  }
+
+}

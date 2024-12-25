@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const {} = require('./feedController');
+const {
+    createPost,
+    getPosts,
+    addComment,
+    likePost,
+} = require('../Controllers/feedController');
 
-router.post('/posts', feedController.createPost);
-router.get('/posts', feedController.getPosts);
-router.post('/posts/:postId/comments', feedController.addComment);
-router.post('/posts/:postId/like', feedController.likePost);
+router.post('/posts', createPost);
+router.get('/posts', getPosts);
+router.post('/posts/:postId/comments', addComment);
+router.post('/posts/:postId/like', likePost);
 
 module.exports = router;

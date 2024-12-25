@@ -1,3 +1,4 @@
+// feedModel.js
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
@@ -21,8 +22,8 @@ const postSchema = new mongoose.Schema({
             createdAt: { type: Date, default: Date.now }
         }
     ],
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Lượt thích
-    shares: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Người đã chia sẻ
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    shares: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     status: {
         type: String,
         enum: ['public', 'private', 'friends'], 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/message.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Ứng dụng Chat</title>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><a href="home.html">Chiap</a></div>
+    </div>
+    <div class="mainContent">
+        <div class="left">
+            <div class="form__group">
+                <input type="text" class="form__field" placeholder="Tìm kiếm bạn bè" name="name" id="search" required />
+            </div>
+            <div class="a-tag">
+                <div><a href="#" onclick="showContent('friendList', this)" class="active">Tất cả</a></div>
+                <div><a href="#" onclick="showContent('groupChat', this)">Nhóm</a></div>
+                <div><a href="#" onclick="showContent('important', this)">Quan trọng</a></div>
+            </div>  
+
+            <div class="leftContent" id="friendList">
+                <div class="loading">Đang tải danh sách bạn bè...</div>
+                
+            </div>
+            <div class="leftContent" id="groupChat" style="display: none;">
+                <div id="createGroupSection">
+                    <!-- <button >Tạo nhóm mới</button> -->
+                    <a href="#" onclick="showCreateGroupForm()"><i class="fa-solid fa-plus"></i></a>
+                </div>
+
+                <div id="createGroupForm" style="display: none;">
+                    <input type="text" id="groupNameInput" placeholder="Tên nhóm">
+                    <div id="friendsListForGroup">
+                        <p>Chọn bạn bè để thêm vào nhóm:</p>
+                        <div id="friendCheckboxList">
+                        </div>
+                    </div>
+                    <button onclick="createGroup()">Tạo nhóm</button>
+                    <button onclick="hideCreateGroupForm()">Hủy</button>
+                </div>
+
+                <div id="groupList"></div>
+
+            </div>
+            
+
+            <div class="leftContent" id="important" style="display: none;">
+                <div class="loading">Đang tải các tin nhắn quan trọng...</div>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="header" id="group">
+                <div class="user-info" >
+                    <img src="../img/default-avatar.png" alt="Ảnh đại diện" id="avatar"/>
+                    <div class="user-info-status">
+                        <span id="username">Tên người dùng</span> 
+                        <span id="status"><i class="fa-solid fa-circle"></i></span>
+                    </div>
+                </div>
+                <div class="headerIcon">
+                    <a href="#" onclick="startVoiceCall()"><i class="fa-solid fa-phone"></i></a>
+                    <a href="#" onclick="videoCall()"><i class="fa-solid fa-video"></i></a>
+                    <a href="#" onclick="sideMenu()"><i class="fa fa-ellipsis-h"></i></a>
+                </div>
+            </div>
+
+            <div id="chatArea" class="rightContent">
+                <div class="loading">Chọn một cuộc trò chuyện để bắt đầu</div>
+            </div>
+
+            <div class="rightFooter">
+                <div class="chatFunction" id="chatFunction">
+                    <input type="file" id="fileInput" accept="*/*" style="display: none;" />
+                    <label for="fileInput" class="file-label">
+                        <i class="fa fa-paperclip"></i>
+                    </label>
+                </div>
+                <div class="chatInput">
+                    <div id="inputPreview"></div>
+                    <div style="display: flex; flex-direction: row; width: 100%;">
+                        <div class="icon" id="icon">
+                            <i class="fa fa-smile" onclick="emojiToggle()">
+                                <div id="emoji" style="display: none;" >
+                                    <emoji-picker></emoji-picker>
+                                </div>
+                            </i>
+                        </div>
+                        <div id="textArea" contenteditable=""></div>
+                        <textarea id="chatInput" placeholder="Nhập tin nhắn..." ></textarea>
+                    </div>
+                </div>
+                <button id="sendButton"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <div id="sideMenu" class="side" style="display: none;">
+            <div class="headerSide" id="headerSide">
+            </div>
+
+            <div class="file" id="file" >
+            </div>
+
+            <a href="#" id="deleteChatButton" >
+                <i class="fa-regular fa-trash-can"></i>
+                <p>Xóa lịch sử trò chuyện</p>
+            </a>
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="../scripts/message.js"></script>
+    <script>
+        function showContent(contentId, element) {
+            const contents = document.querySelectorAll('.leftContent');
+            contents.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            const contentToShow = document.getElementById(contentId);
+            contentToShow.style.display = 'block';
+
+            const links = document.querySelectorAll('.a-tag a');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+        
+    </script>
+</body>
+</html>

@@ -19,39 +19,50 @@
     </div>
   </div>
 
+  <div class="container" id="userInfoContainer">
+      <div id="userInfo" class="user-info"></div>
+      <button class="button" id="updateButton">Chỉnh sửa</button>
+      
+  </div>
+
+  <div class="update-form" id="updateForm">
+    <h2>Cập nhật thông tin</h2>
+    <input type="text" id="name" placeholder="Tên người dùng" value="">
+    <input type="date" id="birthDate" placeholder="Ngày sinh" value="">
+    <select id="gender">
+        <option value="">Chọn giới tính</option>
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+    </select>
+    <input type="file" id="avatar" accept="image/*">
+    <button class="btn" id="saveButton">Lưu thông tin</button>
+</div>
+
     <div class="main-container">
         <div class="sidebar">
           <ul>
-            <!-- <a href="profile.html"><li>Trang cá nhân</li></a>
-            <a href=""><li>Tin nhắn</li></a>
-            <a href=""><li>Nhóm</li></a>
-            <a href="" ><li>Sự kiện</li></a> -->
+            <a href="../components/post.html" ><li>Feed</li></a>
           </ul>
           <ul>
             <a href="#" onclick="logout()"><li>Đăng xuất</li></a>
           </ul>
+          
         </div>
     
-        <div class="feed">
-          <div class="post">
-            <div class="post-header">
-              <img src="https://via.placeholder.com/40" alt="avatar" class="avatar">
-              <span class="post-user">John Doe</span>
+        <div class="feed" id="feed">
+          <div class="feed-container">
+            <div class="post-form">
+              <h3>Đăng bài mới</h3>
+              <textarea id="postContent" placeholder="Bạn đang nghĩ gì?"></textarea>
+              <input type="file" id="postImage" accept="image/*">
+              <button id="postButton">Đăng bài</button>
             </div>
-            <div class="post-content">
-              Hello world! Đây là bài viết đầu tiên của tôi.
+          
+            <div class="posts" id="posts">
+              
             </div>
-          </div>
-    
-          <div class="post">
-            <div class="post-header">
-              <img src="https://via.placeholder.com/40" alt="avatar" class="avatar">
-              <span class="post-user">Jane Smith</span>
-            </div>
-            <div class="post-content">
-              Hôm nay là một ngày tuyệt vời!
-            </div>
-          </div>
+          </div>          
         </div>
     
         <div class="List" id="list" style="display: none;">
@@ -59,19 +70,7 @@
         </div>
         
     </div>
-    <a href="#" onclick="listDisplay()"><i class="fa-regular fa-comment-dots"></i></a>
-    <details class="dropdown">
-        <summary role="button">
-          <a class="button">Click on me!</a>
-        </summary>
-        <ul>
-          <li><a href="#">I'm a dropdown.</a></li>
-          <li><a href="#">In Pure CSS</a></li>
-          <li><a href="#">As in...</a></li>
-          <li><a href="#">No JavaScript.</a></li>
-          <li><a href="#">At All.</a></li>
-      </ul>
-    </details>
+    
     
 
   <script src="../scripts/profile.js"></script>
