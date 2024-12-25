@@ -126,3 +126,26 @@ body, ul, li, a{
     border-radius: 20px;
   }
   
+  .leftContent {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .chatUser{
+    display: flex;
+    height: 50px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 5px;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+  
+  .chatUser:hover{
+    background-color: #c0c0c0;
+    border-radius: 10px;
+  }
+  
+  .chatUser {
+    cursor: pointer;
+  }

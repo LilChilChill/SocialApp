@@ -20,17 +20,7 @@ input[type="text"] {
     border-radius: 5px;
     margin-right: 10px;
 }
-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-button:hover {
-    background-color: #0056b3;
-}
+
 .user-list {
     display: flex;
     flex-direction: column;

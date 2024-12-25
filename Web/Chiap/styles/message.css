@@ -323,6 +323,9 @@
     border-radius: 10px;
   }
   
+  .chatUser {
+    cursor: pointer;
+  }
   
   
   .content{
@@ -349,9 +352,6 @@
   .loading {
     text-align: center;
     font-size: 1.2rem;
-  }
-  .chatUser {
-    cursor: pointer;
   }
   .message {
     display: flex;

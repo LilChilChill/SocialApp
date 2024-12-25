@@ -4,3 +4,55 @@ function logout() {
     localStorage.removeItem('username');
     window.location.href = '../index.html'; 
 }
+
+function getFriends() {
+    const token = localStorage.getItem('token'); 
+
+    if (!token) {
+        alert('Vui lòng đăng nhập.');
+        window.location.href = 'index.html'; 
+        return;
+    }
+
+    fetch('http://localhost:5001/api/users/friends', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(friends => {
+        const friendList = document.getElementById('friendList');
+        const headerName = document.getElementById('header')
+        friendList.innerHTML = ''; 
+
+        if (friends.length === 0) {
+            friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
+        } else {
+            friends.forEach(friend => {
+                const friendAvatar = friend.avatar && friend.avatar.data && typeof friend.avatar.data === 'string'
+                    ? `data:${friend.avatar.contentType};base64,${friend.avatar.data}`
+                    : '../img/default-avatar.png';
+
+                const friendItem = document.createElement('div');
+                friendItem.classList.add('friend-item');
+                // onclick="openChat('${friend._id}', '${friend.name}', '${friendAvatar}')"
+                friendItem.innerHTML = `
+                    <div class='chatUser' >
+                        <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
+                        <div class='content'>
+                            <span>${friend.name}</span>
+                        </div>
+                    </div>
+                `;
+                friendList.appendChild(friendItem);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy danh sách bạn bè:', error);
+        document.getElementById('friendList').innerHTML = '<p>Không thể tải danh sách bạn bè. Vui lòng thử lại sau.</p>';
+    });
+}
+
+getFriends()
