@@ -2,9 +2,12 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const http = require('http')
+const { Server } = require('socket.io');
 const userRoute = require('./Routes/userRoute')
 const friendsRoute = require('./Routes/friendRoute')
 const feedRoute = require('./Routes/feedRoute')
+const messageRoute = require('./Routes/messageRoute')
+const socketHandler = require('./socket.js')
 
 const app = express()
 module.exports = app
@@ -16,18 +19,30 @@ app.use("/api/users", userRoute)
 app.use("/api/friends", friendsRoute)
 app.use("/api/feeds", feedRoute)
 
-const server = http.createServer(app)
-
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });
 
+const server = http.createServer(app)
+
+const io = new Server(server, {
+    cors: {
+        origin: '*', 
+        methods: ['GET', 'POST']
+    }
+});
+
+
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI
+
+app.use("/api/messages", messageRoute(io));
 
 mongoose.connect(uri)
     .then(() => console.log('MongoDB connection established'))
     .catch((error) => console.log("MongoDB connection error:", error.message));
+
+socketHandler(io);
 
 server.listen(port, () =>{
     console.log(`Server running on port ${port}`) 

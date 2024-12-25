@@ -1,4 +1,4 @@
-const socket = io('https://server-57ql.onrender.com');
+const socket = io('http://localhost:5001');
 let currentFriendId = null;
 let selectedFile = null;
 let friendAvatar = null;
@@ -154,7 +154,7 @@ function getFriends() {
         return;
     }
 
-    fetch('https://server-57ql.onrender.com/api/users/friends', {
+    fetch('http://localhost:5001/api/users/friends', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -226,7 +226,7 @@ function openChat(friendId, name, avatar, page = 1) {
     const fileData = document.getElementById('file');
     fileData.innerHTML = '';
 
-    fetch(`https://server-57ql.onrender.com/api/messages/${friendId}?page=${page}`, {
+    fetch(`http://localhost:5001/api/messages/${friendId}?page=${page}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -343,7 +343,7 @@ document.getElementById('sendButton').addEventListener('click', () => {
         messageData.append('file', selectedFile); 
     }
 
-    fetch('https://server-57ql.onrender.com/api/messages', {
+    fetch('http://localhost:5001/api/messages', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -429,7 +429,7 @@ socket.on('receiveMessage', (messageData) => {
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
     if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử chat không?')) {
-        fetch(`https://server-57ql.onrender.com/api/messages/delete/${currentFriendId}`, {
+        fetch(`http://localhost:5001/api/messages/delete/${currentFriendId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -459,7 +459,7 @@ document.getElementById('chatArea').addEventListener('scroll', () => {
 
 function loadOlderMessages() {
     isLoadingMessages = true;
-    fetch(`https://server-57ql.onrender.com/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
+    fetch(`http://localhost:5001/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -550,7 +550,7 @@ getFriends();
 function showCreateGroupForm() {
     document.getElementById('createGroupForm').style.display = 'block';
 
-    fetch('https://server-57ql.onrender.com/api/users/friends', {
+    fetch('http://localhost:5001/api/users/friends', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -604,7 +604,7 @@ function createGroup() {
 
     const members = [...selectedFriendIds, userId];  
 
-    fetch('https://server-57ql.onrender.com/api/groups/create', {
+    fetch('http://localhost:5001/api/groups/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -638,7 +638,7 @@ function createGroup() {
 
 function loadGroupChats() {
     const userId = localStorage.getItem('userId');
-    fetch(`https://server-57ql.onrender.com/api/groups/${userId}`, {
+    fetch(`http://localhost:5001/api/groups/${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -698,7 +698,7 @@ function openGroupChat(groupId, groupName) {
         </div>
     `;
     localStorage.setItem('groupId', groupId)
-    fetch(`https://server-57ql.onrender.com/api/groups/${groupId}/messages`, {
+    fetch(`http://localhost:5001/api/groups/${groupId}/messages`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
