@@ -7,11 +7,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <title>Home</title>
   <link rel="stylesheet" href="../styles/home.css">
+  <link rel="stylesheet" href="../styles/addFriend.css">
 </head>
 <body>
   <div class="navbar">
     <div class="logo"><a href="home.html">Chiap</a></div>
-    <input type="text" class="search-bar" placeholder="Tìm kiếm...">
+    <div style="display: flex; align-items: center; ">
+      <input type="text" class="search-bar" id="searchInput" placeholder="Tìm kiếm...">
+      <a href="#" id="searchButton" style="text-decoration: none; color: #000; position: fixed; right: 42%;">
+        <i class="fa-solid fa-magnifying-glass" ></i>
+      </a>
+    </div>
     <div class="navbar-icons">
       <span><a href=""><i class="fa-solid fa-bell"></i></a></span> 
       <span><a href=""><i class="fa-solid fa-message"></i></a></span>
@@ -19,6 +25,11 @@
     </div>
   </div>
 
+  <div class="user-list" id="userList">
+  </div>
+  <div class="notification" id="notification"></div>
+  <div class="error" id="error"></div>
+  
   <div class="main-container">
     <div class="sidebar">
       <ul>
@@ -61,5 +72,6 @@
   </div>
 
   <script src="../scripts/home.js"></script>
+  <script src="../scripts/function.js"></script>
 </body>
 </html>
