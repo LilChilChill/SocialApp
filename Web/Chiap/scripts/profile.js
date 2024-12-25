@@ -54,7 +54,7 @@ const displayUserInfo = (user) => {
         : '../img/default-avatar.png';
 
     userInfoContainer.innerHTML = `
-        <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+        <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
         <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
         
     `;
