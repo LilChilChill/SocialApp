@@ -85,7 +85,6 @@ const getMessages = async (req, res) => {
         });
 
         res.status(200).json(formattedMessages);
-        console.log('messages:', formattedMessages);
     } catch (error) {
         res.status(500).json({ message: 'Có lỗi xảy ra khi lấy tin nhắn', error: error.message });
     }

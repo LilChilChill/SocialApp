@@ -267,7 +267,21 @@ function openChat(friendId, name, avatar, page = 1) {
                         ? `data:${message.file.contentType};base64,${message.file.data}`
                         : null;
 
-                    messageDiv.innerHTML = `
+
+                    if (message.content == ''){
+                        messageDiv.innerHTML = `
+                        ${message.sender === friendId ? 
+                            `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
+                            `<img src="" alt="Bạn" style="display: none;">`
+                        }
+                        <div class="msgContent">
+                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                            </div>
+                            `;
+                            // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
+                            
+                    } else {
+                        messageDiv.innerHTML = `
                         ${message.sender === friendId ? 
                             `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
                             `<img src="" alt="Bạn" style="display: none;">`
@@ -281,6 +295,8 @@ function openChat(friendId, name, avatar, page = 1) {
                             `;
                             // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
                             
+                    }
+                    
                             friendInfo.innerHTML = `
                                 <img src="${friendAvatar}" alt="Ảnh đại diện" id="headerAva"/>
                                 <p>${friendName}</p>
@@ -325,9 +341,6 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     }
 });
 
-
-
-
 document.getElementById('sendButton').addEventListener('click', () => {
     const messageInput = document.getElementById('chatInput');
     const content = messageInput.value.trim(); 
@@ -348,7 +361,7 @@ document.getElementById('sendButton').addEventListener('click', () => {
     if (selectedFile) {
         messageData.append('file', selectedFile); 
     }
-
+    
     fetch('http://localhost:5001/api/messages', {
         method: 'POST',
         headers: {
@@ -379,17 +392,28 @@ document.getElementById('sendButton').addEventListener('click', () => {
             date: data.date
         });
 
-            selectedFile = null; 
+        const tempFile = selectedFile;
+        selectedFile = null; 
         
 
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'sent');
 
-        const fileDataUrl = data.messageData.file && data.messageData.file.data && typeof data.messageData.file.data === 'string'
+        const fileDataUrl = tempFile
+            ? URL.createObjectURL(tempFile)
+            : (data.messageData.file && data.messageData.file.data && typeof data.messageData.file.data === 'string'
             ? `data:${data.messageData.file.contentType};base64,${data.messageData.file.data}`
-            : null;
+            : null);
 
-        messageDiv.innerHTML = `
+        if (content == ''){
+            messageDiv.innerHTML = `
+            <div class="msgContent">
+                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                </div>
+                `; 
+                // <p class="msgDate">${data.messageData.date}</p>
+        } else {
+            messageDiv.innerHTML = `
             <div class="msgContent">
                 <div class="messageContent">
                     <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
@@ -398,7 +422,8 @@ document.getElementById('sendButton').addEventListener('click', () => {
                 </div>
                 `; 
                 // <p class="msgDate">${data.messageData.date}</p>
-        console.log('time', data.messageData.date)
+        }
+        console.log('image', fileDataUrl)
         document.getElementById('chatArea').appendChild(messageDiv);
         chatArea.scrollTop = chatArea.scrollHeight; 
         
@@ -420,15 +445,24 @@ socket.on('receiveMessage', (messageData) => {
 
     const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
 
-    messageDiv.innerHTML = `
+    if (messageData.content == ''){
+        messageDiv.innerHTML = `
         <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
-        <div class="msgContent">
+        <div class="msgContent" id="msgContent">
+            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+        </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+        <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
+        <div class="msgContent" id="msgContent">
             <div class="messageContent">
                 <p>${messageData.content.replace(/\n/g, '<br>')}</p>
             </div>
             ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
         </div>
     `;
+    }
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
     console.log(fileDataUrl);
