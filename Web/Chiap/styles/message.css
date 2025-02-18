@@ -576,6 +576,52 @@
     left: 0;
     animation: wobble2 var(--uib-speed) infinite ease-in-out;
    }
+
+   .image-popup {
+    display: none; 
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); 
+    text-align: center;
+}
+
+.image-popup .popup-content {
+    max-width: 90%;
+    max-height: 90%;
+    margin-top: 3%;
+    border-radius: 10px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+}
+.download-btn {
+  position: absolute;
+  top: 15px;
+  right: 70px;
+  font-size: 25px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.download-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+
+
    
    @keyframes spin78236 {
     0% {

@@ -267,7 +267,7 @@ function openChat(friendId, name, avatar, page = 1) {
                             `<img src="" alt="Bạn" style="display: none;">`
                         }
                         <div class="msgContent">
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
                             </div>
                             `;
                             // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
@@ -282,7 +282,7 @@ function openChat(friendId, name, avatar, page = 1) {
                             <div class="messageContent">
                                 <p>${message.content.replace(/\n/g, '<br>')}</p>
                             </div>
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
                             </div>
                             `;
                             // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
@@ -338,7 +338,6 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     }
 });
 
-// Hàm nén ảnh
 async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -455,7 +454,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         if (content == ''){
             messageDiv.innerHTML = `
             <div class="msgContent">
-                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
             </div>`; 
         } else {
             messageDiv.innerHTML = `
@@ -463,7 +462,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                 <div class="messageContent">
                     <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
                 </div>
-                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
             </div>`; 
         }
         console.log('image', fileDataUrl);
@@ -488,11 +487,11 @@ socket.on('receiveMessage', (messageData) => {
 
     const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
 
-    if (messageData.content == ''){
+    if (messageData.content == '') {
         messageDiv.innerHTML = `
         <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
         <div class="msgContent" id="msgContent">
-            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
         </div>
         `;
     } else {
@@ -502,27 +501,20 @@ socket.on('receiveMessage', (messageData) => {
             <div class="messageContent">
                 <p>${messageData.content.replace(/\n/g, '<br>')}</p>
             </div>
-            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
         </div>
     `;
     }
 
-    fileData.innerHTML = 
-                `
-                    <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
-                    <div style="display: none" id="fileDisplay">
-                        <a href="#" onclick"imgFileToggle()"><p>- File phương tiện</p></a>
-                        <div id="imgFile" style="display: none">
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
-                            <p> TEST </p>
-                        </div>
-                        <a href="#"><p>- File</p></a>
-                    </div>
-                `
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
 });
 
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeImage();
+    }
+});
 
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
@@ -603,7 +595,7 @@ function loadOlderMessages() {
                             <div class="messageContent">
                                 <p>${message.content.replace(/\n/g, '<br>')}</p>
                             </div>
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
                         </div>
                     `;
 
@@ -644,6 +636,26 @@ function emojiToggle(){
     document.getElementById('emoji').style.display = document.getElementById('emoji').style.display === 'none'? 'flex' : 'none';
 }
 
+function openImage(src) {
+    document.getElementById("popupImage").src = src;
+    document.getElementById("imagePopup").style.display = "block";
+    
+    // Cập nhật link tải ảnh
+    const downloadBtn = document.getElementById("downloadBtn");
+    downloadBtn.href = src;
+    downloadBtn.setAttribute("download", "image.jpg"); // Tên mặc định
+}
+
+function closeImage() {
+    document.getElementById("imagePopup").style.display = "none";
+}
+
+
+document.addEventListener("click", function (event) {
+    if (event.target.id === "imagePopup") {
+        closeImage();
+    }
+});
 
 getFriends();
 

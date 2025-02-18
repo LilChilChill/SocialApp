@@ -105,11 +105,20 @@
 
             <div class="file" id="file" >
             </div>
-            
+
             <div id="deleteChatButton">
             </div>
         </div>
     </div>
+
+    <div id="imagePopup" class="image-popup">
+        <span class="close-btn" onclick="closeImage()">&times;</span>
+        <a id="downloadBtn" class="download-btn" download>
+            ⬇
+        </a>
+        <img class="popup-content" id="popupImage">
+    </div>
+
     
 
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
@@ -132,6 +141,8 @@
             element.classList.add('active');
         }
         
+        
+
     </script>
 </body>
 </html>
