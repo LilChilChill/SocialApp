@@ -1,9 +1,9 @@
 const socket = io('http://localhost:5001');
 let currentFriendId = null;
-let selectedFile = null;
 let friendAvatar = null;
 let friendName = null; 
 let currentPage = 1;
+let selectedFile = null; 
 
 
 let localStream;
@@ -313,10 +313,10 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     const fileInput = event.target;
     selectedFile = fileInput.files[0]; 
 
+    const chatInput = document.getElementById('inputPreview');
+    chatInput.innerHTML = ''; 
+
     if (selectedFile) {
-        const chatInput = document.getElementById('inputPreview');
-        const fileInput = document.getElementById('chatInput');
-        
         if (selectedFile.type.startsWith('image/')) {
             chatInput.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" alt="Selected File" class="imgPreview"/>`;
         } else {
@@ -326,12 +326,18 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
 });
 
 
+
+
 document.getElementById('sendButton').addEventListener('click', () => {
     const messageInput = document.getElementById('chatInput');
     const content = messageInput.value.trim(); 
     const chatFunction = document.getElementById('chatFunction');
 
-    if (!content && !selectedFile || !currentFriendId) {
+    if (!content && !selectedFile ) {
+        return;
+    }
+
+    if (!currentFriendId) {
         return;
     }
 
@@ -358,7 +364,6 @@ document.getElementById('sendButton').addEventListener('click', () => {
     })
     .then(data => {
         messageInput.value = ''; 
-        selectedFile = null; 
         document.getElementById('inputPreview').innerHTML = ''; 
 
         socket.emit('sendMessage', {
@@ -373,6 +378,8 @@ document.getElementById('sendButton').addEventListener('click', () => {
             } : null,
             date: data.date
         });
+
+            selectedFile = null; 
         
 
         const messageDiv = document.createElement('div');
@@ -424,6 +431,7 @@ socket.on('receiveMessage', (messageData) => {
     `;
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
+    console.log(fileDataUrl);
 });
 
 
@@ -547,190 +555,190 @@ getFriends();
 
 
 //----------------------------------------------------- GROUP CHAT -------------------------------------------------------------\\
-function showCreateGroupForm() {
-    document.getElementById('createGroupForm').style.display = 'block';
+// function showCreateGroupForm() {
+//     document.getElementById('createGroupForm').style.display = 'block';
 
-    fetch('http://localhost:5001/api/users/friends', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-    .then(response => response.json())
-    .then(friends => {
-        const friendCheckboxList = document.getElementById('friendCheckboxList');
-        friendCheckboxList.innerHTML = ''; 
+//     fetch('http://localhost:5001/api/users/friends', {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': `Bearer ${localStorage.getItem('token')}`
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(friends => {
+//         const friendCheckboxList = document.getElementById('friendCheckboxList');
+//         friendCheckboxList.innerHTML = ''; 
 
-        if (friends.length === 0) {
-            friendCheckboxList.innerHTML = '<p>Không có bạn bè nào để thêm.</p>';
-        } else {
-            friends.forEach(friend => {
-                const friendCheckbox = document.createElement('div');
-                friendCheckbox.classList.add('friend-checkbox-item');
-                friendCheckbox.innerHTML = `
-                    <input type="checkbox" id="friend_${friend._id}" value="${friend._id}">
-                    <label for="friend_${friend._id}">${friend.name}</label>
-                `;
-                friendCheckboxList.appendChild(friendCheckbox);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi tải danh sách bạn bè:', error);
-        document.getElementById('friendCheckboxList').innerHTML = '<p>Lỗi khi tải danh sách bạn bè.</p>';
-    });
-}
+//         if (friends.length === 0) {
+//             friendCheckboxList.innerHTML = '<p>Không có bạn bè nào để thêm.</p>';
+//         } else {
+//             friends.forEach(friend => {
+//                 const friendCheckbox = document.createElement('div');
+//                 friendCheckbox.classList.add('friend-checkbox-item');
+//                 friendCheckbox.innerHTML = `
+//                     <input type="checkbox" id="friend_${friend._id}" value="${friend._id}">
+//                     <label for="friend_${friend._id}">${friend.name}</label>
+//                 `;
+//                 friendCheckboxList.appendChild(friendCheckbox);
+//             });
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi tải danh sách bạn bè:', error);
+//         document.getElementById('friendCheckboxList').innerHTML = '<p>Lỗi khi tải danh sách bạn bè.</p>';
+//     });
+// }
 
-function hideCreateGroupForm() {
-    document.getElementById('createGroupForm').style.display = 'none';
-}
+// function hideCreateGroupForm() {
+//     document.getElementById('createGroupForm').style.display = 'none';
+// }
 
-function createGroup() {
-    const groupName = document.getElementById('groupNameInput').value.trim();
-    const selectedFriendIds = Array.from(document.querySelectorAll('#friendCheckboxList input[type="checkbox"]:checked'))
-        .map(checkbox => checkbox.value);
+// function createGroup() {
+//     const groupName = document.getElementById('groupNameInput').value.trim();
+//     const selectedFriendIds = Array.from(document.querySelectorAll('#friendCheckboxList input[type="checkbox"]:checked'))
+//         .map(checkbox => checkbox.value);
 
-    if (!groupName) {
-        alert('Vui lòng nhập tên nhóm.');
-        return;
-    }
+//     if (!groupName) {
+//         alert('Vui lòng nhập tên nhóm.');
+//         return;
+//     }
 
-    if (selectedFriendIds.length < 2) {
-        alert('Vui lòng chọn ít nhất hai bạn bè để thêm vào nhóm.');
-        return;
-    }
+//     if (selectedFriendIds.length < 2) {
+//         alert('Vui lòng chọn ít nhất hai bạn bè để thêm vào nhóm.');
+//         return;
+//     }
 
-    const userId = localStorage.getItem('userId');
+//     const userId = localStorage.getItem('userId');
 
-    const members = [...selectedFriendIds, userId];  
+//     const members = [...selectedFriendIds, userId];  
 
-    fetch('http://localhost:5001/api/groups/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-            groupName: groupName, 
-            members: members      
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi tạo nhóm.');
-        }
-        return response.json();
-    })
-    .then(group => {
-        alert('Nhóm được tạo thành công!');
-        hideCreateGroupForm();
-        console.log('Creating group with data:', {
-            groupName,
-            members: members
-        });
-        loadGroupChats()
-    })
-    .catch(error => {
-        console.error('Lỗi khi tạo nhóm:', error);
-        alert('Không thể tạo nhóm. Vui lòng thử lại.');
-    });
-}
+//     fetch('http://localhost:5001/api/groups/create', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': `Bearer ${localStorage.getItem('token')}`
+//         },
+//         body: JSON.stringify({
+//             groupName: groupName, 
+//             members: members      
+//         })
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Lỗi khi tạo nhóm.');
+//         }
+//         return response.json();
+//     })
+//     .then(group => {
+//         alert('Nhóm được tạo thành công!');
+//         hideCreateGroupForm();
+//         console.log('Creating group with data:', {
+//             groupName,
+//             members: members
+//         });
+//         loadGroupChats()
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi tạo nhóm:', error);
+//         alert('Không thể tạo nhóm. Vui lòng thử lại.');
+//     });
+// }
 
-function loadGroupChats() {
-    const userId = localStorage.getItem('userId');
-    fetch(`http://localhost:5001/api/groups/${userId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-    .then(response => response.json())
-    .then(groups => {
-        const groupList = document.getElementById('groupList');
+// function loadGroupChats() {
+//     const userId = localStorage.getItem('userId');
+//     fetch(`http://localhost:5001/api/groups/${userId}`, {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': `Bearer ${localStorage.getItem('token')}`
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(groups => {
+//         const groupList = document.getElementById('groupList');
         
-        if (!groupList) {
-            console.error("Không tìm thấy phần tử #groupList trong DOM");
-            return;  
-        }
+//         if (!groupList) {
+//             console.error("Không tìm thấy phần tử #groupList trong DOM");
+//             return;  
+//         }
 
-        groupList.innerHTML = ''; 
+//         groupList.innerHTML = ''; 
 
-        if (groups.length === 0) {
-            groupList.innerHTML = '<p>Không có nhóm nào.</p>';
-        } else {
-            groups.forEach(group => {
-                const groupItem = document.createElement('div');
-                groupItem.classList.add('group-item');
-                groupItem.innerHTML = `
-                    <div class="chatUser" onclick="openGroupChat('${group._id}', '${group.groupName}')">
-                        <span>${group.groupName}</span>
-                        <p>Side</p>
-                    </div>
-                `;
-                groupList.appendChild(groupItem);
-                console.log('groupName', group.groupName)
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi tải danh sách nhóm:', error);
-        const groupList = document.getElementById('groupList');
+//         if (groups.length === 0) {
+//             groupList.innerHTML = '<p>Không có nhóm nào.</p>';
+//         } else {
+//             groups.forEach(group => {
+//                 const groupItem = document.createElement('div');
+//                 groupItem.classList.add('group-item');
+//                 groupItem.innerHTML = `
+//                     <div class="chatUser" onclick="openGroupChat('${group._id}', '${group.groupName}')">
+//                         <span>${group.groupName}</span>
+//                         <p>Side</p>
+//                     </div>
+//                 `;
+//                 groupList.appendChild(groupItem);
+//                 console.log('groupName', group.groupName)
+//             });
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi tải danh sách nhóm:', error);
+//         const groupList = document.getElementById('groupList');
         
-        if (groupList) {
-            groupList.innerHTML = '<p>Lỗi khi tải danh sách nhóm.</p>';
-        }
-    });
-}
+//         if (groupList) {
+//             groupList.innerHTML = '<p>Lỗi khi tải danh sách nhóm.</p>';
+//         }
+//     });
+// }
 
-function openGroupChat(groupId, groupName) {
-    document.getElementById('username').textContent = groupName;
-    // document.getElementById('avatar') = defaultAvatar;
-    currentFriendId = null; 
+// function openGroupChat(groupId, groupName) {
+//     document.getElementById('username').textContent = groupName;
+//     // document.getElementById('avatar') = defaultAvatar;
+//     currentFriendId = null; 
 
-    const chatArea = document.getElementById('chatArea');
-    chatArea.innerHTML = `
-        <div style="display: flex; justify-content: center;">
-            <div class="three-body">
-                <div class="three-body__dot"></div>
-                <div class="three-body__dot"></div>
-                <div class="three-body__dot"></div>
-            </div>
-        </div>
-    `;
-    localStorage.setItem('groupId', groupId)
-    fetch(`http://localhost:5001/api/groups/${groupId}/messages`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi tải tin nhắn nhóm.');
-        }
-        return response.json();
-    })
-    .then(messages => {
-        chatArea.innerHTML = '';
-        if (messages.length === 0) {
-            chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
-        } else {
-            messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', message.sender === localStorage.getItem('userId') ? 'sent' : 'received');
-                messageDiv.innerHTML = `
-                    <div class="messageContent">
-                        <p>${message.content}</p>
-                    </div>
-                `;
-                chatArea.appendChild(messageDiv);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi tải tin nhắn nhóm:', error);
-        chatArea.innerHTML = '<p>Lỗi khi tải tin nhắn nhóm.</p>';
-    });
-}
+//     const chatArea = document.getElementById('chatArea');
+//     chatArea.innerHTML = `
+//         <div style="display: flex; justify-content: center;">
+//             <div class="three-body">
+//                 <div class="three-body__dot"></div>
+//                 <div class="three-body__dot"></div>
+//                 <div class="three-body__dot"></div>
+//             </div>
+//         </div>
+//     `;
+//     localStorage.setItem('groupId', groupId)
+//     fetch(`http://localhost:5001/api/groups/${groupId}/messages`, {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': `Bearer ${localStorage.getItem('token')}`
+//         }
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Lỗi khi tải tin nhắn nhóm.');
+//         }
+//         return response.json();
+//     })
+//     .then(messages => {
+//         chatArea.innerHTML = '';
+//         if (messages.length === 0) {
+//             chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
+//         } else {
+//             messages.forEach(message => {
+//                 const messageDiv = document.createElement('div');
+//                 messageDiv.classList.add('message', message.sender === localStorage.getItem('userId') ? 'sent' : 'received');
+//                 messageDiv.innerHTML = `
+//                     <div class="messageContent">
+//                         <p>${message.content}</p>
+//                     </div>
+//                 `;
+//                 chatArea.appendChild(messageDiv);
+//             });
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi tải tin nhắn nhóm:', error);
+//         chatArea.innerHTML = '<p>Lỗi khi tải tin nhắn nhóm.</p>';
+//     });
+// }
 
-loadGroupChats();
+// loadGroupChats();

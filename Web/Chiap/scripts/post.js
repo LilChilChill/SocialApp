@@ -24,7 +24,7 @@ createPostForm.addEventListener('submit', async (e) => {
         const data = await response.json();
         if (response.ok) {
             alert(data.message);
-            loadPosts(); // Tải lại danh sách bài viết
+            loadPosts();
         } else {
             alert(data.message || 'Có lỗi xảy ra');
         }
@@ -33,7 +33,6 @@ createPostForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Lấy danh sách bài viết
 async function loadPosts() {
     try {
         const response = await fetch(`http://localhost:5001/api/feeds/posts`);
@@ -70,7 +69,7 @@ async function likePost(postId) {
         const response = await fetch(`http://localhost:5001/api/feeds/posts/${postId}/like`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username }), // Gửi username
+            body: JSON.stringify({ username }), 
         });
         const data = await response.json();
         if (response.ok) {

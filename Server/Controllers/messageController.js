@@ -3,6 +3,61 @@ const fs = require('fs');
 const path = require('path');
 
 
+// const sendMessage = (io) => async (req, res) => {
+//     const { receiverId, content } = req.body; 
+//     const senderId = req.user._id;
+//     let fileData = null;
+
+//     let date = new Date();
+//     let hours = date.getHours();
+//     let miniutes = date.getMinutes();
+//     if (+hours <= 9) {
+//         hours = `0${hours}`;
+//     }
+//     if (+miniutes <= 9) {
+//         miniutes = `0${miniutes}`;
+//     }
+//     date = `${hours}:${miniutes}`;
+
+//     if (req.file) {
+//         fileData = {
+//             data: req.file.buffer,
+//             contentType: req.file.mimetype
+//         };
+//     }
+
+//     try {
+//         const messageData = new Message({
+//             sender: senderId,
+//             receiver: receiverId,
+//             content: content || '', 
+//             file: fileData,
+//             date: date
+//         });
+
+//         if (content || fileData) {
+//             await messageData.save(); 
+
+//             io.to(receiverId).emit('receiveMessage', {
+//                 senderId,
+//                 receiverId,
+//                 content: messageData.content,
+//                 file: messageData.file,
+//                 date
+//             });
+
+//             res.status(200).json({ message: 'Tin nhắn đã được gửi thành công', messageData });
+//             console.log("success message: ", messageData);
+//             console.log('time', date)
+//         } else {
+//             return res.status(400).json({ message: 'Không có nội dung để gửi' });
+//         }
+//     } catch (error) {
+//         console.error('Lỗi:', error);
+//         res.status(500).json({ message: 'Có lỗi xảy ra', error: error.message });
+//     }
+// };
+
 const sendMessage = (io) => async (req, res) => {
     const { receiverId, content } = req.body; 
     const senderId = req.user._id;
@@ -10,14 +65,10 @@ const sendMessage = (io) => async (req, res) => {
 
     let date = new Date();
     let hours = date.getHours();
-    let miniutes = date.getMinutes();
-    if (+hours <= 9) {
-        hours = `0${hours}`;
-    }
-    if (+miniutes <= 9) {
-        miniutes = `0${miniutes}`;
-    }
-    date = `${hours}:${miniutes}`;
+    let minutes = date.getMinutes();
+    if (hours < 10) hours = `0${hours}`;
+    if (minutes < 10) minutes = `0${minutes}`;
+    date = `${hours}:${minutes}`;
 
     if (req.file) {
         fileData = {
@@ -47,8 +98,6 @@ const sendMessage = (io) => async (req, res) => {
             });
 
             res.status(200).json({ message: 'Tin nhắn đã được gửi thành công', messageData });
-            console.log("success message: ", messageData);
-            console.log('time', date)
         } else {
             return res.status(400).json({ message: 'Không có nội dung để gửi' });
         }
