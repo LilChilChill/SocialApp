@@ -341,12 +341,57 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     }
 });
 
-document.getElementById('sendButton').addEventListener('click', () => {
+// Hàm nén ảnh
+async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const maxWidth = 1920;
+                const maxHeight = 1080;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth || height > maxHeight) {
+                    if (width > height) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    } else {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob.size / 1024 / 1024 > maxSizeMB) {
+                        resolve(compressImage(file, maxSizeMB, quality - 0.1)); // Giảm tiếp chất lượng nếu cần
+                    } else {
+                        resolve(new File([blob], file.name, { type: "image/jpeg" }));
+                    }
+                }, "image/jpeg", quality);
+            };
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
+
+// Gửi tin nhắn
+document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
     const content = messageInput.value.trim(); 
     const chatFunction = document.getElementById('chatFunction');
 
-    if (!content && !selectedFile ) {
+    if (!content && !selectedFile) {
         return;
     }
 
@@ -354,12 +399,19 @@ document.getElementById('sendButton').addEventListener('click', () => {
         return;
     }
 
+    let fileToSend = selectedFile;
+    let tempFile = fileToSend;
+
+    if (selectedFile && selectedFile.size / 1024 / 1024 > 5) {
+        fileToSend = await compressImage(selectedFile);
+    }
+
     const messageData = new FormData();
     messageData.append('content', content);
     messageData.append('receiverId', currentFriendId); 
 
-    if (selectedFile) {
-        messageData.append('file', selectedFile); 
+    if (fileToSend) {
+        messageData.append('file', fileToSend); 
     }
     
     fetch('http://localhost:5001/api/messages', {
@@ -384,18 +436,16 @@ document.getElementById('sendButton').addEventListener('click', () => {
             receiverId: currentFriendId,
             sender: localStorage.getItem('userId'),
             content: content,
-            file: selectedFile ? {
-                name: selectedFile.name,
-                type: selectedFile.type,
-                size: selectedFile.size
+            file: fileToSend ? {
+                name: fileToSend.name,
+                type: fileToSend.type,
+                size: fileToSend.size
             } : null,
             date: data.date
         });
 
-        const tempFile = selectedFile;
         selectedFile = null; 
         
-
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'sent');
 
@@ -409,21 +459,17 @@ document.getElementById('sendButton').addEventListener('click', () => {
             messageDiv.innerHTML = `
             <div class="msgContent">
                 ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
-                </div>
-                `; 
-                // <p class="msgDate">${data.messageData.date}</p>
+            </div>`; 
         } else {
             messageDiv.innerHTML = `
             <div class="msgContent">
                 <div class="messageContent">
                     <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
-                    </div>
-                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
                 </div>
-                `; 
-                // <p class="msgDate">${data.messageData.date}</p>
+                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+            </div>`; 
         }
-        console.log('image', fileDataUrl)
+        console.log('image', fileDataUrl);
         document.getElementById('chatArea').appendChild(messageDiv);
         chatArea.scrollTop = chatArea.scrollHeight; 
         
@@ -433,7 +479,7 @@ document.getElementById('sendButton').addEventListener('click', () => {
     });
 });
 
-
+// Nhận tin nhắn
 socket.on('receiveMessage', (messageData) => {
     const chatArea = document.getElementById('chatArea');
     const messageDiv = document.createElement('div');
@@ -465,8 +511,8 @@ socket.on('receiveMessage', (messageData) => {
     }
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
-    console.log(fileDataUrl);
 });
+
 
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
