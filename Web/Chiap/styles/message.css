@@ -118,6 +118,10 @@
   #fileDisplay{
     flex-direction: column;
   }
+
+  #imgFile{
+    flex-direction: column;
+  }
   
   .form__group {
     margin-bottom: 20px;
@@ -387,6 +391,7 @@
     text-decoration: none;
     justify-content: space-between;
     padding: 10px;
+    cursor: pointer;
   }
   
   #deleteChatButton:hover {

@@ -203,6 +203,7 @@ function openChat(friendId, name, avatar, page = 1) {
     currentFriendId = friendId;
     currentPage = 1;
 
+    const deleteBtn = document.getElementById('deleteChatButton')
     const friendInfo = document.getElementById('headerSide');
     friendInfo.innerHTML = `
         <div class="three-body">
@@ -242,6 +243,7 @@ function openChat(friendId, name, avatar, page = 1) {
             chatArea.innerHTML = '';
             friendInfo.innerHTML = '';
             fileData.innerHTML = '';
+            deleteBtn.innerHTML = '';
 
             if (messages.length === 0) {
                 chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
@@ -249,16 +251,6 @@ function openChat(friendId, name, avatar, page = 1) {
                 let lastMessageDate = null;
 
                 messages.forEach(message => {
-                    // const messageDate = new Date(message.date).toLocaleDateString();
-
-                    // // Thêm date separator nếu ngày thay đổi
-                    // if (lastMessageDate !== messageDate) {
-                    //     const dateSeparator = document.createElement('div');
-                    //     dateSeparator.classList.add('date-separator');
-                    //     dateSeparator.textContent = messageDate;
-                    //     chatArea.appendChild(dateSeparator);
-                    //     lastMessageDate = messageDate;
-                    // }
 
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
@@ -311,6 +303,11 @@ function openChat(friendId, name, avatar, page = 1) {
                                     <a href="#"><p>- File phương tiện</p></a>
                                     <a href="#"><p>- File</p></a>
                                 </div>
+                            `
+
+                            deleteBtn.innerHTML = `
+                                <i class="fa-regular fa-trash-can"></i>
+                                <p>Xóa lịch sử trò chuyện</p>
                             `
 
                     chatArea.appendChild(messageDiv);
@@ -509,6 +506,19 @@ socket.on('receiveMessage', (messageData) => {
         </div>
     `;
     }
+
+    fileData.innerHTML = 
+                `
+                    <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
+                    <div style="display: none" id="fileDisplay">
+                        <a href="#" onclick"imgFileToggle()"><p>- File phương tiện</p></a>
+                        <div id="imgFile" style="display: none">
+                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" />` : ''}
+                            <p> TEST </p>
+                        </div>
+                        <a href="#"><p>- File</p></a>
+                    </div>
+                `
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
 });
@@ -619,6 +629,10 @@ document.getElementById('chatInput').addEventListener('keydown', (event) => {
 
 function fileToggle(){
     document.getElementById('fileDisplay').style.display = document.getElementById('fileDisplay').style.display === 'none'? 'flex' : 'none';
+}
+
+function imgFileToggle(){
+    document.getElementById('imgFile').style.display = document.getElementById('imgFile').style.display === 'none'? 'flex' : 'none';
 }
 
 function sideMenu(){

@@ -11,7 +11,9 @@ const userSchema = new mongoose.Schema({
         default: null
     },
     avatar: { data: Buffer, contentType: String },
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    isOnline: { type: Boolean, default: false},
+    lastActive: { type: Date, default: Date.now },
 }, {timeeStamps: true});
 
 module.exports = mongoose.model('User', userSchema);
