@@ -259,6 +259,7 @@ function openChat(friendId, name, avatar, page = 1) {
                         ? `data:${message.file.contentType};base64,${message.file.data}`
                         : null;
 
+                        // console.log('ChatId', message._id)
 
                     if (message.content == ''){
                         messageDiv.innerHTML = `
@@ -619,9 +620,6 @@ document.getElementById('chatInput').addEventListener('keydown', (event) => {
     }
 });
 
-function fileToggle(){
-    document.getElementById('fileDisplay').style.display = document.getElementById('fileDisplay').style.display === 'none'? 'flex' : 'none';
-}
 
 function imgFileToggle(){
     document.getElementById('imgFile').style.display = document.getElementById('imgFile').style.display === 'none'? 'flex' : 'none';
@@ -635,15 +633,17 @@ function sideMenu(){
 function emojiToggle(){
     document.getElementById('emoji').style.display = document.getElementById('emoji').style.display === 'none'? 'flex' : 'none';
 }
+function fileToggle(){
+    document.getElementById('fileDisplay').style.display = document.getElementById('fileDisplay').style.display === 'none'? 'flex' : 'none';
+}
 
 function openImage(src) {
     document.getElementById("popupImage").src = src;
     document.getElementById("imagePopup").style.display = "block";
     
-    // Cập nhật link tải ảnh
     const downloadBtn = document.getElementById("downloadBtn");
     downloadBtn.href = src;
-    downloadBtn.setAttribute("download", "image.jpg"); // Tên mặc định
+    downloadBtn.setAttribute("download", "image.jpg");
 }
 
 function closeImage() {

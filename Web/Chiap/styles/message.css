@@ -620,7 +620,31 @@
   background: rgba(0, 0, 0, 0.8);
 }
 
+.prev-btn, .next-btn {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+}
 
+.prev-btn, .next-btn {
+  position: absolute;
+  color: white;
+  font-size: 30px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+  .prev-btn {
+    left: 20px; 
+  }
+  .next-btn { 
+    right: 20px;
+  }
+ .prev-btn:hover, .next-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+  }
 
    
    @keyframes spin78236 {
