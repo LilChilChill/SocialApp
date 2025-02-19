@@ -7,6 +7,7 @@ function logout() {
     window.location.href = '../index.html'; 
 }
 
+window.logout = logout
 function getFriends() {
     const token = localStorage.getItem('token'); 
 
