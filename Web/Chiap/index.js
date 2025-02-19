@@ -18,7 +18,7 @@ const signUpButton = document.getElementById('signUp');
       const password = document.getElementById('password').value;
 
       try {
-        const res = await fetch('http://localhost:5001/api/users/register', {
+        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ const signUpButton = document.getElementById('signUp');
       const password = document.getElementById('signInPassword').value;
 
       try {
-        const res = await fetch('http://localhost:5001/api/users/login', {
+        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

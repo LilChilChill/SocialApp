@@ -197,6 +197,10 @@ body, ul, li, a{
 .update-form {
   display: none;
   margin-top: 20px;
+  max-width: 500px;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
 }
 
 .update-form input,

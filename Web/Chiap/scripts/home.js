@@ -14,7 +14,7 @@ function getFriends() {
         return;
     }
 
-    fetch('http://localhost:5001/api/users/friends', {
+    fetch('https://socialapp-m4c6.onrender.com/api/users/friends', {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

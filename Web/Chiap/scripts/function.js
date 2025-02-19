@@ -25,7 +25,7 @@ const searchUsers = async () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5001/api/users/search?query=${query}`, {
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/users/search?query=${query}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -86,7 +86,7 @@ const addFriend = async (receiverId) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5001/api/friends/add`, {
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/friends/add`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

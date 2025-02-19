@@ -15,7 +15,7 @@ createPostForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:5001/api/feeds/posts`, {
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/feeds/posts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ author, title, content }),
@@ -35,7 +35,7 @@ createPostForm.addEventListener('submit', async (e) => {
 
 async function loadPosts() {
     try {
-        const response = await fetch(`http://localhost:5001/api/feeds/posts`);
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/feeds/posts`);
         const posts = await response.json();
         postsContainer.innerHTML = '';
         posts.forEach((post) => {
@@ -66,7 +66,7 @@ async function likePost(postId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:5001/api/feeds/posts/${postId}/like`, {
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/feeds/posts/${postId}/like`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username }), 
@@ -103,7 +103,7 @@ async function addComment(postId) {
     }
 
     try {
-        const response = await fetch(`http://localhost:5001/api/feeds/posts/${postId}/comment`, {
+        const response = await fetch(`https://socialapp-m4c6.onrender.com/api/feeds/posts/${postId}/comment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user: username, text }),

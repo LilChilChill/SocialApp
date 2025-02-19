@@ -26,7 +26,7 @@ const getUserInfo = async () => {
     }
 
     try {
-        const res = await fetch('http://localhost:5001/api/users/profile', {
+        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/profile', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -88,6 +88,49 @@ const validateInputs = (name, birthDate) => {
     return true;
 };
 
+async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+
+              const maxWidth = 1920;
+              const maxHeight = 1080;
+              let width = img.width;
+              let height = img.height;
+
+              if (width > maxWidth || height > maxHeight) {
+                  if (width > height) {
+                      height *= maxWidth / width;
+                      width = maxWidth;
+                  } else {
+                      width *= maxHeight / height;
+                      height = maxHeight;
+                  }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
+
+              canvas.toBlob((blob) => {
+                  if (blob.size / 1024 / 1024 > maxSizeMB) {
+                      resolve(compressImage(file, maxSizeMB, quality - 0.1)); // Giảm tiếp chất lượng nếu cần
+                  } else {
+                      resolve(new File([blob], file.name, { type: "image/jpeg" }));
+                  }
+              }, "image/jpeg", quality);
+          };
+      };
+      reader.onerror = (error) => reject(error);
+  });
+}
+
 saveButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     const name = document.getElementById('name').value || currentUser.name;
@@ -112,7 +155,7 @@ saveButton.addEventListener('click', async () => {
     }
 
     try {
-        const res = await fetch('http://localhost:5001/api/users/update', {
+        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/update', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -146,7 +189,7 @@ const postContent = document.getElementById('postContent');
 const postImage = document.getElementById('postImage');
 
 // API URL
-const API_BASE_URL = 'http://localhost:5001/api/feeds/posts';
+const API_BASE_URL = 'https://socialapp-m4c6.onrender.com/api/feeds/posts';
 
 // Hiển thị bài viết
 const loadPosts = async () => {
