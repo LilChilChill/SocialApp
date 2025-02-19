@@ -1,4 +1,4 @@
-import { API_URL } from "./config";
+const API_URL = import.meta.env.VITER_API_URL
 
 const friendRequestList = document.getElementById('friendRequestList');
 const notification = document.getElementById('notification');

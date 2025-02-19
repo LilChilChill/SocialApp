@@ -1,4 +1,5 @@
-import { API_URL } from "./config";
+const API_URL = import.meta.env.VITE_API_URL
+
 const socket = io(`${API_URL}`);
 let currentFriendId = null;
 let friendAvatar = null;
