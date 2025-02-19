@@ -32,7 +32,7 @@ const signUpButton = document.getElementById('signUp');
         if (res.ok) {
           alert('Đăng ký thành công!');
           console.log(data);
-          window.location.href = 'index.html'; 
+          window.location.href = window.location.origin + 'index.html'; 
         } else {
           alert(data);
         }
@@ -62,7 +62,7 @@ const signUpButton = document.getElementById('signUp');
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', data.name)
           localStorage.setItem('userId', data._id)
-          window.location.href = './components/home.html';
+          window.location.href = window.location.origin + '/components/home.html';
         } else {
           alert(data);
         }

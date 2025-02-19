@@ -11,7 +11,7 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    window.location.href = '../index.html'; 
+    window.location.href = window.location.origin + '../index.html'; 
 }
 
 function listDisplay() {
@@ -23,7 +23,7 @@ const getUserInfo = async () => {
 
     if (!token) {
         alert('Vui lòng đăng nhập trước khi truy cập thông tin.');
-        window.location.href = 'index.html';
+        window.location.href = window.location.origin + 'index.html';
         return;
     }
 
@@ -41,7 +41,7 @@ const getUserInfo = async () => {
         } else {
             const errorMsg = await res.json();
             alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');
-            window.location.href = 'index.html';
+            window.location.href = window.location.origin + 'index.html';
         }
     } catch (error) {
         console.error('Error:', error);

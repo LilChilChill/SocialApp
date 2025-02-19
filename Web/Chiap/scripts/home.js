@@ -4,7 +4,7 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    window.location.href = '../index.html'; 
+    window.location.href = window.location.origin + '../index.html'; 
 }
 
 window.logout = logout
@@ -13,7 +13,7 @@ function getFriends() {
 
     if (!token) {
         alert('Vui lòng đăng nhập.');
-        window.location.href = 'index.html'; 
+        window.location.href = window.location.origin + 'index.html'; 
         return;
     }
 
