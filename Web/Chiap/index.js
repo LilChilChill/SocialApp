@@ -61,9 +61,11 @@ const signUpButton = document.getElementById('signUp');
         if (res.ok) {
           alert('Đăng nhập thành công!');
           localStorage.setItem('token', data.token);
+          console.log("Token lưu vào localStorage:", localStorage.getItem("token"));
           localStorage.setItem('username', data.name)
           localStorage.setItem('userId', data._id)
           window.location.href = '/components/home.html';
+          console.log("Chuyển hướng sang home.html");
         } else {
           alert(data);
         }
