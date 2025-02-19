@@ -1,10 +1,12 @@
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    window.location.href = '../index.html'; 
+    window.location.href = window.location.origin; 
+    
 }
 
 window.logout = logout
@@ -13,7 +15,7 @@ function getFriends() {
 
     if (!token) {
         alert('Vui lòng đăng nhập.');
-        window.location.href = 'index.html'; 
+        window.location.href = window.location.origin; 
         return;
     }
 

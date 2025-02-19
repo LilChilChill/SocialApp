@@ -33,7 +33,8 @@ const signUpButton = document.getElementById('signUp');
         if (res.ok) {
           alert('Đăng ký thành công!');
           console.log(data);
-          window.location.href = 'index.html'; 
+          window.location.href = window.location.origin; 
+          
         } else {
           alert(data);
         }
@@ -64,7 +65,8 @@ const signUpButton = document.getElementById('signUp');
           console.log("Token lưu vào localStorage:", localStorage.getItem("token"));
           localStorage.setItem('username', data.name)
           localStorage.setItem('userId', data._id)
-          window.location.href = '/components/home.html';
+          window.location.href = window.location.origin + '/components/home.html';
+
           console.log("Chuyển hướng sang home.html");
         } else {
           alert(data);
