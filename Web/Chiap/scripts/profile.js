@@ -1,4 +1,4 @@
-import { API_URL } from "../config"
+import { API_URL } from "./config"
 
 // User functions
 const userInfoContainer = document.getElementById('userInfo')

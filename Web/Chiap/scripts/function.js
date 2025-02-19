@@ -1,4 +1,4 @@
-import { API_URL } from "../config";
+import { API_URL } from "./config";
 
 const searchButton = document.getElementById('searchButton');
 const searchInput = document.getElementById('searchInput');

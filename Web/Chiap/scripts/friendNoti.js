@@ -1,4 +1,4 @@
-import { API_URL } from "../config";
+import { API_URL } from "./config";
 
 const friendRequestList = document.getElementById('friendRequestList');
 const notification = document.getElementById('notification');
