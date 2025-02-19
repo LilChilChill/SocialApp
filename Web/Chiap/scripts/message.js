@@ -1,4 +1,5 @@
-const socket = io('https://socialapp-m4c6.onrender.com');
+import { API_URL } from "../config";
+const socket = io(`${API_URL}`);
 let currentFriendId = null;
 let friendAvatar = null;
 let friendName = null; 
@@ -154,7 +155,7 @@ function getFriends() {
         return;
     }
 
-    fetch('https://socialapp-m4c6.onrender.com/api/users/friends', {
+    fetch(`${API_URL}/api/users/friends`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -227,7 +228,7 @@ function openChat(friendId, name, avatar, page = 1) {
     const fileData = document.getElementById('file');
     fileData.innerHTML = '';
 
-    fetch(`https://socialapp-m4c6.onrender.com/api/messages/${friendId}?page=${page}`, {
+    fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -323,6 +324,8 @@ function openChat(friendId, name, avatar, page = 1) {
         });
 }
 
+window.openChat = openChat;
+
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const fileInput = event.target;
     selectedFile = fileInput.files[0]; 
@@ -411,7 +414,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         messageData.append('file', fileToSend); 
     }
     
-    fetch('https://socialapp-m4c6.onrender.com/api/messages', {
+    fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -520,7 +523,7 @@ document.addEventListener("keydown", function (event) {
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
     if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử chat không?')) {
-        fetch(`https://socialapp-m4c6.onrender.com/api/messages/delete/${currentFriendId}`, {
+        fetch(`${API_URL}/api/messages/delete/${currentFriendId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -550,7 +553,7 @@ document.getElementById('chatArea').addEventListener('scroll', () => {
 
 function loadOlderMessages() {
     isLoadingMessages = true;
-    fetch(`https://socialapp-m4c6.onrender.com/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
+    fetch(`${API_URL}/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -664,7 +667,7 @@ getFriends();
 // function showCreateGroupForm() {
 //     document.getElementById('createGroupForm').style.display = 'block';
 
-//     fetch('https://socialapp-m4c6.onrender.com/api/users/friends', {
+//     fetch('${API_URL}/api/users/friends', {
 //         method: 'GET',
 //         headers: {
 //             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -718,7 +721,7 @@ getFriends();
 
 //     const members = [...selectedFriendIds, userId];  
 
-//     fetch('https://socialapp-m4c6.onrender.com/api/groups/create', {
+//     fetch('${API_URL}/api/groups/create', {
 //         method: 'POST',
 //         headers: {
 //             'Content-Type': 'application/json',
@@ -752,7 +755,7 @@ getFriends();
 
 // function loadGroupChats() {
 //     const userId = localStorage.getItem('userId');
-//     fetch(`https://socialapp-m4c6.onrender.com/api/groups/${userId}`, {
+//     fetch(`${API_URL}/api/groups/${userId}`, {
 //         method: 'GET',
 //         headers: {
 //             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -812,7 +815,7 @@ getFriends();
 //         </div>
 //     `;
 //     localStorage.setItem('groupId', groupId)
-//     fetch(`https://socialapp-m4c6.onrender.com/api/groups/${groupId}/messages`, {
+//     fetch(`${API_URL}/api/groups/${groupId}/messages`, {
 //         method: 'GET',
 //         headers: {
 //             'Authorization': `Bearer ${localStorage.getItem('token')}`

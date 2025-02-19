@@ -1,3 +1,5 @@
+import { API_URL } from "../config";
+
 function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
@@ -14,7 +16,7 @@ function getFriends() {
         return;
     }
 
-    fetch('https://socialapp-m4c6.onrender.com/api/users/friends', {
+    fetch(`${API_URL}/api/users/friends`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

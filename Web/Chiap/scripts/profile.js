@@ -1,3 +1,5 @@
+import { API_URL } from "../config"
+
 // User functions
 const userInfoContainer = document.getElementById('userInfo')
 const updateButton = document.getElementById('updateButton')
@@ -26,7 +28,7 @@ const getUserInfo = async () => {
     }
 
     try {
-        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/profile', {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -155,7 +157,7 @@ saveButton.addEventListener('click', async () => {
     }
 
     try {
-        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/update', {
+        const res = await fetch(`${API_URL}/api/users/update`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -189,7 +191,7 @@ const postContent = document.getElementById('postContent');
 const postImage = document.getElementById('postImage');
 
 // API URL
-const API_BASE_URL = 'https://socialapp-m4c6.onrender.com/api/feeds/posts';
+const API_BASE_URL = `${API_URL}/api/feeds/posts`;
 
 // Hiển thị bài viết
 const loadPosts = async () => {
