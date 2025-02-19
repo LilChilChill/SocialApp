@@ -387,6 +387,8 @@ async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
     });
 }
 
+window.openImage = openImage
+
 // Gửi tin nhắn
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
