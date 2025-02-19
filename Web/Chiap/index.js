@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const container = document.getElementById('container');
@@ -18,7 +20,7 @@ const signUpButton = document.getElementById('signUp');
       const password = document.getElementById('password').value;
 
       try {
-        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/register', {
+        const res = await fetch(`${API_URL}/api/users/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -46,7 +48,7 @@ const signUpButton = document.getElementById('signUp');
       const password = document.getElementById('signInPassword').value;
 
       try {
-        const res = await fetch('https://socialapp-m4c6.onrender.com/api/users/login', {
+        const res = await fetch(`${API_URL}/api/users/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
