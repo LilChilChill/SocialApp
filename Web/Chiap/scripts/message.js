@@ -216,6 +216,7 @@ function openChat(friendId, name, avatar, page = 1) {
     document.getElementById('avatar').src = friendAvatar;
     currentFriendId = friendId;
     currentPage = 1;
+    hasMoreMessages = true;
     // prefetchImages();
     prefetchImages(currentPage, false); 
     const deleteBtn = document.getElementById('deleteChatButton')
@@ -720,8 +721,25 @@ document.getElementById('chatArea').addEventListener('scroll', () => {
     }
 });
 
-let hasMoreMessages = true;
+function switchChat(newFriendId, newFriendAvatar, newFriendName) {
+    if (currentFriendId === newFriendId) return; // Nếu trùng ID thì không làm gì cả
 
+    currentFriendId = newFriendId;
+    friendAvatar = newFriendAvatar;
+    friendName = newFriendName;
+
+    // 🔥 Reset lại các biến liên quan
+    currentPage = 1;
+    hasMoreMessages = true; 
+    isLoadingMessages = false;
+
+    document.getElementById('chatArea').innerHTML = ''; // Xóa nội dung chat cũ
+
+    loadOlderMessages(); // Tải tin nhắn mới của cuộc trò chuyện
+}
+
+
+let hasMoreMessages = true;
 function loadOlderMessages() {
     if (!hasMoreMessages || isLoadingMessages) return;
     
@@ -774,6 +792,7 @@ function loadOlderMessages() {
         chatArea.insertBefore(fragment, chatArea.firstChild);
 
         currentPage++; 
+        
     })
     .catch(error => {
         console.error('Lỗi khi lấy tin nhắn cũ:', error);
