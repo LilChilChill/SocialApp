@@ -590,6 +590,43 @@ function prefetchImages(page = 1, append = false) {
     });
 }
 
+function fetchAllImages() {
+    let page = 1; 
+    let allImages = []; 
+
+    function fetchNextPage() {
+        return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Lỗi khi lấy ảnh');
+            }
+            return response.json();
+        })
+        .then(data => {
+            allImages = [...allImages, ...data.images]; 
+
+            if (data.hasMore) {
+                page++; 
+                return fetchNextPage(); 
+            } else {
+                cachedImages = allImages; 
+                imagesFetched = true;
+                console.log('Tất cả ảnh đã tải:', cachedImages);
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi tải ảnh:', error);
+        });
+    }
+
+    return fetchNextPage();
+}
+
 function toggleImages() {
     const fileImageDisplay = document.getElementById('fileImageDisplay');
 
@@ -598,25 +635,33 @@ function toggleImages() {
         return;
     }
 
-    // if (!imagesFetched) {
-    //     prefetchImages();
-    //     return;
-    // }
+    fileImageDisplay.style.display = 'block'; 
+    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
 
+    if (imagesFetched) {
+        renderImages();
+        return;
+    }
+
+    fetchAllImages()
+        .then(() => {
+            renderImages();
+        })
+        .catch(error => {
+            console.error('Lỗi khi tải ảnh:', error);
+            fileImageDisplay.innerHTML = '<p>Lỗi khi tải ảnh.</p>';
+        });
+}
+
+function renderImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
     fileImageDisplay.innerHTML = '';
 
-    if (tempImages.length === 0 && cachedImages.length === 0) { 
+    if (cachedImages.length === 0) {
         fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
     } else {
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('image-container');
-
-        tempImages.forEach(tempFile => {
-            const imgElement = document.createElement('img');
-            imgElement.src = URL.createObjectURL(tempFile);
-            imgElement.onclick = () => openImage(imgElement.src);
-            imageContainer.appendChild(imgElement);
-        });
 
         cachedImages.forEach(image => {
             const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
@@ -633,9 +678,11 @@ function toggleImages() {
 
         fileImageDisplay.appendChild(imageContainer);
     }
-    
-    fileImageDisplay.style.display = 'block';
+
+    imagesFetched = true;
 }
+
+
 window.toggleImages = toggleImages;
 
 
