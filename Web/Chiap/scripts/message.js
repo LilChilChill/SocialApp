@@ -531,12 +531,6 @@ socket.on('receiveMessage', (messageData) => {
     chatArea.scrollTop = chatArea.scrollHeight;
 });
 
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-        closeImage();
-    }
-});
-
 function prefetchImages() {
     fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
         method: 'GET',
@@ -806,6 +800,17 @@ document.addEventListener("click", function (event) {
     }
 });
 
+document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+        closeImage();
+    }
+    if (event.key === "ArrowLeft") {
+        prevImage();
+    }
+    if (event.key === "ArrowRight") {
+        nextImage();
+    }
+});
 
 getFriends();
 
