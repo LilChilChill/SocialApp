@@ -9,8 +9,8 @@ let currentPage = 1;
 let selectedFile = null; 
 let cachedImages = [];
 let imagesFetched = false;
-
-
+let tempImages = [];
+let currentImageIndex = 0;
 
 let localStream;
 let peerConnection;
@@ -466,6 +466,12 @@ document.getElementById('sendButton').addEventListener('click', async () => {
             ? `data:${data.messageData.file.contentType};base64,${data.messageData.file.data}`
             : null);
 
+        if(tempFile){
+            tempImages.push(tempFile);
+        }
+
+        // toggleImages(); // Cập nhật giao diện ngay lập tức
+
         if (content == ''){
             messageDiv.innerHTML = `
             <div class="msgContent">
@@ -531,76 +537,6 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-// function fetchImages() {
-//     const fileImageDisplay = document.getElementById('fileImageDisplay');
-
-//     // Nếu fileImageDisplay đang hiển thị, ẩn nó đi khi nhấn lại
-//     if (fileImageDisplay.style.display === 'block') {
-//         fileImageDisplay.style.display = 'none';
-//         return;
-//     }
-
-//     fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': `Bearer ${localStorage.getItem('token')}`,
-//         },
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Lỗi khi lấy ảnh');
-//         }
-//         return response.json();
-//     })
-//     .then(images => { 
-//         console.log('Dữ liệu ảnh nhận được:', images);
-
-//         if (!images || images.length === 0) { 
-//             fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
-//             fileImageDisplay.style.display = 'block';
-//             return;
-//         }
-
-//         fileImageDisplay.innerHTML = ''; // Xóa nội dung cũ
-//         const imageContainer = document.createElement('div');
-//         imageContainer.classList.add('image-container');
-
-//         images.forEach(image => { 
-//             // Chuyển đổi dữ liệu ảnh thành base64 URL
-//             const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
-//                 ? `data:${image.file.contentType};base64,${image.file.data}`
-//                 : null;
-
-//             if (!fileDataUrl) {
-//                 console.warn('Dữ liệu ảnh bị lỗi:', image);
-//                 return;
-//             }
-
-//             const imgElement = document.createElement('img');
-//             imgElement.src = fileDataUrl;
-//             imgElement.classList.add('thumbnail');
-//             imgElement.onclick = () => openImage(imgElement.src);
-
-//             imageContainer.appendChild(imgElement);
-//         });
-
-//         fileImageDisplay.appendChild(imageContainer);
-//         fileImageDisplay.style.display = 'block'; // Hiển thị danh sách ảnh sau khi fetch
-//     })
-//     .catch(error => {
-//         console.error('Lỗi khi lấy ảnh:', error);
-//         alert('Không thể tải ảnh. Vui lòng thử lại sau.');
-//     });
-// }
-
-// function toggleImages() {
-//     const fileImageDisplay = document.getElementById('fileImageDisplay');
-//     fileImageDisplay.style.display = (fileImageDisplay.style.display === 'none') ? 'block' : 'none';
-// }
-
-// window.toggleImages = toggleImages
-// window.fetchImages = fetchImages;
-
 function prefetchImages() {
     fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
         method: 'GET',
@@ -639,15 +575,24 @@ function toggleImages() {
         return;
     }
 
-    // Nếu đã có ảnh, chỉ việc hiển thị
+    // Hiển thị ảnh từ tempImages + cachedImages
     fileImageDisplay.innerHTML = '';
-    
-    if (cachedImages.length === 0) { 
+
+    if (tempImages.length === 0 && cachedImages.length === 0) { 
         fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
     } else {
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('image-container');
 
+        // Hiển thị ảnh mới gửi trước
+        tempImages.forEach(tempFile => {
+            const imgElement = document.createElement('img');
+            imgElement.src = URL.createObjectURL(tempFile);
+            imgElement.onclick = () => openImage(imgElement.src);
+            imageContainer.appendChild(imgElement);
+        });
+
+        // Hiển thị ảnh từ database
         cachedImages.forEach(image => {
             const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
                 ? `data:${image.file.contentType};base64,${image.file.data}`
@@ -658,7 +603,6 @@ function toggleImages() {
             const imgElement = document.createElement('img');
             imgElement.src = fileDataUrl;
             imgElement.onclick = () => openImage(imgElement.src);
-
             imageContainer.appendChild(imgElement);
         });
 
@@ -797,14 +741,62 @@ window.fileToggle = fileToggle
 function openImage(src) {
     document.getElementById("popupImage").src = src;
     document.getElementById("imagePopup").style.display = "block";
+
     
-    const downloadBtn = document.getElementById("downloadBtn");
-    downloadBtn.href = src;
-    downloadBtn.setAttribute("download", "image.jpg");
+    currentImageIndex = cachedImages.findIndex(image => {
+        const fileDataUrl = image.file && image.file.data && typeof image.file.data === "string"
+            ? `data:${image.file.contentType};base64,${image.file.data}`
+            : null;
+        return fileDataUrl === src;
+    });
+
+    updateImage();
 }
 
 function closeImage() {
     document.getElementById("imagePopup").style.display = "none";
+}
+window.closeImage = closeImage
+
+function prevImage() {
+    if (currentImageIndex > 0) {
+        currentImageIndex--;
+        updateImage();
+    }
+}
+window.prevImage = prevImage
+
+function nextImage() {
+    if (currentImageIndex < cachedImages.length - 1) {
+        currentImageIndex++;
+        updateImage();
+    }
+}
+window.nextImage = nextImage
+
+function updateImage() {
+    const image = cachedImages[currentImageIndex];
+    if (!image) return;
+
+    const fileDataUrl = image.file && image.file.data && typeof image.file.data === "string"
+        ? `data:${image.file.contentType};base64,${image.file.data}`
+        : null;
+
+    if (fileDataUrl) {
+        document.getElementById("popupImage").src = fileDataUrl;
+        updateDownloadLink();
+    }
+
+    
+    document.querySelector(".prev-btn").style.display = currentImageIndex === 0 ? "none" : "block";
+    document.querySelector(".next-btn").style.display = currentImageIndex === cachedImages.length - 1 ? "none" : "block";
+}
+
+
+function updateDownloadLink() {
+    const downloadBtn = document.getElementById("downloadBtn");
+    downloadBtn.href = document.getElementById("popupImage").src;
+    downloadBtn.setAttribute("download", `image_${currentImageIndex + 1}.jpg`);
 }
 
 
@@ -813,6 +805,7 @@ document.addEventListener("click", function (event) {
         closeImage();
     }
 });
+
 
 getFriends();
 
