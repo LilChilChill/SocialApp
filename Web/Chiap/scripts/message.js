@@ -208,7 +208,7 @@ function openChat(friendId, name, avatar, page = 1) {
     document.getElementById('avatar').src = friendAvatar;
     currentFriendId = friendId;
     currentPage = 1;
-
+    prefetchImages();
     const deleteBtn = document.getElementById('deleteChatButton')
     const friendInfo = document.getElementById('headerSide');
     friendInfo.innerHTML = `
