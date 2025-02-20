@@ -117,6 +117,9 @@ const deleteChatHistory = async (req, res) => {
 const getChatImages = async (req, res) => {
     const userId = req.user._id;
     const friendId = req.params.friendId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
     try {
         const images = await Message.find({
@@ -124,24 +127,30 @@ const getChatImages = async (req, res) => {
                 { sender: userId, receiver: friendId },
                 { sender: friendId, receiver: userId }
             ],
-            file: { $ne: null } 
+            file: { $ne: null }
         })
         .sort('-timestamp')
+        .skip(skip)
+        .limit(limit)
         .select('file date');
 
         const formattedImages = images.map(message => ({
             file: {
-                data: message.file.data.toString('base64'), 
+                data: message.file.data.toString('base64'),
                 contentType: message.file.contentType
             },
             date: message.date
         }));
-        
-        res.status(200).json(formattedImages);
+
+        res.status(200).json({
+            images: formattedImages,
+            hasMore: formattedImages.length === limit
+        });
     } catch (error) {
         res.status(500).json({ message: 'Có lỗi xảy ra khi lấy ảnh', error: error.message });
     }
 };
+
 
 const getSingleChat = async (req, res) => {
     const chatId = req.sessage._id

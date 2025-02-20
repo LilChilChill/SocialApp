@@ -4,6 +4,7 @@ const {
     getMessages, 
     deleteChatHistory, 
     getChatImages,
+    getImageById,
     getSingleChat } = require('../Controllers/messageController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const multer = require('multer');

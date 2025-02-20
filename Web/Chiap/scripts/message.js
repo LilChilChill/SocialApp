@@ -1,5 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL
-console.log("API URL:", API_URL);
+// console.log("API URL:", API_URL);
 
 const socket = io(`${API_URL}`);
 let currentFriendId = null;
@@ -11,6 +11,7 @@ let cachedImages = [];
 let imagesFetched = false;
 let tempImages = [];
 let currentImageIndex = 0;
+let hasMoreImages = true;
 
 let localStream;
 let peerConnection;
@@ -133,17 +134,17 @@ socket.on('signal', ({ type, data }) => {
 socket.on('connect', () => {
     const userId = localStorage.getItem('userId');
 
-    console.log('Đã kết nối với server:', socket.id);
+    // console.log('Đã kết nối với server:', socket.id);
     if (userId) {
         socket.emit('register', userId);
-        console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+        // console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
     } else {
         console.error('Không tìm thấy userId trong localStorage.');
     }
 });
 
 socket.on('receiveMessage', (message) => {
-    console.log('Nhận tin nhắn:', message);
+    // console.log('Nhận tin nhắn:', message);
 });
 
 socket.on('disconnect', () => {
@@ -200,6 +201,13 @@ function getFriends() {
     });
 }
 
+// function loadChatImages() {
+//     prefetchImages(currentPage, false); 
+// }
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     loadChatImages();
+// });
 
 function openChat(friendId, name, avatar, page = 1) {
     friendName = name;
@@ -208,7 +216,8 @@ function openChat(friendId, name, avatar, page = 1) {
     document.getElementById('avatar').src = friendAvatar;
     currentFriendId = friendId;
     currentPage = 1;
-    prefetchImages();
+    // prefetchImages();
+    prefetchImages(currentPage, false); 
     const deleteBtn = document.getElementById('deleteChatButton')
     const friendInfo = document.getElementById('headerSide');
     friendInfo.innerHTML = `
@@ -486,7 +495,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                 ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
             </div>`; 
         }
-        console.log('image', fileDataUrl);
+        // console.log('image', fileDataUrl);
         document.getElementById('chatArea').appendChild(messageDiv);
         chatArea.scrollTop = chatArea.scrollHeight; 
         
@@ -531,8 +540,10 @@ socket.on('receiveMessage', (messageData) => {
     chatArea.scrollTop = chatArea.scrollHeight;
 });
 
-function prefetchImages() {
-    fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+function prefetchImages(page = 1, append = false) {
+    if (!hasMoreImages) return;
+
+    fetch(`${API_URL}/api/messages/images/${currentFriendId}?page=${page}&limit=10`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -544,32 +555,35 @@ function prefetchImages() {
         }
         return response.json();
     })
-    .then(images => {
-        cachedImages = images;
+    .then(data => {
+        if (append) {
+            cachedImages = [...cachedImages, ...data.images]; // Thêm ảnh mới vào danh sách cũ
+        } else {
+            cachedImages = data.images; // Chỉ thay thế khi không append
+        }
+
+        hasMoreImages = data.hasMore;
         imagesFetched = true;
-        console.log('Ảnh đã fetch trước:', cachedImages);
+        console.log(`Ảnh trang ${page}:`, cachedImages);
     })
     .catch(error => {
-        console.error('Lỗi khi tải trước ảnh:', error);
+        console.error('Lỗi khi tải ảnh:', error);
     });
 }
 
 function toggleImages() {
     const fileImageDisplay = document.getElementById('fileImageDisplay');
 
-    // Nếu đang hiển thị, ẩn đi khi nhấn lại
     if (fileImageDisplay.style.display === 'block') {
         fileImageDisplay.style.display = 'none';
         return;
     }
 
-    // Nếu chưa fetch ảnh trước đó, fetch trước rồi hiển thị
-    if (!imagesFetched) {
-        prefetchImages();
-        return;
-    }
+    // if (!imagesFetched) {
+    //     prefetchImages();
+    //     return;
+    // }
 
-    // Hiển thị ảnh từ tempImages + cachedImages
     fileImageDisplay.innerHTML = '';
 
     if (tempImages.length === 0 && cachedImages.length === 0) { 
@@ -578,7 +592,6 @@ function toggleImages() {
         const imageContainer = document.createElement('div');
         imageContainer.classList.add('image-container');
 
-        // Hiển thị ảnh mới gửi trước
         tempImages.forEach(tempFile => {
             const imgElement = document.createElement('img');
             imgElement.src = URL.createObjectURL(tempFile);
@@ -586,7 +599,6 @@ function toggleImages() {
             imageContainer.appendChild(imgElement);
         });
 
-        // Hiển thị ảnh từ database
         cachedImages.forEach(image => {
             const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
                 ? `data:${image.file.contentType};base64,${image.file.data}`
@@ -606,6 +618,7 @@ function toggleImages() {
     fileImageDisplay.style.display = 'block';
 }
 window.toggleImages = toggleImages;
+
 
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
@@ -756,6 +769,9 @@ function prevImage() {
     if (currentImageIndex > 0) {
         currentImageIndex--;
         updateImage();
+    } else if (hasMoreImages) {
+        currentPage--;
+        prefetchImages(currentPage, true);
     }
 }
 window.prevImage = prevImage
@@ -764,6 +780,9 @@ function nextImage() {
     if (currentImageIndex < cachedImages.length - 1) {
         currentImageIndex++;
         updateImage();
+    } else if (hasMoreImages) {
+        currentPage++;
+        prefetchImages(currentPage, true);
     }
 }
 window.nextImage = nextImage
