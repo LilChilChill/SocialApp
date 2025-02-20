@@ -1,4 +1,5 @@
 const API_URL = import.meta.env.VITER_API_URL
+document.title = "Chiap"
 
 const friendRequestList = document.getElementById('friendRequestList');
 const notification = document.getElementById('notification');
