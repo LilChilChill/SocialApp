@@ -481,6 +481,24 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 
         // toggleImages(); // Cập nhật giao diện ngay lập tức
 
+        if (chatArea.innerHTML.trim() === '<p>Không có tin nhắn nào.</p>') {
+            if (content == ''){
+                messageDiv.innerHTML = `
+                <div class="msgContent">
+                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
+                </div>`; 
+            } else {
+                messageDiv.innerHTML = `
+                <div class="msgContent">
+                    <div class="messageContent">
+                        <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
+                </div>`; 
+            }
+            openChat(currentFriendId, friendName, friendAvatar);
+        } 
+
         if (content == ''){
             messageDiv.innerHTML = `
             <div class="msgContent">
@@ -495,6 +513,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                 ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
             </div>`; 
         }
+        
         // console.log('image', fileDataUrl);
         document.getElementById('chatArea').appendChild(messageDiv);
         chatArea.scrollTop = chatArea.scrollHeight; 
@@ -634,6 +653,7 @@ document.getElementById('deleteChatButton').addEventListener('click', () => {
                 throw new Error('Lỗi khi xóa lịch sử chat');
             }
             document.getElementById('chatArea').innerHTML = '<p>Đã xóa lịch sử chat.</p>';
+            openChat(currentFriendId, friendName, friendAvatar);
         })
         .catch(error => {
             console.error('Lỗi khi xóa lịch sử chat:', error);
@@ -653,69 +673,69 @@ document.getElementById('chatArea').addEventListener('scroll', () => {
     }
 });
 
+let hasMoreMessages = true;
+
 function loadOlderMessages() {
+    if (!hasMoreMessages || isLoadingMessages) return;
+    
     isLoadingMessages = true;
+
     fetch(`${API_URL}/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Lỗi khi lấy tin nhắn cũ');
-            }
-            return response.json();
-        })
-        .then(messages => {
-            if (messages.length > 0) {
-                const chatArea = document.getElementById('chatArea');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Lỗi khi lấy tin nhắn cũ');
+        }
+        return response.json();
+    })
+    .then(messages => {
+        if (messages.length === 0) {
+            hasMoreMessages = false; 
+            return;
+        }
 
-                currentPage++;
+        const chatArea = document.getElementById('chatArea');
+        const fragment = document.createDocumentFragment(); 
 
-                let lastMessageDate = null;
+        messages.forEach(message => {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', message.sender === currentFriendId ? 'received' : 'sent');
 
-                messages.forEach(message => {
-                    // const messageDate = new Date(message.date).toLocaleDateString();
+            const fileDataUrl = message.file && message.file.data && typeof message.file.data === 'string'
+                ? `data:${message.file.contentType};base64,${message.file.data}`
+                : null;
 
-                    // if (lastMessageDate !== messageDate) {
-                    //     const dateSeparator = document.createElement('div');
-                    //     dateSeparator.classList.add('date-separator');
-                    //     dateSeparator.textContent = messageDate;
-                    //     chatArea.insertBefore(dateSeparator, chatArea.firstChild);
-                    //     lastMessageDate = messageDate;
-                    // }
+            messageDiv.innerHTML = `
+                ${message.sender === currentFriendId ? 
+                    `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
+                    `<img src="" alt="Bạn" style="display: none;">`}
+                <div class="msgContent">
+                    <div class="messageContent">
+                        <p>${message.content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
+                </div>
+            `;
 
-                    const messageDiv = document.createElement('div');
-                    messageDiv.classList.add('message', message.sender === currentFriendId ? 'received' : 'sent');
-
-                    const fileDataUrl = message.file && message.file.data && typeof message.file.data === 'string'
-                        ? `data:${message.file.contentType};base64,${message.file.data}`
-                        : null;
-
-                    messageDiv.innerHTML = `
-                        ${message.sender === currentFriendId ? 
-                            `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
-                            `<img src="" alt="Bạn" style="display: none;">`}
-                        <div class="msgContent">
-                            <div class="messageContent">
-                                <p>${message.content.replace(/\n/g, '<br>')}</p>
-                            </div>
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
-                        </div>
-                    `;
-
-                    chatArea.insertBefore(messageDiv, chatArea.firstChild);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi khi lấy tin nhắn cũ:', error);
-        })
-        .finally(() => {
-            isLoadingMessages = false;
+            fragment.appendChild(messageDiv);
         });
+
+        chatArea.insertBefore(fragment, chatArea.firstChild);
+
+        currentPage++; 
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy tin nhắn cũ:', error);
+    })
+    .finally(() => {
+        isLoadingMessages = false;
+    });
 }
+
 
 document.getElementById('chatInput').addEventListener('keydown', (event) => {
     
@@ -769,9 +789,6 @@ function prevImage() {
     if (currentImageIndex > 0) {
         currentImageIndex--;
         updateImage();
-    } else if (hasMoreImages) {
-        currentPage--;
-        prefetchImages(currentPage, true);
     }
 }
 window.prevImage = prevImage
