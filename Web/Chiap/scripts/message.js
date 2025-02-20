@@ -560,9 +560,9 @@ socket.on('receiveMessage', (messageData) => {
 });
 
 function prefetchImages(page = 1, append = false) {
-    if (!hasMoreImages) return;
+    if (!hasMoreImages) return Promise.resolve(); // Trả về Promise rỗng nếu không còn ảnh
 
-    fetch(`${API_URL}/api/messages/images/${currentFriendId}?page=${page}&limit=10`, {
+    return fetch(`${API_URL}/api/messages/images/${currentFriendId}?page=${page}&limit=10`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -789,19 +789,44 @@ function prevImage() {
     if (currentImageIndex > 0) {
         currentImageIndex--;
         updateImage();
-    }
+    } 
+    // else if (hasMoreImages) {
+    //     currentPage--;
+    //     prefetchImages(currentPage, true);
+    // }
 }
 window.prevImage = prevImage
 
+let isLoading = false;
 function nextImage() {
+    if (isLoading) return;
+
     if (currentImageIndex < cachedImages.length - 1) {
         currentImageIndex++;
         updateImage();
     } else if (hasMoreImages) {
+        isLoading = true;
         currentPage++;
-        prefetchImages(currentPage, true);
+
+        const prefetchResult = prefetchImages(currentPage, true);
+
+        if (prefetchResult instanceof Promise) {
+            prefetchResult
+                .then(() => {
+                    isLoading = false;
+                    updateImage();
+                })
+                .catch(() => {
+                    isLoading = false;
+                });
+        } else {
+            console.error('prefetchImages không trả về Promise');
+            isLoading = false;
+        }
     }
 }
+
+
 window.nextImage = nextImage
 
 function updateImage() {
