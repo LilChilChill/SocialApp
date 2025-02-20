@@ -11,8 +11,10 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    window.location.assign("../index.html");
+    window.location.href = window.location.origin; 
 }
+
+window.logout = logout
 
 function listDisplay() {
     document.getElementById('list').style.display = document.getElementById('list').style.display === 'none'? 'flex' : 'none';

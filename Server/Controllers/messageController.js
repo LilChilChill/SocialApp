@@ -91,8 +91,6 @@ const getMessages = async (req, res) => {
 };
 
 
-
-
 const deleteChatHistory = async (req, res) => {
     try {
         const { friendId } = req.params;
@@ -116,6 +114,34 @@ const deleteChatHistory = async (req, res) => {
     }
 };
 
+const getChatImages = async (req, res) => {
+    const userId = req.user._id;
+    const friendId = req.params.friendId;
+
+    try {
+        const images = await Message.find({
+            $or: [
+                { sender: userId, receiver: friendId },
+                { sender: friendId, receiver: userId }
+            ],
+            file: { $ne: null } 
+        })
+        .sort('-timestamp')
+        .select('file date');
+
+        const formattedImages = images.map(message => ({
+            file: {
+                data: message.file.data.toString('base64'), 
+                contentType: message.file.contentType
+            },
+            date: message.date
+        }));
+        
+        res.status(200).json(formattedImages);
+    } catch (error) {
+        res.status(500).json({ message: 'Có lỗi xảy ra khi lấy ảnh', error: error.message });
+    }
+};
 
 const getSingleChat = async (req, res) => {
     const chatId = req.sessage._id
@@ -129,4 +155,4 @@ const getSingleChat = async (req, res) => {
     }
 }
 
-module.exports = { sendMessage, getMessages, deleteChatHistory, getSingleChat };
+module.exports = { sendMessage, getMessages, deleteChatHistory, getSingleChat, getChatImages };

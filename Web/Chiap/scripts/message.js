@@ -7,6 +7,9 @@ let friendAvatar = null;
 let friendName = null; 
 let currentPage = 1;
 let selectedFile = null; 
+let cachedImages = [];
+let imagesFetched = false;
+
 
 
 let localStream;
@@ -304,10 +307,14 @@ function openChat(friendId, name, avatar, page = 1) {
                             fileData.innerHTML = `
                                 <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
                                 <div style="display: none" id="fileDisplay">
-                                    <a href="#"><p>- File phương tiện</p></a>
+                                    <a href="#" onclick="toggleImages()"><p>- File phương tiện</p></a>
+                                    <div style="display: none" id="fileImageDisplay"></div>
                                     <a href="#"><p>- File</p></a>
                                 </div>
-                            `
+                            `;
+
+
+
 
                             deleteBtn.innerHTML = `
                                 <i class="fa-regular fa-trash-can"></i>
@@ -524,6 +531,144 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+// function fetchImages() {
+//     const fileImageDisplay = document.getElementById('fileImageDisplay');
+
+//     // Nếu fileImageDisplay đang hiển thị, ẩn nó đi khi nhấn lại
+//     if (fileImageDisplay.style.display === 'block') {
+//         fileImageDisplay.style.display = 'none';
+//         return;
+//     }
+
+//     fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': `Bearer ${localStorage.getItem('token')}`,
+//         },
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Lỗi khi lấy ảnh');
+//         }
+//         return response.json();
+//     })
+//     .then(images => { 
+//         console.log('Dữ liệu ảnh nhận được:', images);
+
+//         if (!images || images.length === 0) { 
+//             fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
+//             fileImageDisplay.style.display = 'block';
+//             return;
+//         }
+
+//         fileImageDisplay.innerHTML = ''; // Xóa nội dung cũ
+//         const imageContainer = document.createElement('div');
+//         imageContainer.classList.add('image-container');
+
+//         images.forEach(image => { 
+//             // Chuyển đổi dữ liệu ảnh thành base64 URL
+//             const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
+//                 ? `data:${image.file.contentType};base64,${image.file.data}`
+//                 : null;
+
+//             if (!fileDataUrl) {
+//                 console.warn('Dữ liệu ảnh bị lỗi:', image);
+//                 return;
+//             }
+
+//             const imgElement = document.createElement('img');
+//             imgElement.src = fileDataUrl;
+//             imgElement.classList.add('thumbnail');
+//             imgElement.onclick = () => openImage(imgElement.src);
+
+//             imageContainer.appendChild(imgElement);
+//         });
+
+//         fileImageDisplay.appendChild(imageContainer);
+//         fileImageDisplay.style.display = 'block'; // Hiển thị danh sách ảnh sau khi fetch
+//     })
+//     .catch(error => {
+//         console.error('Lỗi khi lấy ảnh:', error);
+//         alert('Không thể tải ảnh. Vui lòng thử lại sau.');
+//     });
+// }
+
+// function toggleImages() {
+//     const fileImageDisplay = document.getElementById('fileImageDisplay');
+//     fileImageDisplay.style.display = (fileImageDisplay.style.display === 'none') ? 'block' : 'none';
+// }
+
+// window.toggleImages = toggleImages
+// window.fetchImages = fetchImages;
+
+function prefetchImages() {
+    fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Lỗi khi lấy ảnh');
+        }
+        return response.json();
+    })
+    .then(images => {
+        cachedImages = images;
+        imagesFetched = true;
+        console.log('Ảnh đã fetch trước:', cachedImages);
+    })
+    .catch(error => {
+        console.error('Lỗi khi tải trước ảnh:', error);
+    });
+}
+
+function toggleImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
+
+    // Nếu đang hiển thị, ẩn đi khi nhấn lại
+    if (fileImageDisplay.style.display === 'block') {
+        fileImageDisplay.style.display = 'none';
+        return;
+    }
+
+    // Nếu chưa fetch ảnh trước đó, fetch trước rồi hiển thị
+    if (!imagesFetched) {
+        prefetchImages();
+        return;
+    }
+
+    // Nếu đã có ảnh, chỉ việc hiển thị
+    fileImageDisplay.innerHTML = '';
+    
+    if (cachedImages.length === 0) { 
+        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
+    } else {
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+
+        cachedImages.forEach(image => {
+            const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
+                ? `data:${image.file.contentType};base64,${image.file.data}`
+                : null;
+
+            if (!fileDataUrl) return;
+
+            const imgElement = document.createElement('img');
+            imgElement.src = fileDataUrl;
+            imgElement.onclick = () => openImage(imgElement.src);
+
+            imageContainer.appendChild(imgElement);
+        });
+
+        fileImageDisplay.appendChild(imageContainer);
+    }
+    
+    fileImageDisplay.style.display = 'block';
+}
+window.toggleImages = toggleImages;
+
 
 document.getElementById('deleteChatButton').addEventListener('click', () => {
     if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử chat không?')) {
@@ -544,6 +689,8 @@ document.getElementById('deleteChatButton').addEventListener('click', () => {
         });
     }
 });
+
+
 
 let isLoadingMessages = false; 
 
@@ -632,10 +779,12 @@ function imgFileToggle(){
     document.getElementById('imgFile').style.display = document.getElementById('imgFile').style.display === 'none'? 'flex' : 'none';
 }
 
+
 function sideMenu(){
     document.getElementById('sideMenu').style.display = document.getElementById('sideMenu').style.display === 'none'? 'flex' : 'none';
     document.getElementById('icon').style.left = document.getElementById('icon').style.left === '65%' ? '86%' : '65%';
 }
+window.sideMenu = sideMenu
 
 function emojiToggle(){
     document.getElementById('emoji').style.display = document.getElementById('emoji').style.display === 'none'? 'flex' : 'none';
@@ -643,6 +792,7 @@ function emojiToggle(){
 function fileToggle(){
     document.getElementById('fileDisplay').style.display = document.getElementById('fileDisplay').style.display === 'none'? 'flex' : 'none';
 }
+window.fileToggle = fileToggle
 
 function openImage(src) {
     document.getElementById("popupImage").src = src;
