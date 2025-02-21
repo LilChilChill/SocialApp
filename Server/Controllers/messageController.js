@@ -245,9 +245,6 @@ const getMessages = async (req, res) => {
 const getChatImages = async (req, res) => {
     const userId = req.user._id;
     const friendId = req.params.friendId;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
 
     try {
         const images = await Message.find({
@@ -258,14 +255,9 @@ const getChatImages = async (req, res) => {
             fileUrl: { $ne: null }
         })
         .sort('-timestamp')
-        .skip(skip)
-        .limit(limit)
         .select('fileUrl fileType date');
 
-        res.status(200).json({
-            images,
-            hasMore: images.length === limit
-        });
+        res.status(200).json({ images });
     } catch (error) {
         res.status(500).json({ message: 'Có lỗi xảy ra khi lấy ảnh', error: error.message });
     }
