@@ -200,15 +200,6 @@ function getFriends() {
     });
 }
 
-
-// function loadChatImages() {
-//     prefetchImages(currentPage, false); 
-// }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     loadChatImages();
-// });
-
 function openChat(friendId, name, avatar, page = 1) {
     friendName = name;
     friendAvatar = avatar;
@@ -286,6 +277,7 @@ function openChat(friendId, name, avatar, page = 1) {
         `;
 
         chatArea.scrollTop = chatArea.scrollHeight;
+        fetchAllImages()
     })
     .catch(error => {
         console.error('Lỗi khi lấy tin nhắn:', error);
@@ -393,6 +385,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     if (fileToSend && fileToSend.type.startsWith('image/')) {
         try {
             fileToSend = await compressImage(fileToSend);
+            var previewUrl = URL.createObjectURL(fileToSend);
         } catch (error) {
             console.error('Lỗi khi nén ảnh:', error);
             return;
@@ -430,7 +423,16 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         };
 
         // Gửi tin nhắn qua socket
-        socket.emit('sendMessage', messagePayload);
+        // socket.emit('sendMessage', messagePayload);
+        socket.emit('sendMessage', { ...messagePayload, fileUrl: data.messageData.fileUrl });
+
+        // Cập nhật lại ảnh từ server (tránh hiển thị URL tạm)
+        setTimeout(() => {
+            const imgElement = messageDiv.querySelector(".imgContent");
+            if (imgElement && data.messageData.fileUrl) {
+                imgElement.src = data.messageData.fileUrl;
+            }
+        }, 1000);
 
         selectedFile = null;
 
@@ -444,13 +446,13 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                     <div class="messageContent">
                         <p>${content.replace(/\n/g, '<br>')}</p>
                     </div>
-                    ${messagePayload.fileUrl ? `<img src="${messagePayload.fileUrl}" class="imgContent" onclick="openImage('${messagePayload.fileUrl}')"/>` : ''}
+                    ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
                 </div>
             `;
         } else if (messagePayload.fileUrl) {
             messageDiv.innerHTML = `
                 <div class="msgContent">
-                    <img src="${messagePayload.fileUrl}" class="imgContent" onclick="openImage('${messagePayload.fileUrl}')"/>
+                    <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
                 </div>
             `;
         }
@@ -497,128 +499,7 @@ socket.on('receiveMessage', (messageData) => {
 
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
-});
-
-function prefetchImages(page = 1, append = false) {
-    if (!hasMoreImages) return Promise.resolve();
-
-    return fetch(`${API_URL}/api/messages/images/${currentFriendId}?page=${page}&limit=10`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi lấy ảnh');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (append) {
-            cachedImages = [...cachedImages, ...data.images];
-        } else {
-            cachedImages = data.images;
-        }
-
-        hasMoreImages = data.hasMore;
-        imagesFetched = true;
-        console.log(`Ảnh trang ${page}:`, cachedImages);
-    })
-    .catch(error => {
-        console.error('Lỗi khi tải ảnh:', error);
-    });
-}
-
-function fetchAllImages() {
-    let page = 1; 
-    let allImages = []; 
-
-    function fetchNextPage() {
-        return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Lỗi khi lấy ảnh');
-            }
-            return response.json();
-        })
-        .then(data => {
-            allImages = [...allImages, ...data.images]; 
-
-            if (data.hasMore) {
-                page++; 
-                return fetchNextPage(); 
-            } else {
-                cachedImages = allImages; 
-                imagesFetched = true;
-                console.log('Tất cả ảnh đã tải:', cachedImages);
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi khi tải ảnh:', error);
-        });
-    }
-
-    return fetchNextPage();
-}
-
-function toggleImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-
-    if (fileImageDisplay.style.display === 'block') {
-        fileImageDisplay.style.display = 'none';
-        return;
-    }
-
-    fileImageDisplay.style.display = 'block';
-    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
-
-    if (imagesFetched) {
-        renderImages();
-        return;
-    }
-
-    fetchAllImages()
-        .then(() => {
-            renderImages();
-        })
-        .catch(error => {
-            console.error('Lỗi khi tải ảnh:', error);
-            fileImageDisplay.innerHTML = '<p>Lỗi khi tải ảnh.</p>';
-        });
-}
-
-function renderImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-    fileImageDisplay.innerHTML = '';
-
-    if (cachedImages.length === 0) {
-        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
-    } else {
-        const imageContainer = document.createElement('div');
-        imageContainer.classList.add('image-container');
-
-        cachedImages.forEach(image => {
-            const fileUrl = image.fileUrl;
-
-            if (!fileUrl) return;
-
-            const imgElement = document.createElement('img');
-            imgElement.src = fileUrl;
-            imgElement.onclick = () => openImage(imgElement.src);
-            imageContainer.appendChild(imgElement);
-        });
-
-        fileImageDisplay.appendChild(imageContainer);
-    }
-
-    imagesFetched = true;
-}
+})
 
 window.toggleImages = toggleImages;
 
@@ -771,85 +652,119 @@ function fileToggle(){
 }
 window.fileToggle = fileToggle
 
+function fetchAllImages() {
+    return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Lỗi khi lấy ảnh');
+        }
+        return response.json();
+    })
+    .then(data => {
+        cachedImages = data.images || []; 
+        imagesFetched = true;
+        renderImages();
+    })
+    .catch(error => {
+        console.error('Lỗi khi tải ảnh:', error);
+        document.getElementById('fileImageDisplay').innerHTML = '<p>Lỗi khi tải ảnh.</p>';
+    });
+}
+
+function toggleImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
+    
+    if (fileImageDisplay.style.display === 'block') {
+        fileImageDisplay.style.display = 'none';
+        return;
+    }
+    
+    fileImageDisplay.style.display = 'block';
+    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
+    
+    // if (!imagesFetched) {
+    //     fetchAllImages();
+    // } else {
+    //     renderImages();
+    // }
+    renderImages()
+}
+
+function renderImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
+    fileImageDisplay.innerHTML = '';
+    
+    if (cachedImages.length === 0) {
+        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
+        return;
+    }
+    
+    const imageContainer = document.createElement('div');
+    imageContainer.classList.add('image-container');
+    
+    cachedImages.forEach(image => {
+        if (!image.fileUrl) return;
+        
+        const imgElement = document.createElement('img');
+        imgElement.src = image.fileUrl;
+        imgElement.onclick = () => openImage(image.fileUrl);
+        imageContainer.appendChild(imgElement);
+    });
+    
+    fileImageDisplay.appendChild(imageContainer);
+}
+
 function openImage(src) {
-    document.getElementById("popupImage").src = src;
-    document.getElementById("imagePopup").style.display = "block";
-
+    document.getElementById('popupImage').src = src;
+    document.getElementById('imagePopup').style.display = 'block';
     currentImageIndex = cachedImages.findIndex(image => image.fileUrl === src);
-
     updateImage();
 }
 
 function closeImage() {
-    document.getElementById("imagePopup").style.display = "none";
+    document.getElementById('imagePopup').style.display = 'none';
 }
-window.closeImage = closeImage
 
 function prevImage() {
     if (currentImageIndex > 0) {
         currentImageIndex--;
         updateImage();
-    } 
-    // else if (hasMoreImages) {
-    //     currentPage--;
-    //     prefetchImages(currentPage, true);
-    // }
-}
-window.prevImage = prevImage
-
-let isLoading = false;
-function nextImage() {
-    if (isLoading) return;
-
-    if (currentImageIndex < cachedImages.length - 1) {
-        currentImageIndex++;
-        updateImage();
-    } else if (hasMoreImages) {
-        isLoading = true;
-        currentPage++;
-
-        const prefetchResult = prefetchImages(currentPage, true);
-
-        if (prefetchResult instanceof Promise) {
-            prefetchResult
-                .then(() => {
-                    isLoading = false;
-                    updateImage();
-                })
-                .catch(() => {
-                    isLoading = false;
-                });
-        } else {
-            console.error('prefetchImages không trả về Promise');
-            isLoading = false;
-        }
     }
 }
 
-
-window.nextImage = nextImage
+function nextImage() {
+    if (currentImageIndex < cachedImages.length - 1) {
+        currentImageIndex++;
+        updateImage();
+    }
+}
 
 function updateImage() {
     const image = cachedImages[currentImageIndex];
     if (!image) return;
-
-    const fileUrl = image.fileUrl;
-
-    if (fileUrl) {
-        document.getElementById("popupImage").src = fileUrl;
-        updateDownloadLink();
-    }
-
-    document.querySelector(".prev-btn").style.display = currentImageIndex === 0 ? "none" : "block";
-    document.querySelector(".next-btn").style.display = currentImageIndex === cachedImages.length - 1 ? "none" : "block";
+    
+    document.getElementById('popupImage').src = image.fileUrl;
+    updateDownloadLink();
+    
+    document.querySelector('.prev-btn').style.display = currentImageIndex === 0 ? 'none' : 'block';
+    document.querySelector('.next-btn').style.display = currentImageIndex === cachedImages.length - 1 ? 'none' : 'block';
 }
-
 
 function updateDownloadLink() {
-    const downloadBtn = document.getElementById("downloadBtn");
-    downloadBtn.href = document.getElementById("popupImage").src;
-    downloadBtn.setAttribute("download", `image_${currentImageIndex + 1}.jpg`);
+    const downloadBtn = document.getElementById('downloadBtn');
+    downloadBtn.href = document.getElementById('popupImage').src;
+    downloadBtn.setAttribute('download', `image_${currentImageIndex + 1}.jpg`);
 }
+
+window.toggleImages = toggleImages;
+window.closeImage = closeImage;
+window.prevImage = prevImage;
+window.nextImage = nextImage;
 
 
 document.addEventListener("click", function (event) {
