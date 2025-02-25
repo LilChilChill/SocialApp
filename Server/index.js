@@ -86,22 +86,20 @@ const io = new Server(server, {
     }
 });
 
-// Kết nối MongoDB
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI;
 
 if (uri) {
     mongoose.connect(uri)
-        .then(() => console.log('✅ MongoDB connected successfully'))
-        .catch((error) => console.error("❌ MongoDB connection error:", error.message));
+        .then(() => console.log('MongoDB connected successfully'))
+        .catch((error) => console.error("MongoDB connection error:", error.message));
 } else {
-    console.warn("⚠️ Warning: ATLAS_URI is not set. Database connection skipped.");
+    console.warn("Warning: ATLAS_URI is not set. Database connection skipped.");
 }
 
-// Khởi tạo socket.io
 app.use("/api/messages", messageRoute(io));
 socketHandler(io);
 
 server.listen(port, () => {
-    console.log(`🚀 Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
