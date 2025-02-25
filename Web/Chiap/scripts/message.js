@@ -131,24 +131,26 @@ socket.on('signal', ({ type, data }) => {
     handleSignal(type, data);
 });
 
-socket.on('connect', () => {
-    const userId = localStorage.getItem('userId');
-
-    // console.log('Đã kết nối với server:', socket.id);
-    if (userId) {
-        socket.emit('register', userId);
-        // console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
-    } else {
-        console.error('Không tìm thấy userId trong localStorage.');
-    }
-});
+function connectSocket() {
+    socket.on('connect', () => {
+        const userId = localStorage.getItem('userId');
+        console.log('Đã kết nối với server:', socket.id);
+        if (userId) {
+            socket.emit('register', userId);
+            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+        } else {
+            console.error('Không tìm thấy userId trong localStorage.');
+        }
+    });
+}
+window.connectSocket = connectSocket;
 
 socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
 });
 
 socket.on('disconnect', () => {
-    console.log('Mất kết nối tới server.');
+    console.log(Error);
 });
 
 //----------------------------------------------------- PRIVATE CHAT -------------------------------------------------------------\\
@@ -278,6 +280,7 @@ function openChat(friendId, name, avatar, page = 1) {
 
         chatArea.scrollTop = chatArea.scrollHeight;
         fetchAllImages()
+        connectSocket()
     })
     .catch(error => {
         console.error('Lỗi khi lấy tin nhắn:', error);
