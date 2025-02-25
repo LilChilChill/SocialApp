@@ -723,7 +723,9 @@ function openImage(src) {
     document.getElementById('popupImage').src = src;
     document.getElementById('imagePopup').style.display = 'block';
     currentImageIndex = cachedImages.findIndex(image => image.fileUrl === src);
+
     updateImage();
+
 }
 
 function closeImage() {
@@ -747,9 +749,13 @@ function nextImage() {
 function updateImage() {
     const image = cachedImages[currentImageIndex];
     if (!image) return;
+
+    const fileUrl = image.fileUrl
     
-    document.getElementById('popupImage').src = image.fileUrl;
-    updateDownloadLink();
+    if(fileUrl){
+        document.getElementById('popupImage').src = fileUrl
+        updateDownloadLink();
+    }
     
     document.querySelector('.prev-btn').style.display = currentImageIndex === 0 ? 'none' : 'block';
     document.querySelector('.next-btn').style.display = currentImageIndex === cachedImages.length - 1 ? 'none' : 'block';
@@ -757,9 +763,18 @@ function updateImage() {
 
 function updateDownloadLink() {
     const downloadBtn = document.getElementById('downloadBtn');
-    downloadBtn.href = document.getElementById('popupImage').src;
-    downloadBtn.setAttribute('download', `image_${currentImageIndex + 1}.jpg`);
+    const imageUrl = document.getElementById('popupImage').src;
+
+    fetch(imageUrl)
+        .then(response => response.blob())  
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            downloadBtn.href = blobUrl;
+            downloadBtn.setAttribute('download', `image_${currentImageIndex + 1}.jpg`);
+        })
+        .catch(error => console.error("Lỗi khi tải ảnh:", error));
 }
+
 
 window.toggleImages = toggleImages;
 window.closeImage = closeImage;
