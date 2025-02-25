@@ -143,7 +143,7 @@ const displayPosts = (posts) => {
         // Hiển thị tệp đính kèm (ảnh, video, tài liệu)
         let filesHtml = '';
         if (post.files.length > 0) {
-            filesHtml = post.files.map(file => {
+            filesHtml = `<div class="post-images-container">` + post.files.map(file => {
                 if (file.fileType === 'image') {
                     return `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
                 } else if (file.fileType === 'video') {
@@ -151,8 +151,9 @@ const displayPosts = (posts) => {
                 } else {
                     return `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`;
                 }
-            }).join('');
+            }).join('') + `</div>`;
         }
+        
         const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
         postElement.innerHTML = `
             <div class="post-header">

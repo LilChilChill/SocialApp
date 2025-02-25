@@ -57,16 +57,17 @@ body, ul, li, a{
   /* Sidebar */
   .sidebar {
     display: flex;
-    position: fixed;
     flex-direction: column;
     justify-content: space-between;
-    height: 55%;
+    height: 800px;
     max-width: 400px;
     min-width: 200px;
     background-color: #fff;
     border-radius: 20px;
     border: 20px;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    left: 10%;
   }
   
   .sidebar ul li {
@@ -98,7 +99,7 @@ body, ul, li, a{
   }
   
   .post-form {
-    width: 50%;
+    width: 65%;
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
@@ -128,21 +129,21 @@ body, ul, li, a{
     background-color: #0056b3;
   }
   
-  .posts {
+  /* .posts {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
+  } */
   
   .posts {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 65%;
     height: auto;
-    background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* background-color: #fff; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   }
   
   .post img {
@@ -320,20 +321,31 @@ body, ul, li, a{
   border: 1px solid #ddd;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5px;
+  border-radius: 5%;
   background: #fff;
 }
 
 .post-files {
   margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.post-images-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Tự động điều chỉnh số cột */
+  gap: 10px; /* Khoảng cách giữa các ảnh */
+  max-width: 100%;
 }
 
 .post-image {
   width: 100%;
-  max-width: 500px;
+  max-width: 300px;
   height: auto;
   border-radius: 5px;
+  object-fit: cover; /* Đảm bảo ảnh đẹp hơn */
+  cursor: pointer;
 }
+
 
 .post-video {
   width: 100%;
