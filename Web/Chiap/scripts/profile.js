@@ -8,15 +8,6 @@ const updateForm = document.getElementById('updateForm');
 const saveButton = document.getElementById('saveButton');
 let currentUser = {};
 
-function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    window.location.href = window.location.origin; 
-}
-
-window.logout = logout;
-
 function listDisplay() {
     document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
 }
@@ -118,19 +109,17 @@ saveButton.addEventListener('click', async () => {
 
 getUserInfo();
 
-// FEED function
 const postsContainer = document.getElementById('posts');
 const postButton = document.getElementById('postButton');
 const postContent = document.getElementById('postContent');
-const postImage = document.getElementById('postImage');
+const postFiles = document.getElementById('postImage'); // Đổi tên cho phù hợp
 
 const API_BASE_URL = `${API_URL}/api/feeds/posts`;
 
+// Tải bài viết từ API
 const loadPosts = async () => {
     try {
-        const res = await fetch(API_BASE_URL, {
-            method: 'GET',
-        });
+        const res = await fetch(API_BASE_URL, { method: 'GET' });
 
         if (res.ok) {
             const posts = await res.json();
@@ -143,52 +132,71 @@ const loadPosts = async () => {
     }
 };
 
+// Hiển thị bài viết với hình ảnh, video, tài liệu
 const displayPosts = (posts) => {
+    const authorName = localStorage.getItem('username');
     postsContainer.innerHTML = '';
     posts.forEach((post) => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
-        const imageUrl = post.image ? post.image : '';
 
+        // Hiển thị tệp đính kèm (ảnh, video, tài liệu)
+        let filesHtml = '';
+        if (post.files.length > 0) {
+            filesHtml = post.files.map(file => {
+                if (file.fileType === 'image') {
+                    return `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                } else if (file.fileType === 'video') {
+                    return `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`;
+                } else {
+                    return `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`;
+                }
+            }).join('');
+        }
+        const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
         postElement.innerHTML = `
-            <p><strong>${post.author}</strong></p>
-            <p>${post.content}</p>
-            ${imageUrl ? `<img src="${imageUrl}" alt="Post Image">` : ''}
-            <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
+            <div class="post-header">
+                <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                <div class="post-info">
+                    <h4>${authorName}</h4>
+                    <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
+                </div>
+            </div>
+            <p>${post.title}</p>
+            <div class="post-files">${filesHtml}</div>
         `;
 
         postsContainer.appendChild(postElement);
     });
 };
 
+// Gửi bài viết với nhiều tệp đính kèm
 postButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
-    const content = postContent.value.trim();
-    const image = postImage.files[0];
+    const title = postContent.value.trim();
+    const files = postFiles.files;
 
-    if (!content && !image) {
-        alert('Vui lòng nhập nội dung hoặc chọn hình ảnh.');
+    if (!title && files.length === 0) {
+        alert('Vui lòng nhập nội dung hoặc chọn tệp.');
         return;
     }
 
     const formData = new FormData();
-    formData.append('content', content);
-    if (image) {
-        formData.append('image', image);
+    formData.append('title', title);
+    for (let file of files) {
+        formData.append('files', file);
     }
 
     try {
         const res = await fetch(API_BASE_URL, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
+            headers: { 'Authorization': `Bearer ${token}` },
             body: formData,
         });
 
         if (res.ok) {
             postContent.value = '';
-            postImage.value = '';
+            postFiles.value = '';
             alert('Đăng bài thành công!');
             loadPosts();
         } else {
@@ -200,4 +208,5 @@ postButton.addEventListener('click', async () => {
     }
 });
 
+// Tải bài viết khi trang load
 document.addEventListener('DOMContentLoaded', loadPosts);
