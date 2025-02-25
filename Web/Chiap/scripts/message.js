@@ -443,6 +443,27 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'sent');
 
+        if(chatArea.innerHTML.trim() === '<p>Không có tin nhắn nào.</p>'){
+            if (content) {
+            messageDiv.innerHTML = `
+                <div class="msgContent">
+                    <div class="messageContent">
+                        <p>${content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
+                </div>
+            `;
+            } else if (messagePayload.fileUrl) {
+                messageDiv.innerHTML = `
+                    <div class="msgContent">
+                        <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
+                    </div>
+                `;
+            }
+            openChat(currentFriendId, friendName, friendAvatar);
+            
+        } 
+
         if (content) {
             messageDiv.innerHTML = `
                 <div class="msgContent">
@@ -459,6 +480,9 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                 </div>
             `;
         }
+        
+
+        
 
         document.getElementById('chatArea').appendChild(messageDiv);
         chatArea.scrollTop = chatArea.scrollHeight;
