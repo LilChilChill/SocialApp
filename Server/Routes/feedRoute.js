@@ -1,15 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const {
-    createPost,
-    getPosts,
-    addComment,
-    likePost,
-} = require('../Controllers/feedController');
+const multer = require('multer');
+const { createPost, deletePost } = require('../controllers/feedController');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
-router.post('/posts', createPost);
-router.get('/posts', getPosts);
-router.post('/posts/:postId/comments', addComment);
-router.post('/posts/:postId/like', likePost);
+const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post('/posts', authMiddleware, upload.array('files', 5), createPost);
+router.delete('/posts/:postId', authMiddleware, deletePost);
 
 module.exports = router;
