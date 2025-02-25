@@ -1,4 +1,4 @@
-const Post = require('../models/feedModel');
+const Post = require('../Models/feedModel');
 const { uploadFileToGCS, deleteFileFromGCS } = require('../services/gcs');
 
 const createPost = async (req, res) => {
