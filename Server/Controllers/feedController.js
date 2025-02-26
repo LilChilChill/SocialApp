@@ -36,9 +36,15 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const { page = 1, limit = 10 } = req.query; // Mặc định trang 1, 10 bài/trang
-        const posts = await Post.find()
-            .populate('author', 'username avatar')
+        const { page = 1, limit = 10, userId } = req.query;
+
+        let filter = {};
+        if (userId) {
+            filter.author = userId;
+        }
+
+        const posts = await Post.find(filter)
+            .populate('author', 'name avatar')
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));
@@ -49,6 +55,7 @@ const getPosts = async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ.', error: error.message });
     }
 };
+
 
 
 const deletePost = async (req, res) => {
