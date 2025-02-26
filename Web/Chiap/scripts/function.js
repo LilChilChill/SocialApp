@@ -106,6 +106,9 @@ const addFriend = async (receiverId) => {
             const errorMessage = await response.json();
             error.innerHTML = `Lỗi: ${errorMessage.message}`;
             error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 2000);
         }
     } catch (error) {
         console.error(error);
