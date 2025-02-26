@@ -1,8 +1,7 @@
-// feedModel.js
 const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     title: { type: String, required: true },
     files: [
         {
@@ -11,7 +10,7 @@ const postSchema = new mongoose.Schema({
                 enum: ['image', 'video', 'document'],
                 required: true
             },
-            data: Buffer, 
+            data: { type: String, required: true },
             contentType: String
         }
     ],
@@ -26,7 +25,7 @@ const postSchema = new mongoose.Schema({
     shares: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     status: {
         type: String,
-        enum: ['public', 'private', 'friends'], 
+        enum: ['public', 'private', 'friends'],
         default: 'public'
     },
     createdAt: { type: Date, default: Date.now },

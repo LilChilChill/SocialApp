@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- <title>Home</title> -->
   <link rel="stylesheet" href="../styles/profile.css">
   <link rel="stylesheet" href="../styles/addFriend.css">
 </head>
@@ -28,7 +27,6 @@
   <div class="container" id="userInfoContainer">
       <div id="userInfo" class="user-info"></div>
       <button class="button" id="updateButton">Chỉnh sửa</button>
-      
   </div>
 
   <div class="update-form" id="updateForm">
@@ -48,33 +46,22 @@
     <div class="main-container">
         <div class="sidebar">
           <ul>
-            <a href="../components/post.html" ><li>Feed</li></a>
+            <a href="#" ><li>Feed</li></a>
           </ul>
-          <ul>
-            <a href="#" onclick="logout()"><li>Đăng xuất</li></a>
-          </ul>
-          
         </div>
     
         <div class="feed" id="feed">
           <div class="feed-container">
-            <div class="post-form">
-              <h3>Đăng bài mới</h3>
-              <textarea id="postContent" placeholder="Bạn đang nghĩ gì?"></textarea>
-              <input type="file" id="postImage" accept="image/*">
-              <button id="postButton">Đăng bài</button>
-            </div>
-          
-            <div class="posts" id="posts">
-              
-            </div>
-          </div>          
-        </div>
-    
-        <div class="List" id="list" style="display: none;">
-            <div class="friendList">Danh sách bạn bè</div>
-        </div>
-        
+              <div class="post-form">
+                  <h3>Đăng bài mới</h3>
+                  <textarea id="postContent" placeholder="Bạn đang nghĩ gì?"></textarea>
+                  <input type="file" id="postImage" accept="image/*,video/*,.pdf,.doc,.docx" multiple>
+                  <button id="postButton">Đăng bài</button>
+              </div>
+      
+              <div class="posts" id="posts"></div>
+          </div>
+      </div>      
     </div>
     
     

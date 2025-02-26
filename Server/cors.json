@@ -1,0 +1,9 @@
+[
+    {
+      "maxAgeSeconds": 3600,
+      "method": ["GET", "HEAD", "OPTIONS"],
+      "origin": ["*"],
+      "responseHeader": ["Content-Type", "Authorization", "Content-Disposition"]
+    }
+  ]
+  

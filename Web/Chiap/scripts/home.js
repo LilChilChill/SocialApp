@@ -36,8 +36,8 @@ function getFriends() {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar && friend.avatar.data && typeof friend.avatar.data === 'string'
-                    ? `data:${friend.avatar.contentType};base64,${friend.avatar.data}`
+                const friendAvatar = friend.avatar
+                    ? friend.avatar
                     : '../img/default-avatar.png';
 
                 const friendItem = document.createElement('div');
@@ -62,3 +62,63 @@ function getFriends() {
 }
 
 getFriends()
+
+//Home
+const postsContainer = document.getElementById('posts');
+const postButton = document.getElementById('postButton');
+const postContent = document.getElementById('postContent');
+const postFiles = document.getElementById('postImage'); 
+
+const API_BASE_URL = `${API_URL}/api/feeds/posts`;
+
+const loadPosts = async () => {
+    const res = await fetch(API_BASE_URL);
+
+    if (res.ok) {
+        const posts = await res.json();
+        displayPosts(posts);
+    } else {
+        console.error('Không thể tải bài viết.');
+    }
+};
+
+document.addEventListener('DOMContentLoaded', loadPosts);
+
+
+const displayPosts = (posts) => {
+    postsContainer.innerHTML = '';
+    posts.forEach((post) => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post';
+
+        let filesHtml = '';
+        if (post.files.length > 0) {
+            filesHtml = `<div class="post-images-container">` + post.files.map(file => {
+                if (file.fileType === 'image') {
+                    return `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                } else if (file.fileType === 'video') {
+                    return `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`;
+                } else {
+                    return `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`;
+                }
+            }).join('') + `</div>`;
+        }
+        
+        const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
+        const authorName = post.author.name || 'Người dùng ẩn danh'
+        postElement.innerHTML = `
+            <div class="post-header">
+                <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                <div class="post-info">
+                    <h4>${authorName}</h4>
+                    <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
+                </div>
+            </div>
+            <p>${post.title}</p>
+            <div class="post-files">${filesHtml}</div>
+        `;
+
+        postsContainer.appendChild(postElement);
+    });
+};
+document.addEventListener('DOMContentLoaded', loadPosts);
