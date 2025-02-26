@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
 const { options } = require('..')
+const { uploadImageToGCS } = require('../services/gcsService');
 
 const register = async (req, res) => {
     try{
@@ -46,7 +47,7 @@ const login = async (req, res) => {
             return res.status(401).json({message: 'Invalid Password'})
         
         const token = createToken(user._id)
-        res.status(200).json({_id: user._id, name: user.name, email, token})
+        res.status(200).json({_id: user._id, name: user.name, email, avatar: user.avatar, token})
     } catch(error){
         console.log(error)
         res.status(500).json({message: 'Server error'})
@@ -59,16 +60,7 @@ const getUserProfile = async (req, res) => {
         if (!user)
             return res.status(404).json({message: 'User not found'})
 
-        const userProfile = user.toObject()
-
-        if (userProfile.avatar && userProfile.avatar.data) {
-            userProfile.avatar = {
-                data: userProfile.avatar.data.toString('base64'),
-                contentType: userProfile.avatar.contentType
-            }
-        }
-
-        res.status(200).json(userProfile)
+        res.status(200).json(user)
     } catch(error){
         console.log(error)
         res.status(500).json({message: 'Server error'})
@@ -76,42 +68,38 @@ const getUserProfile = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-    const userId = req.user._id
-    const {name, birthDate, gender} = req.body
-    const newAvatar = req.file
+    const userId = req.user._id;
+    const { name, birthDate, gender } = req.body;
+    // const newAvatar = req.file;
 
-    try{
-        const user = await userModel.findById(userId)
-        if (!user)
-            return res.status(404).json({message: 'User not found'})
-
-        const updateFields = {}
-        if (name && name.length >=3)
-            updateFields.name = name
-        if (birthDate)
-            updateFields.birthDate = birthDate
-        if (gender)
-            updateFields.gender = gender
-
-        if (newAvatar) {
-            updateFields.avatar = {
-                data: newAvatar.buffer,
-                contentType: newAvatar.mimetype,
-            }
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
         }
 
-        const updateUser = await userModel.findByIdAndUpdate(
+        const updateFields = {};
+        if (name && name.length >= 3) updateFields.name = name;
+        if (birthDate) updateFields.birthDate = birthDate;
+        if (gender) updateFields.gender = gender;
+
+        if (req.file) {
+            const imageUrl = await uploadImageToGCS(req.file, 'avatars');
+            updateFields.avatar = imageUrl;
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(
             userId,
             updateFields,
-            {new: true, runValidators: true}
-        ).select('-password')
+            { new: true, runValidators: true }
+        ).select('-password');
 
-        res.status(200).json(updateUser)
+        res.status(200).json(updatedUser);
     } catch (err) {
-        console.log(err)
-        res.status(500).json({message: 'Server error'})
+        console.log(err);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 const getUsers = async (req, res) => {
     try{
@@ -133,20 +121,7 @@ const searchUsers = async (req, res) => {
             ]
         }).select('-password -friends')
 
-        const formattedFriends = users.map(user => {
-            if (user.avatar && user.avatar.data) {
-                return {
-                    ...user.toObject(),
-                    avatar: {
-                        data: user.avatar.data.toString('base64'),
-                        contentType: user.avatar.contentType
-                    }
-                }
-            }
-            return user
-        })
-
-        res.status(200).json(formattedFriends)
+        res.status(200).json(users)
     } catch(error){
         console.log(error)
         res.status(500).json({message: 'Server error'})
@@ -161,18 +136,7 @@ const getFriends = async (req, res) => {
         if (!user)
             return res.status(404).json({ message: 'User not found' })
 
-        const friends = user.friends.map(friend => {
-            const friendObj = friend.toObject()
-            if (friend.avatar && friend.avatar.data) {
-                friendObj.avatar = {
-                    data: friend.avatar.data.toString('base64'),
-                    contentType: friend.avatar.contentType
-                }
-            }
-            return friendObj
-        })
-
-        res.status(200).json(friends)
+        res.status(200).json(user.friends)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Server error' })

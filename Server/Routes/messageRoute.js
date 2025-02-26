@@ -1,19 +1,11 @@
 const express = require('express');
-const { 
-    sendMessage, 
-    getMessages, 
-    deleteChatHistory, 
-    getChatImages,
-    getImageById,
-    getSingleChat } = require('../Controllers/messageController');
+const { sendMessage, getMessages, getChatImages, deleteChatHistory } = require('../Controllers/messageController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 const multer = require('multer');
 
-const storage = multer.memoryStorage(); 
-
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    
     if (!allowedTypes.includes(file.mimetype)) {
         return cb(new Error('Loại file không được chấp nhận'), false);
     }
@@ -28,15 +20,12 @@ const upload = multer({
 
 const router = express.Router();
 
-
 const messageRoute = (io) => {
-    router.post('/', authMiddleware, upload.single('file'), (req, res) => sendMessage(io)(req, res)); 
-    router.get('/:friendId', authMiddleware, getMessages); 
-    router.delete('/delete/:friendId', authMiddleware, deleteChatHistory); 
-    // router.get('/:friendId/images', authMiddleware, getChatImages); 
+    router.post('/', authMiddleware, upload.single('file'), (req, res) => sendMessage(io)(req, res));
+    router.get('/:friendId', authMiddleware, getMessages);
     router.get('/images/:friendId', authMiddleware, getChatImages);
-    router.get('/getChat/:id', authMiddleware, getSingleChat);
-    return router; 
+    router.delete('/delete/:friendId', authMiddleware, deleteChatHistory);
+    return router;
 };
 
 module.exports = messageRoute;
