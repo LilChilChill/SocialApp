@@ -26,25 +26,33 @@ function getFriends() {
             'Authorization': `Bearer ${token}`
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+                localStorage.removeItem("token");
+                window.location.href = window.location.origin;
+            }
+            throw new Error("Lỗi khi tải danh sách bạn bè.");
+        }
+        return response.json();
+    })
     .then(friends => {
         const friendList = document.getElementById('friendList');
-        const headerName = document.getElementById('header')
         friendList.innerHTML = ''; 
 
         if (friends.length === 0) {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar
-                    ? friend.avatar
-                    : '../img/default-avatar.png';
+                const friendAvatar = friend.avatar ? friend.avatar : '../img/default-avatar.png';
 
                 const friendItem = document.createElement('div');
                 friendItem.classList.add('friend-item');
-                // onclick="openChat('${friend._id}', '${friend.name}', '${friendAvatar}')"
+                friendItem.onclick = () => openChat(friend._id, friend.name, friendAvatar); // Thêm sự kiện mở chat
+
                 friendItem.innerHTML = `
-                    <div class='chatUser' >
+                    <div class='chatUser'>
                         <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
                         <div class='content'>
                             <span>${friend.name}</span>
@@ -61,7 +69,8 @@ function getFriends() {
     });
 }
 
-getFriends()
+getFriends();
+
 
 const postsContainer = document.getElementById('posts');
 const postButton = document.getElementById('postButton');

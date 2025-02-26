@@ -112,21 +112,20 @@ const getUsers = async (req, res) => {
 }
 
 const searchUsers = async (req, res) => {
-    const { query } = req.body
-    try{
+    const { query } = req.query; 
+    try {
         const users = await userModel.find({
             $or: [
-                { name: { $regex: query, $options: 'i' } },
-                { email: { $regex: query, $options: 'i' } }
+                { name: { $regex: query, $options: 'i' } }
             ]
-        }).select('-password -friends')
+        }).select('-password -friends');
 
-        res.status(200).json(users)
-    } catch(error){
-        console.log(error)
-        res.status(500).json({message: 'Server error'})
+        res.status(200).json(users);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 const getFriends = async (req, res) => {
     const userId = req.user._id
