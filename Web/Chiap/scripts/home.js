@@ -36,8 +36,8 @@ function getFriends() {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar && friend.avatar.data && typeof friend.avatar.data === 'string'
-                    ? `data:${friend.avatar.contentType};base64,${friend.avatar.data}`
+                const friendAvatar = friend.avatar
+                    ? friend.avatar
                     : '../img/default-avatar.png';
 
                 const friendItem = document.createElement('div');

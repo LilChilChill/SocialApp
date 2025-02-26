@@ -131,24 +131,26 @@ socket.on('signal', ({ type, data }) => {
     handleSignal(type, data);
 });
 
-socket.on('connect', () => {
-    const userId = localStorage.getItem('userId');
-
-    // console.log('Đã kết nối với server:', socket.id);
-    if (userId) {
-        socket.emit('register', userId);
-        // console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
-    } else {
-        console.error('Không tìm thấy userId trong localStorage.');
-    }
-});
+function connectSocket() {
+    socket.on('connect', () => {
+        const userId = localStorage.getItem('userId');
+        console.log('Đã kết nối với server:', socket.id);
+        if (userId) {
+            socket.emit('register', userId);
+            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+        } else {
+            console.error('Không tìm thấy userId trong localStorage.');
+        }
+    });
+}
+window.connectSocket = connectSocket;
 
 socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
 });
 
 socket.on('disconnect', () => {
-    console.log('Mất kết nối tới server.');
+    console.log(Error);
 });
 
 //----------------------------------------------------- PRIVATE CHAT -------------------------------------------------------------\\
@@ -170,21 +172,20 @@ function getFriends() {
     .then(response => response.json())
     .then(friends => {
         const friendList = document.getElementById('friendList');
-        const headerName = document.getElementById('header')
         friendList.innerHTML = ''; 
 
         if (friends.length === 0) {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar && friend.avatar.data && typeof friend.avatar.data === 'string'
-                    ? `data:${friend.avatar.contentType};base64,${friend.avatar.data}`
-                    : '../img/default-avatar.png';
+                const friendAvatar = friend.avatar 
+                    ? friend.avatar 
+                    : '../assets/profile-default.png';
 
                 const friendItem = document.createElement('div');
                 friendItem.classList.add('friend-item');
                 friendItem.innerHTML = `
-                    <div class='chatUser' onclick="openChat('${friend._id}', '${friend.name}', '${friendAvatar}')">
+                   <div class='chatUser' onclick="openChatEncoded('${encodeBase64Unicode(friend._id)}', '${encodeBase64Unicode(friend.name)}', '${encodeBase64Unicode(friendAvatar)}')">
                         <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
                         <div class='content'>
                             <span>${friend.name}</span>
@@ -201,14 +202,6 @@ function getFriends() {
     });
 }
 
-// function loadChatImages() {
-//     prefetchImages(currentPage, false); 
-// }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     loadChatImages();
-// });
-
 function openChat(friendId, name, avatar, page = 1) {
     friendName = name;
     friendAvatar = avatar;
@@ -217,133 +210,103 @@ function openChat(friendId, name, avatar, page = 1) {
     currentFriendId = friendId;
     currentPage = 1;
     hasMoreMessages = true;
-    // prefetchImages();
-    prefetchImages(currentPage, false); 
-    const deleteBtn = document.getElementById('deleteChatButton')
+
+    const deleteBtn = document.getElementById('deleteChatButton');
     const friendInfo = document.getElementById('headerSide');
-    friendInfo.innerHTML = `
-        <div class="three-body">
-            <div class="three-body__dot"></div>
-            <div class="three-body__dot"></div>
-            <div class="three-body__dot"></div>
-        </div>
-    `;
-
     const chatArea = document.getElementById('chatArea');
-    chatArea.innerHTML = `
-        <div style="display: flex; justify-content: center;">
-            <div class="three-body">
-                <div class="three-body__dot"></div>
-                <div class="three-body__dot"></div>
-                <div class="three-body__dot"></div>
-            </div>
-        </div>
-    `;
-
     const fileData = document.getElementById('file');
+
+    friendInfo.innerHTML = `<div class="three-body"><div class="three-body__dot"></div><div class="three-body__dot"></div><div class="three-body__dot"></div></div>`;
+    chatArea.innerHTML = `<div style="display: flex; justify-content: center;"><div class="three-body"><div class="three-body__dot"></div><div class="three-body__dot"></div><div class="three-body__dot"></div></div></div>`;
     fileData.innerHTML = '';
 
     fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
         method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Lỗi khi lấy tin nhắn');
-            }
-            return response.json();
-        })
-        .then(messages => {
-            chatArea.innerHTML = '';
-            friendInfo.innerHTML = '';
-            fileData.innerHTML = '';
-            deleteBtn.innerHTML = '';
+    .then(response => {
+        if (!response.ok) throw new Error('Lỗi khi lấy tin nhắn');
+        return response.json();
+    })
+    .then(messages => {
+        chatArea.innerHTML = '';
+        friendInfo.innerHTML = '';
+        fileData.innerHTML = '';
+        deleteBtn.innerHTML = '';
 
-            if (messages.length === 0) {
-                chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
-            } else {
-                let lastMessageDate = null;
+        if (messages.length === 0) {
+            chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
+        } else {
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
 
-                messages.forEach(message => {
+                const fileUrl = message.fileUrl;
 
-                    const messageDiv = document.createElement('div');
-                    messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
+                messageDiv.innerHTML = `
+                    ${message.sender === friendId ? `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : '<img src="" alt="Bạn" style="display: none;">'}
+                    <div class="msgContent">
+                        ${message.content ? `<div class="messageContent"><p>${message.content.replace(/\n/g, '<br>')}</p></div>` : ''}
+                        ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>` : ''}
+                    </div>
+                `;
 
-                    const fileDataUrl = message.file && message.file.data && typeof message.file.data === 'string'
-                        ? `data:${message.file.contentType};base64,${message.file.data}`
-                        : null;
+                chatArea.appendChild(messageDiv);
+            });
+        }
 
-                        // console.log('ChatId', message._id)
+        friendInfo.innerHTML = `
+            <img src="${friendAvatar}" alt="Ảnh đại diện" id="headerAva"/>
+            <p>${friendName}</p>
+            <div>
+                <a href="#"><i class="fa-solid fa-bell"></i></a>
+                <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
+            </div>
+        `;
+        
+        fileData.innerHTML = `
+            <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
+            <div style="display: none" id="fileDisplay">
+                <a href="#" onclick="toggleImages()"><p>- File phương tiện</p></a>
+                <div style="display: none" id="fileImageDisplay"></div>
+                <a href="#"><p>- File</p></a>
+            </div>
+        `;
 
-                    if (message.content == ''){
-                        messageDiv.innerHTML = `
-                        ${message.sender === friendId ? 
-                            `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
-                            `<img src="" alt="Bạn" style="display: none;">`
-                        }
-                        <div class="msgContent">
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-                            </div>
-                            `;
-                            // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
-                            
-                    } else {
-                        messageDiv.innerHTML = `
-                        ${message.sender === friendId ? 
-                            `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
-                            `<img src="" alt="Bạn" style="display: none;">`
-                        }
-                        <div class="msgContent">
-                            <div class="messageContent">
-                                <p>${message.content.replace(/\n/g, '<br>')}</p>
-                            </div>
-                            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-                            </div>
-                            `;
-                            // ${message.date ? `<p class="msgDate">${message.date}</p>` : ''}
-                            
-                    }
-                    
-                            friendInfo.innerHTML = `
-                                <img src="${friendAvatar}" alt="Ảnh đại diện" id="headerAva"/>
-                                <p>${friendName}</p>
-                                <div>
-                                    <a href="#"><i class="fa-solid fa-bell"></i></a>
-                                    <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
-                                </div>
-                            `
-                            fileData.innerHTML = `
-                                <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
-                                <div style="display: none" id="fileDisplay">
-                                    <a href="#" onclick="toggleImages()"><p>- File phương tiện</p></a>
-                                    <div style="display: none" id="fileImageDisplay"></div>
-                                    <a href="#"><p>- File</p></a>
-                                </div>
-                            `;
+        deleteBtn.innerHTML = `
+            <i class="fa-regular fa-trash-can"></i>
+            <p>Xóa lịch sử trò chuyện</p>
+        `;
 
-
-
-
-                            deleteBtn.innerHTML = `
-                                <i class="fa-regular fa-trash-can"></i>
-                                <p>Xóa lịch sử trò chuyện</p>
-                            `
-
-                    chatArea.appendChild(messageDiv);
-                });
-            }
-
-            chatArea.scrollTop = chatArea.scrollHeight;
-        })
-        .catch(error => {
-            console.error('Lỗi khi lấy tin nhắn:', error);
-            chatArea.innerHTML = '<p>Không thể tải tin nhắn. Vui lòng thử lại sau.</p>';
-        });
+        chatArea.scrollTop = chatArea.scrollHeight;
+        fetchAllImages()
+        connectSocket()
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy tin nhắn:', error);
+        chatArea.innerHTML = '<p>Không thể tải tin nhắn. Vui lòng thử lại sau.</p>';
+    });
 }
 
 window.openChat = openChat;
+
+function encodeBase64Unicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+}
+
+function decodeBase64Unicode(str) {
+    return decodeURIComponent(escape(atob(str)));
+}
+
+function openChatEncoded(encodedId, encodedName, encodedAvatar) {
+    const friendId = decodeBase64Unicode(encodedId);
+    const friendName = decodeBase64Unicode(encodedName);
+    const friendAvatar = decodeBase64Unicode(encodedAvatar);
+
+    openChat(friendId, friendName, friendAvatar);
+}
+window.openChatEncoded = openChatEncoded;
+
 
 document.getElementById('fileInput').addEventListener('change', function(event) {
     const fileInput = event.target;
@@ -391,9 +354,9 @@ async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
                 canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
 
-                canvas.toBlob((blob) => {
+                canvas.toBlob(async (blob) => {
                     if (blob.size / 1024 / 1024 > maxSizeMB) {
-                        resolve(compressImage(file, maxSizeMB, quality - 0.1)); // Giảm tiếp chất lượng nếu cần
+                        resolve(await compressImage(file, maxSizeMB, quality - 0.1)); // Tiếp tục giảm chất lượng nếu cần
                     } else {
                         resolve(new File([blob], file.name, { type: "image/jpeg" }));
                     }
@@ -409,8 +372,7 @@ window.openImage = openImage
 // Gửi tin nhắn
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
-    const content = messageInput.value.trim(); 
-    const chatFunction = document.getElementById('chatFunction');
+    const content = messageInput.value.trim();
 
     if (!content && !selectedFile) {
         return;
@@ -421,20 +383,26 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     }
 
     let fileToSend = selectedFile;
-    let tempFile = fileToSend;
 
-    if (selectedFile && selectedFile.size / 1024 / 1024 > 5) {
-        fileToSend = await compressImage(selectedFile);
+    // Nếu có file và là ảnh, thực hiện nén
+    if (fileToSend && fileToSend.type.startsWith('image/')) {
+        try {
+            fileToSend = await compressImage(fileToSend);
+            var previewUrl = URL.createObjectURL(fileToSend);
+        } catch (error) {
+            console.error('Lỗi khi nén ảnh:', error);
+            return;
+        }
     }
 
     const messageData = new FormData();
+    messageData.append('receiverId', currentFriendId);
     messageData.append('content', content);
-    messageData.append('receiverId', currentFriendId); 
 
     if (fileToSend) {
-        messageData.append('file', fileToSend); 
+        messageData.append('file', fileToSend);
     }
-    
+
     fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: {
@@ -442,88 +410,88 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         },
         body: messageData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi gửi tin nhắn');
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        messageInput.value = ''; 
-        document.getElementById('inputPreview').innerHTML = ''; 
+        messageInput.value = '';
+        document.getElementById('inputPreview').innerHTML = '';
 
-        socket.emit('sendMessage', {
-            chatType: 'private',
+        const messagePayload = {
+            chatType: 'private',  // Hoặc 'group' nếu gửi tin nhắn nhóm
             receiverId: currentFriendId,
             sender: localStorage.getItem('userId'),
             content: content,
-            file: fileToSend ? {
-                name: fileToSend.name,
-                type: fileToSend.type,
-                size: fileToSend.size
-            } : null,
-            date: data.date
-        });
+            fileUrl: data.messageData.fileUrl || null,
+            fileType: data.messageData.fileType || null,
+            date: data.messageData.date
+        };
 
-        selectedFile = null; 
-        
+        // Gửi tin nhắn qua socket
+        // socket.emit('sendMessage', messagePayload);
+        socket.emit('sendMessage', { ...messagePayload, fileUrl: data.messageData.fileUrl });
+
+        // Cập nhật lại ảnh từ server (tránh hiển thị URL tạm)
+        setTimeout(() => {
+            const imgElement = messageDiv.querySelector(".imgContent");
+            if (imgElement && data.messageData.fileUrl) {
+                imgElement.src = data.messageData.fileUrl;
+            }
+        }, 1000);
+
+        selectedFile = null;
+
+        // Hiển thị tin nhắn ngay trên giao diện người gửi
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', 'sent');
 
-        const fileDataUrl = tempFile
-            ? URL.createObjectURL(tempFile)
-            : (data.messageData.file && data.messageData.file.data && typeof data.messageData.file.data === 'string'
-            ? `data:${data.messageData.file.contentType};base64,${data.messageData.file.data}`
-            : null);
-
-        if(tempFile){
-            tempImages.push(tempFile);
-        }
-
-        // toggleImages(); // Cập nhật giao diện ngay lập tức
-
-        if (chatArea.innerHTML.trim() === '<p>Không có tin nhắn nào.</p>') {
-            if (content == ''){
-                messageDiv.innerHTML = `
-                <div class="msgContent">
-                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-                </div>`; 
-            } else {
-                messageDiv.innerHTML = `
+        if(chatArea.innerHTML.trim() === '<p>Không có tin nhắn nào.</p>'){
+            if (content) {
+            messageDiv.innerHTML = `
                 <div class="msgContent">
                     <div class="messageContent">
-                        <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
+                        <p>${content.replace(/\n/g, '<br>')}</p>
                     </div>
-                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-                </div>`; 
+                    ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
+                </div>
+            `;
+            } else if (messagePayload.fileUrl) {
+                messageDiv.innerHTML = `
+                    <div class="msgContent">
+                        <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
+                    </div>
+                `;
             }
             openChat(currentFriendId, friendName, friendAvatar);
+            
         } 
 
-        if (content == ''){
+        if (content) {
             messageDiv.innerHTML = `
-            <div class="msgContent">
-                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-            </div>`; 
-        } else {
-            messageDiv.innerHTML = `
-            <div class="msgContent">
-                <div class="messageContent">
-                    <p>${data.messageData.content.replace(/\n/g, '<br>')}</p>
+                <div class="msgContent">
+                    <div class="messageContent">
+                        <p>${content.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
                 </div>
-                ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)"/>` : ''}
-            </div>`; 
+            `;
+        } else if (messagePayload.fileUrl) {
+            messageDiv.innerHTML = `
+                <div class="msgContent">
+                    <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
+                </div>
+            `;
         }
         
-        // console.log('image', fileDataUrl);
-        document.getElementById('chatArea').appendChild(messageDiv);
-        chatArea.scrollTop = chatArea.scrollHeight; 
+
         
+
+        document.getElementById('chatArea').appendChild(messageDiv);
+        chatArea.scrollTop = chatArea.scrollHeight;
     })
     .catch(error => {
         console.error('Lỗi khi gửi tin nhắn:', error);
     });
 });
+
 
 // Nhận tin nhắn
 socket.on('receiveMessage', (messageData) => {
@@ -558,131 +526,7 @@ socket.on('receiveMessage', (messageData) => {
 
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
-});
-
-function prefetchImages(page = 1, append = false) {
-    if (!hasMoreImages) return Promise.resolve(); // Trả về Promise rỗng nếu không còn ảnh
-
-    return fetch(`${API_URL}/api/messages/images/${currentFriendId}?page=${page}&limit=10`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi lấy ảnh');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (append) {
-            cachedImages = [...cachedImages, ...data.images]; // Thêm ảnh mới vào danh sách cũ
-        } else {
-            cachedImages = data.images; // Chỉ thay thế khi không append
-        }
-
-        hasMoreImages = data.hasMore;
-        imagesFetched = true;
-        console.log(`Ảnh trang ${page}:`, cachedImages);
-    })
-    .catch(error => {
-        console.error('Lỗi khi tải ảnh:', error);
-    });
-}
-
-function fetchAllImages() {
-    let page = 1; 
-    let allImages = []; 
-
-    function fetchNextPage() {
-        return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Lỗi khi lấy ảnh');
-            }
-            return response.json();
-        })
-        .then(data => {
-            allImages = [...allImages, ...data.images]; 
-
-            if (data.hasMore) {
-                page++; 
-                return fetchNextPage(); 
-            } else {
-                cachedImages = allImages; 
-                imagesFetched = true;
-                console.log('Tất cả ảnh đã tải:', cachedImages);
-            }
-        })
-        .catch(error => {
-            console.error('Lỗi khi tải ảnh:', error);
-        });
-    }
-
-    return fetchNextPage();
-}
-
-function toggleImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-
-    if (fileImageDisplay.style.display === 'block') {
-        fileImageDisplay.style.display = 'none';
-        return;
-    }
-
-    fileImageDisplay.style.display = 'block'; 
-    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
-
-    if (imagesFetched) {
-        renderImages();
-        return;
-    }
-
-    fetchAllImages()
-        .then(() => {
-            renderImages();
-        })
-        .catch(error => {
-            console.error('Lỗi khi tải ảnh:', error);
-            fileImageDisplay.innerHTML = '<p>Lỗi khi tải ảnh.</p>';
-        });
-}
-
-function renderImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-    fileImageDisplay.innerHTML = '';
-
-    if (cachedImages.length === 0) {
-        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
-    } else {
-        const imageContainer = document.createElement('div');
-        imageContainer.classList.add('image-container');
-
-        cachedImages.forEach(image => {
-            const fileDataUrl = image.file && image.file.data && typeof image.file.data === 'string'
-                ? `data:${image.file.contentType};base64,${image.file.data}`
-                : null;
-
-            if (!fileDataUrl) return;
-
-            const imgElement = document.createElement('img');
-            imgElement.src = fileDataUrl;
-            imgElement.onclick = () => openImage(imgElement.src);
-            imageContainer.appendChild(imgElement);
-        });
-
-        fileImageDisplay.appendChild(imageContainer);
-    }
-
-    imagesFetched = true;
-}
-
+})
 
 window.toggleImages = toggleImages;
 
@@ -722,21 +566,27 @@ document.getElementById('chatArea').addEventListener('scroll', () => {
 });
 
 function switchChat(newFriendId, newFriendAvatar, newFriendName) {
-    if (currentFriendId === newFriendId) return; // Nếu trùng ID thì không làm gì cả
+    if (currentFriendId === newFriendId) return;
 
     currentFriendId = newFriendId;
     friendAvatar = newFriendAvatar;
     friendName = newFriendName;
 
-    // 🔥 Reset lại các biến liên quan
     currentPage = 1;
-    hasMoreMessages = true; 
+    hasMoreMessages = true;
     isLoadingMessages = false;
+    document.getElementById('chatArea').innerHTML = ''; 
+    loadOlderMessages();
 
-    document.getElementById('chatArea').innerHTML = ''; // Xóa nội dung chat cũ
+    cachedImages = [];
+    imagesFetched = false;
+    hasMoreImages = true;
 
-    loadOlderMessages(); // Tải tin nhắn mới của cuộc trò chuyện
+    document.getElementById('fileImageDisplay').innerHTML = '';
+
+    console.log(`Đã chuyển sang chat với ${friendName} - ID: ${currentFriendId}`);
 }
+
 
 
 let hasMoreMessages = true;
@@ -770,9 +620,7 @@ function loadOlderMessages() {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', message.sender === currentFriendId ? 'received' : 'sent');
 
-            const fileDataUrl = message.file && message.file.data && typeof message.file.data === 'string'
-                ? `data:${message.file.contentType};base64,${message.file.data}`
-                : null;
+            const fileUrl = message.fileUrl;
 
             messageDiv.innerHTML = `
                 ${message.sender === currentFriendId ? 
@@ -782,7 +630,7 @@ function loadOlderMessages() {
                     <div class="messageContent">
                         <p>${message.content.replace(/\n/g, '<br>')}</p>
                     </div>
-                    ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
+                    ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')" />` : ''}
                 </div>
             `;
 
@@ -831,94 +679,134 @@ function fileToggle(){
 }
 window.fileToggle = fileToggle
 
-function openImage(src) {
-    document.getElementById("popupImage").src = src;
-    document.getElementById("imagePopup").style.display = "block";
-
-    
-    currentImageIndex = cachedImages.findIndex(image => {
-        const fileDataUrl = image.file && image.file.data && typeof image.file.data === "string"
-            ? `data:${image.file.contentType};base64,${image.file.data}`
-            : null;
-        return fileDataUrl === src;
+function fetchAllImages() {
+    return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Lỗi khi lấy ảnh');
+        }
+        return response.json();
+    })
+    .then(data => {
+        cachedImages = data.images || []; 
+        imagesFetched = true;
+        renderImages();
+    })
+    .catch(error => {
+        console.error('Lỗi khi tải ảnh:', error);
+        document.getElementById('fileImageDisplay').innerHTML = '<p>Lỗi khi tải ảnh.</p>';
     });
+}
+
+function toggleImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
+    
+    if (fileImageDisplay.style.display === 'block') {
+        fileImageDisplay.style.display = 'none';
+        return;
+    }
+    
+    fileImageDisplay.style.display = 'block';
+    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
+    
+    // if (!imagesFetched) {
+    //     fetchAllImages();
+    // } else {
+    //     renderImages();
+    // }
+    renderImages()
+}
+
+function renderImages() {
+    const fileImageDisplay = document.getElementById('fileImageDisplay');
+    fileImageDisplay.innerHTML = '';
+    
+    if (cachedImages.length === 0) {
+        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
+        return;
+    }
+    
+    const imageContainer = document.createElement('div');
+    imageContainer.classList.add('image-container');
+    
+    cachedImages.forEach(image => {
+        if (!image.fileUrl) return;
+        
+        const imgElement = document.createElement('img');
+        imgElement.src = image.fileUrl;
+        imgElement.onclick = () => openImage(image.fileUrl);
+        imageContainer.appendChild(imgElement);
+    });
+    
+    fileImageDisplay.appendChild(imageContainer);
+}
+
+function openImage(src) {
+    document.getElementById('popupImage').src = src;
+    document.getElementById('imagePopup').style.display = 'block';
+    currentImageIndex = cachedImages.findIndex(image => image.fileUrl === src);
 
     updateImage();
+
 }
 
 function closeImage() {
-    document.getElementById("imagePopup").style.display = "none";
+    document.getElementById('imagePopup').style.display = 'none';
 }
-window.closeImage = closeImage
 
 function prevImage() {
     if (currentImageIndex > 0) {
         currentImageIndex--;
         updateImage();
-    } 
-    // else if (hasMoreImages) {
-    //     currentPage--;
-    //     prefetchImages(currentPage, true);
-    // }
-}
-window.prevImage = prevImage
-
-let isLoading = false;
-function nextImage() {
-    if (isLoading) return;
-
-    if (currentImageIndex < cachedImages.length - 1) {
-        currentImageIndex++;
-        updateImage();
-    } else if (hasMoreImages) {
-        isLoading = true;
-        currentPage++;
-
-        const prefetchResult = prefetchImages(currentPage, true);
-
-        if (prefetchResult instanceof Promise) {
-            prefetchResult
-                .then(() => {
-                    isLoading = false;
-                    updateImage();
-                })
-                .catch(() => {
-                    isLoading = false;
-                });
-        } else {
-            console.error('prefetchImages không trả về Promise');
-            isLoading = false;
-        }
     }
 }
 
-
-window.nextImage = nextImage
+function nextImage() {
+    if (currentImageIndex < cachedImages.length - 1) {
+        currentImageIndex++;
+        updateImage();
+    }
+}
 
 function updateImage() {
     const image = cachedImages[currentImageIndex];
     if (!image) return;
 
-    const fileDataUrl = image.file && image.file.data && typeof image.file.data === "string"
-        ? `data:${image.file.contentType};base64,${image.file.data}`
-        : null;
-
-    if (fileDataUrl) {
-        document.getElementById("popupImage").src = fileDataUrl;
+    const fileUrl = image.fileUrl
+    
+    if(fileUrl){
+        document.getElementById('popupImage').src = fileUrl
         updateDownloadLink();
     }
-
     
-    document.querySelector(".prev-btn").style.display = currentImageIndex === 0 ? "none" : "block";
-    document.querySelector(".next-btn").style.display = currentImageIndex === cachedImages.length - 1 ? "none" : "block";
+    document.querySelector('.prev-btn').style.display = currentImageIndex === 0 ? 'none' : 'block';
+    document.querySelector('.next-btn').style.display = currentImageIndex === cachedImages.length - 1 ? 'none' : 'block';
 }
-
 
 function updateDownloadLink() {
-    const downloadBtn = document.getElementById("downloadBtn");
-    downloadBtn.href = document.getElementById("popupImage").src;
-    downloadBtn.setAttribute("download", `image_${currentImageIndex + 1}.jpg`);
+    const downloadBtn = document.getElementById('downloadBtn');
+    const imageUrl = document.getElementById('popupImage').src;
+
+    fetch(imageUrl)
+        .then(response => response.blob())  
+        .then(blob => {
+            const blobUrl = URL.createObjectURL(blob);
+            downloadBtn.href = blobUrl;
+            downloadBtn.setAttribute('download', `image_${currentImageIndex + 1}.jpg`);
+        })
+        .catch(error => console.error("Lỗi khi tải ảnh:", error));
 }
+
+
+window.toggleImages = toggleImages;
+window.closeImage = closeImage;
+window.prevImage = prevImage;
+window.nextImage = nextImage;
 
 
 document.addEventListener("click", function (event) {
@@ -940,193 +828,3 @@ document.addEventListener("keydown", function (event) {
 });
 
 getFriends();
-
-
-//----------------------------------------------------- GROUP CHAT -------------------------------------------------------------\\
-// function showCreateGroupForm() {
-//     document.getElementById('createGroupForm').style.display = 'block';
-
-//     fetch('${API_URL}/api/users/friends', {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': `Bearer ${localStorage.getItem('token')}`
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(friends => {
-//         const friendCheckboxList = document.getElementById('friendCheckboxList');
-//         friendCheckboxList.innerHTML = ''; 
-
-//         if (friends.length === 0) {
-//             friendCheckboxList.innerHTML = '<p>Không có bạn bè nào để thêm.</p>';
-//         } else {
-//             friends.forEach(friend => {
-//                 const friendCheckbox = document.createElement('div');
-//                 friendCheckbox.classList.add('friend-checkbox-item');
-//                 friendCheckbox.innerHTML = `
-//                     <input type="checkbox" id="friend_${friend._id}" value="${friend._id}">
-//                     <label for="friend_${friend._id}">${friend.name}</label>
-//                 `;
-//                 friendCheckboxList.appendChild(friendCheckbox);
-//             });
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Lỗi khi tải danh sách bạn bè:', error);
-//         document.getElementById('friendCheckboxList').innerHTML = '<p>Lỗi khi tải danh sách bạn bè.</p>';
-//     });
-// }
-
-// function hideCreateGroupForm() {
-//     document.getElementById('createGroupForm').style.display = 'none';
-// }
-
-// function createGroup() {
-//     const groupName = document.getElementById('groupNameInput').value.trim();
-//     const selectedFriendIds = Array.from(document.querySelectorAll('#friendCheckboxList input[type="checkbox"]:checked'))
-//         .map(checkbox => checkbox.value);
-
-//     if (!groupName) {
-//         alert('Vui lòng nhập tên nhóm.');
-//         return;
-//     }
-
-//     if (selectedFriendIds.length < 2) {
-//         alert('Vui lòng chọn ít nhất hai bạn bè để thêm vào nhóm.');
-//         return;
-//     }
-
-//     const userId = localStorage.getItem('userId');
-
-//     const members = [...selectedFriendIds, userId];  
-
-//     fetch('${API_URL}/api/groups/create', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `Bearer ${localStorage.getItem('token')}`
-//         },
-//         body: JSON.stringify({
-//             groupName: groupName, 
-//             members: members      
-//         })
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Lỗi khi tạo nhóm.');
-//         }
-//         return response.json();
-//     })
-//     .then(group => {
-//         alert('Nhóm được tạo thành công!');
-//         hideCreateGroupForm();
-//         console.log('Creating group with data:', {
-//             groupName,
-//             members: members
-//         });
-//         loadGroupChats()
-//     })
-//     .catch(error => {
-//         console.error('Lỗi khi tạo nhóm:', error);
-//         alert('Không thể tạo nhóm. Vui lòng thử lại.');
-//     });
-// }
-
-// function loadGroupChats() {
-//     const userId = localStorage.getItem('userId');
-//     fetch(`${API_URL}/api/groups/${userId}`, {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': `Bearer ${localStorage.getItem('token')}`
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(groups => {
-//         const groupList = document.getElementById('groupList');
-        
-//         if (!groupList) {
-//             console.error("Không tìm thấy phần tử #groupList trong DOM");
-//             return;  
-//         }
-
-//         groupList.innerHTML = ''; 
-
-//         if (groups.length === 0) {
-//             groupList.innerHTML = '<p>Không có nhóm nào.</p>';
-//         } else {
-//             groups.forEach(group => {
-//                 const groupItem = document.createElement('div');
-//                 groupItem.classList.add('group-item');
-//                 groupItem.innerHTML = `
-//                     <div class="chatUser" onclick="openGroupChat('${group._id}', '${group.groupName}')">
-//                         <span>${group.groupName}</span>
-//                         <p>Side</p>
-//                     </div>
-//                 `;
-//                 groupList.appendChild(groupItem);
-//                 console.log('groupName', group.groupName)
-//             });
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Lỗi khi tải danh sách nhóm:', error);
-//         const groupList = document.getElementById('groupList');
-        
-//         if (groupList) {
-//             groupList.innerHTML = '<p>Lỗi khi tải danh sách nhóm.</p>';
-//         }
-//     });
-// }
-
-// function openGroupChat(groupId, groupName) {
-//     document.getElementById('username').textContent = groupName;
-//     // document.getElementById('avatar') = defaultAvatar;
-//     currentFriendId = null; 
-
-//     const chatArea = document.getElementById('chatArea');
-//     chatArea.innerHTML = `
-//         <div style="display: flex; justify-content: center;">
-//             <div class="three-body">
-//                 <div class="three-body__dot"></div>
-//                 <div class="three-body__dot"></div>
-//                 <div class="three-body__dot"></div>
-//             </div>
-//         </div>
-//     `;
-//     localStorage.setItem('groupId', groupId)
-//     fetch(`${API_URL}/api/groups/${groupId}/messages`, {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': `Bearer ${localStorage.getItem('token')}`
-//         }
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Lỗi khi tải tin nhắn nhóm.');
-//         }
-//         return response.json();
-//     })
-//     .then(messages => {
-//         chatArea.innerHTML = '';
-//         if (messages.length === 0) {
-//             chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
-//         } else {
-//             messages.forEach(message => {
-//                 const messageDiv = document.createElement('div');
-//                 messageDiv.classList.add('message', message.sender === localStorage.getItem('userId') ? 'sent' : 'received');
-//                 messageDiv.innerHTML = `
-//                     <div class="messageContent">
-//                         <p>${message.content}</p>
-//                     </div>
-//                 `;
-//                 chatArea.appendChild(messageDiv);
-//             });
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Lỗi khi tải tin nhắn nhóm:', error);
-//         chatArea.innerHTML = '<p>Lỗi khi tải tin nhắn nhóm.</p>';
-//     });
-// }
-
-// loadGroupChats();
