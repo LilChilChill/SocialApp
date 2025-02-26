@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITER_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 document.title = "Chiap"
 
 const friendRequestList = document.getElementById('friendRequestList');
@@ -53,10 +53,12 @@ const getFriendRequests = async () => {
         }
     } catch (err) {
         console.error(err);
+        console.log(err);
         error.innerHTML = 'Có lỗi xảy ra khi lấy danh sách lời mời.';
         error.style.display = 'block';
     }
 };
+window.getFriendRequests = getFriendRequests;
 
 const acceptFriendRequest = async (requestId) => {
     notification.style.display = 'none'; 
@@ -131,5 +133,8 @@ const rejectFriendRequest = async (requestId) => {
         error.style.display = 'block';
     }
 };
+window.acceptFriendRequest = acceptFriendRequest;
+
+window.rejectFriendRequest = rejectFriendRequest;
 
 window.onload = getFriendRequests;
