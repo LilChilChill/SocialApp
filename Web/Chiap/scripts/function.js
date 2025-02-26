@@ -51,12 +51,8 @@ const searchUsers = async () => {
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
                 
-                const avatarUrl = user.avatar && user.avatar.data && typeof user.avatar.data === 'string'
-                    ? `data:${user.avatar.contentType};base64,${user.avatar.data}`
-                    : '../img/default-avatar.png';
+                const avatarUrl = user.avatar ? user.avatar : '../img/default-avatar.png';
                 
-                console.log('avatar:', user.name)
-                console.log('data:', avatarUrl)
                 userItem.innerHTML = `
                     <div class='userName'> 
                         <img src="${avatarUrl}" alt="${user.name}" id="avatar">
