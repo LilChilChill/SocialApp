@@ -65,6 +65,8 @@ body, ul, li, a{
     padding: 10px;
     height: 100vh;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    left: 5%;
   }
   
   .sidebar ul li {
@@ -132,6 +134,8 @@ body, ul, li, a{
     border: 20px;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
     justify-content: space-between;
+    position: relative;
+    right: 5%;
   }
   
   .leftContent {
@@ -218,6 +222,62 @@ body, ul, li, a{
     color: blue;
     text-decoration: underline;
     font-weight: bold;
+  }
+  .headerIcon{  
+    font-size: 15px;
+  }
+  .headerIcon a{
+    margin-left: 15px;
+  }
+  .user-info{
+    display: flex;
+    align-items: center;
+  }
+  .imgContent{
+    max-width: 170px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .msgContent{
+    max-width: 100%;
+  }
+  
+  .msgContent .messageContent {
+    padding: 0 8px; 
+    border-radius: 20px; 
+  }
+  
+  .received .messageContent {
+    background-color: #c0c0c0; 
+    align-items: flex-start;
+    align-self: flex-start;
+    justify-content: flex-start;
+    color: #000000cc;
+  }
+  
+  .sent .msgContent{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
+  
+  .sent .messageContent {
+    display: flex;
+    align-items: flex-end; 
+    background-color: #3872fa;
+    color: white;
+    font-size: 15px;
+  }
+  
+  .send .msgContent a:hover{
+    display: flex;
+  }
+  
+  .received .msgContent{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
   }
   
   @media (max-width: 600px) {
