@@ -152,7 +152,6 @@ const displayPosts = (posts) => {
 
         const authorName = post.author.name || 'Người dùng ẩn danh';
         const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
-        console.log('Name:', authorName);
         postElement.innerHTML = `
             <div class="post-header">
                 <img src="${avatarUrl}" alt="Avatar" class="post-avatar">

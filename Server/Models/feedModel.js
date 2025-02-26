@@ -10,7 +10,7 @@ const postSchema = new mongoose.Schema({
                 enum: ['image', 'video', 'document'],
                 required: true
             },
-            data: { type: String, required: true }, // Lưu URL thay vì Buffer
+            data: { type: String, required: true },
             contentType: String
         }
     ],
