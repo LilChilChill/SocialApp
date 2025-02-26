@@ -129,12 +129,6 @@ body, ul, li, a{
     background-color: #0056b3;
   }
   
-  /* .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  } */
-  
   .posts {
     display: flex;
     flex-direction: column;
@@ -142,8 +136,6 @@ body, ul, li, a{
     height: auto;
     padding: 20px;
     border-radius: 8px;
-    /* background-color: #fff; 
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
   }
   
   .post img {

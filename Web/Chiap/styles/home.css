@@ -10,7 +10,7 @@ body, ul, li, a{
     background-color: #4f596d;
   }
   
-  /* Navbar */
+  
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -47,13 +47,13 @@ body, ul, li, a{
     color: #ffffff;
   }
   
-  /* Main Container */
+  
   .main-container {
     display: flex;
     margin-top: 20px;
   }
   
-  /* Sidebar */
+  
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -81,10 +81,13 @@ body, ul, li, a{
     background-color: #e4e6eb;
   }
   
-  /* Feed */
+  
   .feed {
+    display: flex;
     flex: 1;
+    justify-content: center;
     padding: 20px;
+    
   }
   
   .post {
@@ -123,8 +126,8 @@ body, ul, li, a{
     flex-direction: column;
     padding: 20px;
     max-width: 250px;
+    height: 100vh;
     background-color: #ffffff;
-    border-radius: 20px;
     border-radius: 20px;
     border: 20px;
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
@@ -153,4 +156,73 @@ body, ul, li, a{
   
   .chatUser {
     cursor: pointer;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+    height: auto;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  .post-header{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .post-avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .post img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  .post-files {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .post-images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 10px; 
+    max-width: 100%;
+  }
+  
+  .post-image {
+    width: 90%;
+    max-width: 250px;
+    height: auto;
+    object-fit: cover; 
+    cursor: pointer;
+  }
+  
+  
+  .post-video {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .post-document {
+    display: block;
+    margin-top: 10px;
+    color: blue;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+  
   }
