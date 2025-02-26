@@ -28,14 +28,15 @@ input[type="text"] {
 }
 .user-item {
     background: white;
-    padding: 15px;
-    margin: 10px;
     border-radius: 5px;
     width: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 10%;
+    margin-top: 100px;
 }
 .notification {
     color: green;
