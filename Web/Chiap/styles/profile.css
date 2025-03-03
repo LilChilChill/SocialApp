@@ -9,16 +9,15 @@ body, ul, li, a{
   body {
     background-color: #f0f2f5;
   }
-  
-
-
   .navbar {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px 0;
     background-color: #1877f2;
     color: white;
+    height: 40px;
   }
   
   .logo {
@@ -37,7 +36,11 @@ body, ul, li, a{
     border: none;
     outline: none;
   }
-  
+  .navbar-icons{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
   .navbar-icons span {
     margin: 0 10px;
     font-size: 20px;
@@ -150,6 +153,11 @@ body, ul, li, a{
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+  }
+  .user-avatar {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 50%;
   }
   
   .post-user {

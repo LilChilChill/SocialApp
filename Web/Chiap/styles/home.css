@@ -35,6 +35,11 @@ body, ul, li, a{
     border: none;
     outline: none;
   }
+  .navbar-icons{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
   
   .navbar-icons span {
     margin: 0 10px;
@@ -103,6 +108,13 @@ body, ul, li, a{
     margin-bottom: 10px;
   }
   
+  .user-avatar {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 50%;
+    padding-right: 15px;
+  }
+  
   .avatar {
     width: 40px;
     height: 40px;
@@ -134,6 +146,7 @@ body, ul, li, a{
     z-index: 2;
   }
   .chat-popup { 
+    display: flex;
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -142,7 +155,6 @@ body, ul, li, a{
     border: 1px solid #ccc;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    display: none;
     flex-direction: column;
     right: 15%;
     z-index: 3;
