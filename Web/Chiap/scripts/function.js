@@ -1,5 +1,52 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+const userAvatar = document.getElementById('userAvatar');
+let currentUser = {};
+
+function listDisplay() {
+    document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
+}
+
+const getUserInfo = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        alert('Vui lòng đăng nhập trước khi truy cập thông tin.');
+        window.location.href = window.location.origin;
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (res.ok) {
+            currentUser = await res.json();
+            displayUserInfo(currentUser);
+        } else {
+            const errorMsg = await res.json();
+            alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');
+            window.location.href = window.location.origin;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+const displayUserInfo = (user) => {
+    localStorage.setItem('userId', user._id);
+    const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
+
+    userAvatar.innerHTML = `
+        <img class="user-avatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
+    `;
+    console.log(avatarUrl);
+};
+getUserInfo()
+
 const searchButton = document.getElementById('searchButton');
 const searchInput = document.getElementById('searchInput');
 const userList = document.getElementById('userList');
