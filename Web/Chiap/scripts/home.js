@@ -148,15 +148,17 @@ getFriends();
 
 
 //Home
-const postsContainer = document.getElementById('posts');
+const postsContainer = document.getElementById('posts')
 const postButton = document.getElementById('postButton');
 const postContent = document.getElementById('postContent');
 const postFiles = document.getElementById('postImage'); 
 
-const API_BASE_URL = `${API_URL}/api/feeds/posts`;
+const API_BASE_URL =`${API_URL}/api/feeds/posts` ;
 
-const loadPosts = async () => {
-    const res = await fetch(API_BASE_URL);
+const loadPosts = async (page = 1) => {
+    currentPage = 1
+    hasMorePost = true
+    const res = await fetch(`${API_URL}/api/feeds/posts?page${page}`);
 
     if (res.ok) {
         const posts = await res.json();
@@ -172,7 +174,8 @@ document.addEventListener('DOMContentLoaded', loadPosts);
 const displayPosts = (posts) => {
     postsContainer.innerHTML = '';
     posts.forEach((post) => {
-        const postElement = document.createElement('div');
+        if(post.status == 'public') {
+            const postElement = document.createElement('div');
         postElement.className = 'post';
 
         let filesHtml = '';
@@ -203,6 +206,34 @@ const displayPosts = (posts) => {
         `;
 
         postsContainer.appendChild(postElement);
+        }
     });
 };
+
+let currentPage = 1
+let hasMorePost = true
+let isLoadPosts = false
+function loadMorePosts() {
+    if(!hasMorePost || isLoadPosts ) 
+        return
+
+    fetch(`${API_URL}/api/feeds/posts?page${currentPage + 1}`,{
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error('Lỗi lấy bài viết.')
+        }
+        return response.json()
+    })
+    .then(posts => {
+        if(posts.length === 0) {
+            hasMorePost = false
+            return
+        }
+        displayPosts(posts)
+        currentPage += 1
+    })
+}
 document.addEventListener('DOMContentLoaded', loadPosts);

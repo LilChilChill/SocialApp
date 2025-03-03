@@ -36,7 +36,7 @@ const createPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const { page = 1, limit = 10, userId } = req.query;
+        const { page = 1, limit = 25, userId } = req.query;
 
         let filter = {};
         if (userId) {

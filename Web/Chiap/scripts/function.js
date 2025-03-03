@@ -47,7 +47,6 @@ const searchUsers = async () => {
             userList.innerHTML = '<p>Không tìm thấy người dùng nào.</p>';
         } else {
             users.forEach(user => {
-                console.log('users', user)
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
                 
