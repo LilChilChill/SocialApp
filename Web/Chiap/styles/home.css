@@ -67,7 +67,7 @@ body, ul, li, a{
   }
   
   .sidebar ul li {
-    padding: 10px 15px;
+    padding: 10px 10px;
     cursor: pointer;
     border-radius: 5px;
   }
@@ -85,7 +85,7 @@ body, ul, li, a{
     display: flex;
     flex: 1;
     justify-content: center;
-    padding: 0 20px;
+    padding: 35px 20px;
     
   }
   
@@ -94,7 +94,7 @@ body, ul, li, a{
     padding: 0 15px;
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
   
   .post-header {
@@ -346,14 +346,63 @@ body, ul, li, a{
     align-items: flex-start;
     flex-direction: column;
   }
-  
-  @media (max-width: 600px) {
-    .container {
-        padding: 10px;
+  @media (max-width: 1000px) {
+    .sidebar{
+      display: none;
     }
-  
+    .container {
+      padding: 10px;
+    }
+    .feed {
+      display: flex;
+      flex: 1;
+      padding: 0 20px;
+      justify-content: flex-start;
+    }
+    .posts {
+      width: 65%;
+    }
+    .search-bar {
+      width: 250px;
+     }
+  }
+  @media (max-width: 600px) {
+    .navbar i {
+      font-size: 15px;
+    }
+    .List{
+      display: none;
+    }
+    .feed {
+      display: flex;
+      flex: 1;
+      padding: 0 20px;
+      justify-content: center;
+    }
+    .posts {
+      width: 70%;
+    }
+    .search-bar {
+     width: auto;
+     height: 10px;
+    }
+  }
+  @media (max-width:400px) {
+    .navbar i {
+      font-size: 12px;
+    }
+    .search-bar {
+     width: auto;
+     height: 10px;
+    }
+    .search-bar {
+      width: 120px;
+      height: 5px;
+     }
   }
   .notification{
     position: relative;
     top: 10%;
   }
+
+  
