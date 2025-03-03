@@ -48,13 +48,13 @@ body, ul, li, a{
     color: #ffffff;
   }
   
-  /* Main Container */
+  
   .main-container {
     display: flex;
     margin: 150px 75px;
   }
   
-  /* Sidebar */
+  
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@ body, ul, li, a{
     background-color: #e4e6eb;
   }
   
-  /* Feed */
+  
   .feed {
     flex: 1;
     padding: 20px;
@@ -160,7 +160,7 @@ body, ul, li, a{
     font-size: 14px;
     color: #333;
   }
-/* */
+
 
 .container {
   max-width: 1000px;
@@ -245,7 +245,7 @@ body, ul, li, a{
   margin: 20px auto;
   display: block;
 }
-/* From Uiverse.io by cssbuttons-io */ 
+
 .button {
   position: absolute;
   top: 130%;
@@ -323,8 +323,8 @@ body, ul, li, a{
 
 .post-images-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Tự động điều chỉnh số cột */
-  gap: 10px; /* Khoảng cách giữa các ảnh */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+  gap: 10px; 
   max-width: 100%;
 }
 
@@ -333,7 +333,7 @@ body, ul, li, a{
   max-width: 300px;
   height: auto;
   border-radius: 5px;
-  object-fit: cover; /* Đảm bảo ảnh đẹp hơn */
+  object-fit: cover; 
   cursor: pointer;
 }
 

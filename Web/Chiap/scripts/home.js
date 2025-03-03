@@ -201,7 +201,7 @@ const displayPosts = (posts) => {
                     <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
                 </div>
             </div>
-            <p>${post.title}</p>
+            <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
             <div class="post-files">${filesHtml}</div>
         `;
 
