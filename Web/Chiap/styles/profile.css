@@ -173,7 +173,6 @@ body, ul, li, a{
   position: relative;
   top: 50px;
   min-height: auto; 
-  margin-bottom: 100px;
 }
 
 .user-info {
@@ -189,12 +188,12 @@ body, ul, li, a{
 }
 
 .update-form {
-  display: none;
   margin-top: 20px;
-  max-width: 500px;
-  justify-content: center;
-  align-items: center;
-  align-items: center;
+  max-width: 310px;
+  position: relative;
+  left: 35%;
+  top: 100px;
+
 }
 
 .update-form input,

@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background: url('../img/f12.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 h1 {
@@ -15,10 +14,9 @@ h1 {
 }
 input[type="text"] {
     padding: 10px;
-    width: 300px;
+    max-width: 300px;
     border: none;
     border-radius: 5px;
-    margin-right: 10px;
 }
 
 .user-list {
@@ -36,7 +34,7 @@ input[type="text"] {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     top: 10%;
-    margin-top: 100px;
+    margin-top: 70px;
 }
 .notification {
     color: green;
@@ -51,12 +49,12 @@ input[type="text"] {
     display: none;
 }
 
-#avatar{
+/* #avatar{
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
-}
+} */
 
 .userName{
     display: flex;
