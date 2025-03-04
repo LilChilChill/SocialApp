@@ -116,7 +116,7 @@ const postStatus = document.getElementById('postStatus');
 const postFiles = document.getElementById('postImage');
 
 const API_BASE_URL = `${API_URL}/api/feeds/posts`;
-
+//Tải post
 const loadProfilePosts = async () => {
     const userId = localStorage.getItem('userId');
     const res = await fetch(`${API_BASE_URL}?userId=${userId}`);
@@ -131,7 +131,7 @@ const loadProfilePosts = async () => {
 
 document.addEventListener('DOMContentLoaded', loadProfilePosts);
 
-
+//Hiển thị bài đăng
 const displayPosts = (posts) => {
     postsContainer.innerHTML = '';
     posts.forEach((post) => {
@@ -198,6 +198,7 @@ const displayPosts = (posts) => {
                     <div class="post-setting">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                         <div class="post-menu hidden">
+                            <button class="edit-post-btn" data-post-id="${post._id}" data-title="${post.title}" data-status="${post.status}">Chỉnh sửa bài viết</button>
                             <button class="delete-post-btn" data-post-id="${post._id}">Xóa bài viết</button>
                         </div>
                     </div>
@@ -239,7 +240,7 @@ const displayPosts = (posts) => {
 
     });
 };
-
+//Tạo post
 postButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     const title = postContent.value.trim();
@@ -280,7 +281,70 @@ postButton.addEventListener('click', async () => {
         console.error('Error:', error);
     }
 });
+//Cập nhật bài đăng
+postsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('edit-post-btn')) {
+        currentPostId = e.target.dataset.postId;
+        editTitle.value = e.target.dataset.title;
+        editStatus.value = e.target.dataset.status;
+        popup.classList.remove('hidden');
+    }
+});
 
+const updatePost = async (postId, title, status) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/${postId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ title, status })
+        });
+
+        if (response.ok) {
+            alert('Cập nhật bài viết thành công');
+            loadProfilePosts();
+        } else {
+            const data = await response.json();
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Lỗi:', error);
+        alert('Có lỗi xảy ra.');
+    }
+};
+
+const popup = document.querySelector('.popup');
+const closePopup = document.querySelector('.close-popup');
+const editTitle = document.querySelector('#edit-title');
+const editStatus = document.querySelector('#edit-status');
+const saveEditBtn = document.querySelector('#save-edit-btn');
+let currentPostId = '';
+
+closePopup.onclick = () => {
+    popup.classList.add('hidden');
+};
+
+saveEditBtn.onclick = async () => {
+    const newTitle = editTitle.value;
+    const newStatus = editStatus.value;
+
+    if (newTitle.trim() !== '') {
+        await updatePost(currentPostId, newTitle, newStatus);
+        popup.classList.add('hidden');
+    } else {
+        alert('Nội dung bài viết không được để trống');
+    }
+};
+
+window.onclick = (e) => {
+    if (e.target === popup) {
+        popup.classList.add('hidden');
+    }
+};
+
+//Xóa Post
 const deletePost = async (postId) => {
     const token = localStorage.getItem('token');
     try {
@@ -303,5 +367,11 @@ const deletePost = async (postId) => {
     }
 };
 
+postsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('fa-ellipsis-vertical')) {
+        const menu = e.target.nextElementSibling;
+        menu.classList.toggle('hidden');
+    }
+});
 
 document.addEventListener('DOMContentLoaded', loadProfilePosts);

@@ -77,6 +77,20 @@
       <img id="lightboxImage" src="" alt="Hình ảnh">
       <span class="lightbox-arrow right" onclick="nextImage()">&#10095;</span>
     </div>
+    <div class="popup hidden">
+      <div class="popup-content">
+          <span class="close-popup">&times;</span>
+          <h3>Chỉnh sửa bài viết</h3>
+          <textarea id="edit-title" placeholder="Nội dung bài viết"></textarea>
+          <select id="edit-status">
+            <option value="public">Công khai</option>
+            <option value="private">Riêng tư</option>
+            <option value="friends">Bạn bè</option>
+          </select>
+          <button id="save-edit-btn">Lưu chỉnh sửa</button>
+      </div>
+  </div>
+  
     
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/profile.js"></script>
