@@ -54,10 +54,38 @@ const displayPosts = (posts) => {
                 filesHtml += documents.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
             }
             if (images.length > 0) {
-                filesHtml += images.map(file => `<img src="${file.data}" alt="Hình ảnh" class="post-image">`).join('');
+                let gridClass = '';
+                if (images.length === 2) {
+                    gridClass = 'two-images';
+                } else if (images.length >= 3 && images.length <= 4) {
+                    gridClass = 'three-four-images';
+                } 
+            
+                filesHtml += `<div class="post-images-grid ${gridClass}">`;
+            
+                images.slice(0, 4).forEach((file, index) => {
+                    if (index === 3 && images.length > 4) {
+                        filesHtml += `
+                            <div class="post-image-overlay">
+                                <img src="${file.data}" alt="Hình ảnh" class="post-image">
+                                <span>+${images.length - 4}</span>
+                            </div>
+                        `;
+                    } else {
+                        filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                    }
+                });
+            
+                filesHtml += `</div>`;
             }
+            
+            
             if (videos.length > 0) {
-                filesHtml += videos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`).join('');
+                if (videos.length === 1) {
+                    filesHtml += `<video controls class="post-video"><source src="${videos[0].data}" type="${videos[0].contentType}"></video>`;
+                } else {
+                    filesHtml += '<div class="post-videos-grid">' + videos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`).join('') + '</div>';
+                }
             }
             filesHtml += '</div>';
 
@@ -111,4 +139,53 @@ function loadMorePosts() {
         currentPage += 1
     })
 }
+
+let currentIndex = 0;
+let currentImages = [];
+
+const openLightbox = (src, images) => {
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+  
+  currentImages = images;
+  currentIndex = images.indexOf(src);
+
+  lightboxImage.src = src;
+  lightbox.classList.add("show");
+};
+
+const closeLightbox = () => {
+  const lightbox = document.getElementById("lightbox");
+  lightbox.classList.remove("show");
+};
+window.closeLightbox = closeLightbox
+
+const prevImage = () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    document.getElementById("lightboxImage").src = currentImages[currentIndex];
+  }
+};
+
+const nextImage = () => {
+  if (currentIndex < currentImages.length - 1) {
+    currentIndex++;
+    document.getElementById("lightboxImage").src = currentImages[currentIndex];
+  }
+};
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("post-image")) {
+    const images = Array.from(e.target.closest(".post-images-grid").querySelectorAll("img")).map(img => img.src);
+    openLightbox(e.target.src, images);
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") prevImage();
+  if (e.key === "ArrowRight") nextImage();
+  if (e.key === "Escape") closeLightbox();
+});
+
+
 document.addEventListener('DOMContentLoaded', loadPosts);
