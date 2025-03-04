@@ -11,140 +11,7 @@ function logout() {
 }
 
 window.logout = logout
-function getFriends() {
-    const token = localStorage.getItem('token'); 
 
-    if (!token) {
-        alert('Vui lòng đăng nhập.');
-        window.location.href = window.location.origin; 
-        return;
-    }
-
-    fetch(`${API_URL}/api/users/friends`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            if (response.status === 401) {
-                alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
-                localStorage.removeItem("token");
-                window.location.href = window.location.origin;
-            }
-            throw new Error("Lỗi khi tải danh sách bạn bè.");
-        }
-        return response.json();
-    })
-    .then(friends => {
-        const friendList = document.getElementById('friendList');
-        friendList.innerHTML = ''; 
-
-        if (friends.length === 0) {
-            friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
-        } else {
-            friends.forEach(friend => {
-                const friendAvatar = friend.avatar ? friend.avatar : '../img/default-avatar.png';
-
-                const friendItem = document.createElement('div');
-                friendItem.classList.add('friend-item');
-                friendItem.onclick = () => openChat(friend._id, friend.name, friendAvatar);
-
-                friendItem.innerHTML = `
-                    <div class='chatUser'>
-                        <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
-                        <div class='content'>
-                            <span>${friend.name}</span>
-                        </div>
-                    </div>
-                `;
-                friendList.appendChild(friendItem);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Lỗi khi lấy danh sách bạn bè:', error);
-        document.getElementById('friendList').innerHTML = '<p>Không thể tải danh sách bạn bè. Vui lòng thử lại sau.</p>';
-    });
-}
-const socket = io(`${API_URL}`);
-socket.on('receiveMessage', (message) => {
-    // console.log('Nhận tin nhắn:', message);
-});
-
-socket.on('disconnect', () => {
-    console.log(Error);
-});
-function connectSocket() {
-    socket.on('connect', () => {
-        const userId = localStorage.getItem('userId');
-        // console.log('Đã kết nối với server:', socket.id);
-        if (userId) {
-            socket.emit('register', userId);
-            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
-        } else {
-            console.error('Không tìm thấy userId trong localStorage.');
-        }
-    });
-}
-window.connectSocket = connectSocket;
-
-function openChat(friendId, friendName, friendAvatar, page = 1) {
-    const chatPopup = document.getElementById("chatPopup")
-    document.getElementById("username").textContent = friendName;
-    document.getElementById("avatar").src = friendAvatar
-    const chatArea = document.getElementById('chatMessages');
-
-    fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Lỗi khi lấy tin nhắn');
-        return response.json();
-    })
-    .then(messages => {
-        chatArea.innerHTML = '';
-
-        if (messages.length === 0) {
-            chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
-        } else {
-            messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
-
-                const fileUrl = message.fileUrl;
-
-                messageDiv.innerHTML = `
-                    ${message.sender === friendId ? `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : '<img src="" alt="Bạn" style="display: none;">'}
-                    <div class="msgContent">
-                        ${message.content ? `<div class="messageContent"><p>${message.content.replace(/\n/g, '<br>')}</p></div>` : ''}
-                        ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>` : ''}
-                    </div>
-                `;
-                chatArea.appendChild(messageDiv);
-            });
-        }
-
-        chatArea.scrollTop = chatArea.scrollHeight;
-        connectSocket()
-    })
-    .catch(error => {
-        console.error('Lỗi khi lấy tin nhắn:', error);
-        chatArea.innerHTML = '<p>Không thể tải tin nhắn. Vui lòng thử lại sau.</p>';
-    });
-    
-    chatPopup.style.display = "flex";
-    
-}
-
-function closeChat() {
-    document.getElementById("chatPopup").style.display = "none";
-}
-window.closeChat = closeChat;
-
-getFriends();
 
 
 //Home
@@ -176,39 +43,47 @@ const displayPosts = (posts) => {
     posts.forEach((post) => {
         if(post.status == 'public') {
             const postElement = document.createElement('div');
-        postElement.className = 'post';
+            postElement.className = 'post';
 
-        let filesHtml = '';
-        if (post.files.length > 0) {
-            filesHtml = `<div class="post-images-container">` + post.files.map(file => {
-                if (file.fileType === 'image') {
-                    return `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
-                } else if (file.fileType === 'video') {
-                    return `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`;
-                } else {
-                    return `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`;
-                }
-            }).join('') + `</div>`;
-        }
-        
-        const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
-        const authorName = post.author.name || 'Người dùng ẩn danh'
-        postElement.innerHTML = `
-            <div class="post-header">
-                <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
-                <div class="post-info">
-                    <h4>${authorName}</h4>
-                    <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
+            let documents = post.files.filter(file => file.fileType === 'document');
+            let images = post.files.filter(file => file.fileType === 'image');
+            let videos = post.files.filter(file => file.fileType === 'video');
+
+            let filesHtml = '<div class="post-files">';
+            if (documents.length > 0) {
+                filesHtml += documents.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
+            }
+            if (images.length > 0) {
+                filesHtml += images.map(file => `<img src="${file.data}" alt="Hình ảnh" class="post-image">`).join('');
+            }
+            if (videos.length > 0) {
+                filesHtml += videos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`).join('');
+            }
+            filesHtml += '</div>';
+
+            const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
+            const authorName = post.author.name || 'Người dùng ẩn danh';
+            postElement.innerHTML = `
+                <div class="post-header">
+                    <div class="post-header-info">
+                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                        <div class="post-info">
+                            <h4>${authorName}</h4>
+                            <p><small>${post.status}</small></p>
+                            <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
+                        </div>
+                    </div>
+                    <div class="post-setting"><i class="fa-solid fa-ellipsis-vertical"></i></div>
                 </div>
-            </div>
-            <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
-            <div class="post-files">${filesHtml}</div>
-        `;
+                <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
+                ${filesHtml}
+            `;
 
-        postsContainer.appendChild(postElement);
+            postsContainer.appendChild(postElement);
         }
     });
 };
+
 
 let currentPage = 1
 let hasMorePost = true

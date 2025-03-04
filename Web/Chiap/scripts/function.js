@@ -43,7 +43,6 @@ const displayUserInfo = (user) => {
     userAvatar.innerHTML = `
         <img class="user-avatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
     `;
-    console.log(avatarUrl);
 };
 getUserInfo()
 
@@ -171,3 +170,154 @@ searchInput.addEventListener('keypress', (e) => {
         searchUsers();
     }
 });
+
+function getFriends() {
+    const token = localStorage.getItem('token'); 
+
+    if (!token) {
+        alert('Vui lòng đăng nhập.');
+        window.location.href = window.location.origin; 
+        return;
+    }
+
+    fetch(`${API_URL}/api/users/friends`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+                localStorage.removeItem("token");
+                window.location.href = window.location.origin;
+            }
+            throw new Error("Lỗi khi tải danh sách bạn bè.");
+        }
+        return response.json();
+    })
+    .then(friends => {
+        const friendList = document.getElementById('friendList');
+        friendList.innerHTML = ''; 
+
+        if (friends.length === 0) {
+            friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
+        } else {
+            friends.forEach(friend => {
+                const friendAvatar = friend.avatar ? friend.avatar : '../img/default-avatar.png';
+
+                const friendItem = document.createElement('div');
+                friendItem.classList.add('friend-item');
+                friendItem.onclick = () => openChat(friend._id, friend.name, friendAvatar);
+
+                friendItem.innerHTML = `
+                    <div class='chatUser'>
+                        <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
+                        <div class='content'>
+                            <span>${friend.name}</span>
+                        </div>
+                    </div>
+                `;
+                friendList.appendChild(friendItem);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy danh sách bạn bè:', error);
+        document.getElementById('friendList').innerHTML = '<p>Không thể tải danh sách bạn bè. Vui lòng thử lại sau.</p>';
+    });
+}
+const socket = io(`${API_URL}`);
+socket.on('receiveMessage', (message) => {
+    // console.log('Nhận tin nhắn:', message);
+});
+
+socket.on('disconnect', () => {
+    console.log(Error);
+});
+function connectSocket() {
+    socket.on('connect', () => {
+        const userId = localStorage.getItem('userId');
+        // console.log('Đã kết nối với server:', socket.id);
+        if (userId) {
+            socket.emit('register', userId);
+            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+        } else {
+            console.error('Không tìm thấy userId trong localStorage.');
+        }
+    });
+}
+window.connectSocket = connectSocket;
+
+function openChat(friendId, friendName, friendAvatar, page = 1) {
+    const chatPopup = document.getElementById("chatPopup")
+    document.getElementById("username").textContent = friendName;
+    document.getElementById("avatar").src = friendAvatar
+    const chatArea = document.getElementById('chatMessages');
+
+    fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Lỗi khi lấy tin nhắn');
+        return response.json();
+    })
+    .then(messages => {
+        chatArea.innerHTML = '';
+
+        if (messages.length === 0) {
+            chatArea.innerHTML = '<p>Không có tin nhắn nào.</p>';
+        } else {
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
+
+                const fileUrl = message.fileUrl;
+
+                messageDiv.innerHTML = `
+                    ${message.sender === friendId ? `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : '<img src="" alt="Bạn" style="display: none;">'}
+                    <div class="msgContent">
+                        ${message.content ? `<div class="messageContent"><p>${message.content.replace(/\n/g, '<br>')}</p></div>` : ''}
+                        ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>` : ''}
+                    </div>
+                `;
+                chatArea.appendChild(messageDiv);
+            });
+        }
+
+        chatArea.scrollTop = chatArea.scrollHeight;
+        connectSocket()
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy tin nhắn:', error);
+        chatArea.innerHTML = '<p>Không thể tải tin nhắn. Vui lòng thử lại sau.</p>';
+    });
+    
+    chatPopup.style.display = "flex";
+    
+}
+
+function closeChat() {
+    event.preventDefault();
+    document.getElementById("chatPopup").style.display = "none";
+}
+window.closeChat = closeChat;
+
+function toggleMessage() {
+    event.preventDefault();
+    const chatMessage = document.getElementById("chatMessage");
+    chatMessage.style.display = chatMessage.style.display === 'none' ? 'flex' : 'none';
+}
+window.toggleMessage = toggleMessage;
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeChat();
+        const chatMessage = document.getElementById("chatMessage");
+        chatMessage.style.display = 'none';
+    }
+})
+
+getFriends();
