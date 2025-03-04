@@ -363,7 +363,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") prevImage();
   if (e.key === "ArrowRight") nextImage();

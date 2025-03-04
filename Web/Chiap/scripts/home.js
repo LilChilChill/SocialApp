@@ -56,29 +56,30 @@ const displayPosts = (posts) => {
             if (images.length > 0) {
                 let gridClass = '';
                 if (images.length === 2) {
-                    gridClass = 'two-images';
+                  gridClass = 'two-images';
                 } else if (images.length >= 3 && images.length <= 4) {
-                    gridClass = 'three-four-images';
-                } 
-            
+                  gridClass = 'three-four-images';
+                } else if (images.length > 4) {
+                  gridClass = 'three-four-images';
+                }
+              
                 filesHtml += `<div class="post-images-grid ${gridClass}">`;
-            
+              
                 images.slice(0, 4).forEach((file, index) => {
-                    if (index === 3 && images.length > 4) {
-                        filesHtml += `
-                            <div class="post-image-overlay">
-                                <img src="${file.data}" alt="Hình ảnh" class="post-image">
-                                <span>+${images.length - 4}</span>
-                            </div>
-                        `;
-                    } else {
-                        filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
-                    }
+                  if (index === 3 && images.length > 4) {
+                    filesHtml += `
+                      <div class="post-image-overlay">
+                        <img src="${file.data}" alt="Hình ảnh" class="post-image">
+                        <span>+${images.length - 4}</span>
+                      </div>
+                    `;
+                  } else {
+                    filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                  }
                 });
-            
+              
                 filesHtml += `</div>`;
-            }
-            
+              }
             
             if (videos.length > 0) {
                 if (videos.length === 1) {
