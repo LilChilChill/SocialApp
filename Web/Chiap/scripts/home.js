@@ -140,52 +140,5 @@ function loadMorePosts() {
     })
 }
 
-let currentIndex = 0;
-let currentImages = [];
-
-const openLightbox = (src, images) => {
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImage = document.getElementById("lightboxImage");
-  
-  currentImages = images;
-  currentIndex = images.indexOf(src);
-
-  lightboxImage.src = src;
-  lightbox.classList.add("show");
-};
-
-const closeLightbox = () => {
-  const lightbox = document.getElementById("lightbox");
-  lightbox.classList.remove("show");
-};
-window.closeLightbox = closeLightbox
-
-const prevImage = () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    document.getElementById("lightboxImage").src = currentImages[currentIndex];
-  }
-};
-
-const nextImage = () => {
-  if (currentIndex < currentImages.length - 1) {
-    currentIndex++;
-    document.getElementById("lightboxImage").src = currentImages[currentIndex];
-  }
-};
-
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("post-image")) {
-    const images = Array.from(e.target.closest(".post-images-grid").querySelectorAll("img")).map(img => img.src);
-    openLightbox(e.target.src, images);
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") prevImage();
-  if (e.key === "ArrowRight") nextImage();
-  if (e.key === "Escape") closeLightbox();
-});
-
 
 document.addEventListener('DOMContentLoaded', loadPosts);
