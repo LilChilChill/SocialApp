@@ -20,7 +20,8 @@
     </div>
     <div class="navbar-icons">
       <span><a href=""><i class="fa-solid fa-bell"></i></a></span> 
-      <span><a href="message.html"><i class="fa-solid fa-message"></i></a></span>
+      <!-- <span><a href="message.html"><i class="fa-solid fa-message"></i></a></span> -->
+      <span><a href="#" onclick="toggleMessage()"><i class="fa-solid fa-message"></i></a></span>
       <!-- <span><a href="profile.html"><i class="fa-solid fa-user"></i></a></i></span> -->
       <!-- <a href="profile.html" id="userAvatar"></a> -->
        <a href="profile.html">
@@ -90,6 +91,10 @@
     <div class="chat-footer">
         <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
     </div>
+</div>
+
+<div class="chatMessage" id="chatMessage" style="display: none;">
+  
 </div>
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>

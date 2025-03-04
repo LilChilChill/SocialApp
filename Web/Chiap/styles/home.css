@@ -105,9 +105,17 @@ body, ul, li, a{
   .post-header {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    flex-direction: row;
+    justify-content: space-between;
   }
-  
+  .post-header .post-header-info{
+    display: flex;
+    flex-direction: row;
+  }
+  .post-setting{
+    cursor: pointer;
+  }
   .user-avatar {
     width: 35px !important;
     height: 35px !important;
@@ -148,7 +156,7 @@ body, ul, li, a{
   .chat-popup { 
     display: flex;
     position: fixed;
-    bottom: 20px;
+    bottom: 10px;
     right: 20px;
     width: 320px;
     background: white;
@@ -156,7 +164,6 @@ body, ul, li, a{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     flex-direction: column;
-    right: 15%;
     z-index: 3;
 }
 .chat-popup .avatar{
@@ -251,11 +258,7 @@ body, ul, li, a{
     padding: 20px;
     border-radius: 8px;
   }
-  .post-header{
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
+ 
   .post-avatar{
     width: 50px;
     height: 50px;
@@ -282,15 +285,21 @@ body, ul, li, a{
   }
   
   .post-image {
-    width: 100%;
-    height: auto;
+    /* width: 100%;
+    height: auto; */
+    width: 250px;
+    height: 300px;
     object-fit: cover; 
     cursor: pointer;
+    gap: 10px;
+    margin: 5px;
   }
   
   
   .post-video {
-    width: 100%;
+    /* width: 100%;
+    height: auto; */
+    width: 200px;
     height: auto;
     border-radius: 5px;
   }
@@ -358,6 +367,37 @@ body, ul, li, a{
     align-items: flex-start;
     flex-direction: column;
   }
+  .chatMessage{
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    background-color: #f7f7f7;
+    z-index: 4;
+    top: 6%;
+    right: 1%;
+    width: 250px;
+    height: 85vh;
+  }
+  .post-info{
+    display: flex;
+    flex-direction: column;
+  }
+  .post-info h4{
+    margin-bottom: -5px;
+    margin-top: 10px;
+  }
+  .post-info p{
+    font-size: 12px;
+    color: #8e8e8e;
+  }
+  .post-info a{
+    font-size: 12px;
+    margin-top: -10px;
+  }
+
   @media (max-width: 1000px) {
     .sidebar{
       display: none;
