@@ -112,6 +112,7 @@ getUserInfo();
 const postsContainer = document.getElementById('posts');
 const postButton = document.getElementById('postButton');
 const postContent = document.getElementById('postContent');
+const postStatus = document.getElementById('postStatus');
 const postFiles = document.getElementById('postImage');
 
 const API_BASE_URL = `${API_URL}/api/feeds/posts`;
@@ -194,13 +195,48 @@ const displayPosts = (posts) => {
                             <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
-                    <div class="post-setting"><i class="fa-solid fa-ellipsis-vertical"></i></div>
+                    <div class="post-setting">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                        <div class="post-menu hidden">
+                            <button class="delete-post-btn" data-post-id="${post._id}">Xóa bài viết</button>
+                        </div>
+                    </div>
+
                 </div>
                 <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
                 ${filesHtml}
             `;
 
+            const settingBtn = postElement.querySelector('.post-setting i');
+            const menu = postElement.querySelector('.post-menu');
+
+            if (settingBtn) {
+                settingBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    menu.classList.toggle('show');
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (menu.classList.contains('show') && !menu.contains(e.target) && e.target !== settingBtn) {
+                        menu.classList.remove('show');
+                    }
+                });
+            }
+
         postsContainer.appendChild(postElement);
+        const deleteBtn = postElement.querySelector('.delete-post-btn');
+
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation(); 
+                const postId = deleteBtn.dataset.postId;
+                const confirmDelete = confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
+                if (confirmDelete) {
+                    deletePost(postId)
+                }
+            });
+        }
+
     });
 };
 
@@ -208,6 +244,7 @@ postButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     const title = postContent.value.trim();
     const files = postFiles.files;
+    const status = postStatus.value;
 
     if (!title && files.length === 0) {
         alert('Vui lòng nhập nội dung hoặc chọn tệp.');
@@ -216,6 +253,8 @@ postButton.addEventListener('click', async () => {
 
     const formData = new FormData();
     formData.append('title', title);
+    formData.append('status', status);
+
     for (let file of files) {
         formData.append('files', file);
     }
@@ -230,6 +269,7 @@ postButton.addEventListener('click', async () => {
         if (res.ok) {
             postContent.value = '';
             postFiles.value = '';
+            postStatus.value = 'public';
             alert('Đăng bài thành công!');
             loadProfilePosts();
         } else {
@@ -240,5 +280,28 @@ postButton.addEventListener('click', async () => {
         console.error('Error:', error);
     }
 });
+
+const deletePost = async (postId) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await fetch(`${API_BASE_URL}/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+            alert(result.message);
+            loadProfilePosts();
+        } else {
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error('Lỗi:', error);
+    }
+};
+
 
 document.addEventListener('DOMContentLoaded', loadProfilePosts);
