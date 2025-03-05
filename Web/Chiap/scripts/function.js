@@ -54,6 +54,7 @@ const error = document.getElementById('error');
 
 const searchUsers = async () => {
     const query = searchInput.value.trim()
+    // const query = removeAccents(searchInput.value.trim().toLowerCase());
     userList.innerHTML = ''
     notification.style.display = 'none'
     error.style.display = 'none'
@@ -108,6 +109,7 @@ const searchUsers = async () => {
                 userList.appendChild(userItem);
             });
         }
+        console.log(response);
     } catch (error) {
         console.error(error);
         error.innerHTML = 'Có lỗi xảy ra trong quá trình tìm kiếm.';
@@ -171,6 +173,24 @@ searchInput.addEventListener('keypress', (e) => {
         userList.style.display = 'flex';
     }
 });
+
+let debounceTimer;
+
+searchInput.addEventListener('input', () => {
+    userList.style.display = 'flex';
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+        if (searchInput.value.trim() !== '') {
+            searchUsers();
+        } else {
+            userList.innerHTML = '';
+            userList.style.display = 'none';
+        }
+    }, 500);
+});
+
 
 function getFriends() {
     const token = localStorage.getItem('token'); 
