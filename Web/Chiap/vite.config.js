@@ -14,10 +14,12 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'),  // Trang chính
-        home: path.resolve(__dirname, 'components/home.html'),  // Trang home
-        profile: path.resolve(__dirname, 'components/profile.html'),  // Trang profile
-        message: path.resolve(__dirname, 'components/message.html'),  // Trang message
+        main: path.resolve(__dirname, 'index.html'),
+        home: path.resolve(__dirname, 'components/home.html'),
+        profile: path.resolve(__dirname, 'components/profile.html'),
+        message: path.resolve(__dirname, 'components/message.html'),
+        user: path.resolve(__dirname, 'components/user.html'),
+        friendNoti: path.resolve(__dirname, 'components/friendNoti.html'),
       }
     }
   }

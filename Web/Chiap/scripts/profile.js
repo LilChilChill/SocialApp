@@ -192,8 +192,8 @@ const displayPosts = (posts) => {
                     <div class="post-header-info">
                         <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
                         <div class="post-info">
-                            <h4>${authorName}</h4>
-                            <p><small>${post.status}</small></p>
+                            <h4 onclick="goToProfile()">${authorName}</h4>
+                            <p onclick="goToProfile()"><small>${post.status}</small></p>
                             <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
@@ -242,6 +242,15 @@ const displayPosts = (posts) => {
     });
 };
 
+const goToProfile = (userId) => {
+    const currentUserId = localStorage.getItem('userId');
+    if (userId === currentUserId) {
+        window.location.href = window.location.origin + '/components/profile.html';
+    } else {
+        window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
+    }
+};
+window.goToProfile = goToProfile;
 //Tạo post
 postButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');

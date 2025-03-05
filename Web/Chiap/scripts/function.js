@@ -109,7 +109,6 @@ const searchUsers = async () => {
                 userList.appendChild(userItem);
             });
         }
-        console.log(response);
     } catch (error) {
         console.error(error);
         error.innerHTML = 'Có lỗi xảy ra trong quá trình tìm kiếm.';
@@ -188,7 +187,7 @@ searchInput.addEventListener('input', () => {
             userList.innerHTML = '';
             userList.style.display = 'none';
         }
-    }, 500);
+    }, 300);
 });
 
 
@@ -255,7 +254,9 @@ const goToProfile = (userId) => {
     if (userId === currentUserId) {
         window.location.href = window.location.origin + '/components/profile.html';
     } else {
-        window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
+        window.location.href = window.location.origin + '/components/user.html?userId=' + userId;
+        ;
+        
     }
 };
 
@@ -334,6 +335,9 @@ function closeChat() {
     event.preventDefault();
     const chatPopup = document.getElementById("chatPopup")
     chatPopup.style.display = "none";
+    const messageInput = document.getElementById("messageInput")
+    messageInput.value = '';
+    
 }
 window.closeChat = closeChat;
 
@@ -349,6 +353,7 @@ document.addEventListener("keydown", function(event) {
         closeChat();
         const chatMessage = document.getElementById("chatMessage");
         chatMessage.style.display = 'none';
+
         userList.style.display = 'none'
         searchInput.value = '';
     }

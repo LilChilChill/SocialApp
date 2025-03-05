@@ -379,3 +379,15 @@ body, ul, li, a{
   .lightbox-arrow.right {
     right: 20px;
   }
+
+  
+  .notification{
+    position: relative;
+    top: 30%;
+    z-index: 4;
+  }
+  .error{
+    position: relative;
+    top: 30%;
+    z-index: 4;
+  }
