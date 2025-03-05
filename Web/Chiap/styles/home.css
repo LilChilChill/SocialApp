@@ -15,6 +15,7 @@ body, ul, li, a{
     background-color: #1877f2;
     color: white;
     position: fixed;
+    top: 0;
     z-index: 3;
   }
   

@@ -100,8 +100,8 @@ const searchUsers = async () => {
                 
                 userItem.innerHTML = `
                     <div class='userName'> 
-                        <img src="${avatarUrl}" alt="${user.name}" id="avatar">
-                        <span>${user.name}</span>    
+                        <img onclick="goToProfile('${user._id}')" src="${avatarUrl}" alt="${user.name}" id="avatar">
+                        <span onclick="goToProfile('${user._id}')">${user.name}</span>    
                     </div>
                     <button onclick="addFriend('${user._id}')">Thêm bạn</button>
                 `;
@@ -168,6 +168,7 @@ searchButton.addEventListener('click', searchUsers);
 searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         searchUsers();
+        userList.style.display = 'flex';
     }
 });
 
@@ -228,6 +229,16 @@ function getFriends() {
         document.getElementById('friendList').innerHTML = '<p>Không thể tải danh sách bạn bè. Vui lòng thử lại sau.</p>';
     });
 }
+
+const goToProfile = (userId) => {
+    const currentUserId = localStorage.getItem('userId');
+    if (userId === currentUserId) {
+        window.location.href = window.location.origin + '/components/profile.html';
+    } else {
+        window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
+    }
+};
+
 const socket = io(`${API_URL}`);
 socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
@@ -318,6 +329,8 @@ document.addEventListener("keydown", function(event) {
         closeChat();
         const chatMessage = document.getElementById("chatMessage");
         chatMessage.style.display = 'none';
+        userList.style.display = 'none'
+        searchInput.value = '';
     }
 })
 
@@ -361,7 +374,9 @@ document.addEventListener("click", (e) => {
   if (e.target.classList.contains("post-image")) {
     const images = Array.from(e.target.closest(".post-images-grid").querySelectorAll("img")).map(img => img.src);
     openLightbox(e.target.src, images);
-  }
+    }
+    userList.style.display = "none";
+    searchInput.value = '';
 });
 
 document.addEventListener("keydown", (e) => {
