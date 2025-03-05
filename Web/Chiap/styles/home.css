@@ -481,6 +481,14 @@ body, ul, li, a{
     font-size: 12px;
     margin-top: -10px;
   }
+  #loading {
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    color: #555;
+    display: none;
+  }
+
 
   @media (max-width: 1000px) {
     .sidebar{
