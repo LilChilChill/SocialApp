@@ -594,3 +594,15 @@ body, ul, li, a{
   }
 
 }
+
+
+.notification{
+  position: relative;
+  top: 30%;
+  z-index: 4;
+}
+.error{
+  position: relative;
+  top: 30%;
+  z-index: 4;
+}

@@ -49,12 +49,18 @@ h1 {
     text-align: center;
     margin-top: 20px;
     display: none;
+    top: 40%;
+    position: relative;
+    z-index: 4;
 }
 .error {
     color: red;
     text-align: center;
     margin-top: 20px;
     display: none;
+    top: 40%;
+    position: relative;
+    z-index: 4;
 }
 
 #avatar{
