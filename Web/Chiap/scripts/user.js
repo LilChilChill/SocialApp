@@ -1,5 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 document.title = "Chiap"
+console.log('Lỗi gì đó')
 
 const getUserProfile = async (userId) => {
     try {
