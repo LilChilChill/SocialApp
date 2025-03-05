@@ -55,17 +55,21 @@ const login = async (req, res) => {
 }
 
 const getUserProfile = async (req, res) => {
-    try{
-        const user = await userModel.findById(req.user._id).select('-password -friends')
-        if (!user)
-            return res.status(404).json({message: 'User not found'})
+    try {
+        const userId = req.params.userId ? req.params.userId : req.user._id;
 
-        res.status(200).json(user)
-    } catch(error){
-        console.log(error)
-        res.status(500).json({message: 'Server error'})
+        const user = await userModel.findById(userId).select('-password -friends');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};
+
 
 const updateUser = async (req, res) => {
     const userId = req.user._id;

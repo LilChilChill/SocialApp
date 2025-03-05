@@ -88,15 +88,15 @@ const displayPosts = (posts) => {
                 }
             }
             filesHtml += '</div>';
-
+            
             const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
             const authorName = post.author.name || 'Người dùng ẩn danh';
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-header-info">
-                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar" onclick="goToProfile('${post.author._id}')">
                         <div class="post-info">
-                            <h4>${authorName}</h4>
+                            <h4 onclick="goToProfile('${post.author._id}')" style="cursor: pointer;">${authorName}</h4>
                             <p><small>${post.status}</small></p>
                             <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
@@ -107,11 +107,21 @@ const displayPosts = (posts) => {
                 ${filesHtml}
             `;
 
+
             postsContainer.appendChild(postElement);
         }
     });
 };
 
+const goToProfile = (userId) => {
+    const currentUserId = localStorage.getItem('userId');
+    if (userId === currentUserId) {
+        window.location.href = window.location.origin + '/components/profile.html';
+    } else {
+        window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
+    }
+};
+window.goToProfile = goToProfile;
 
 const loadMorePosts = async () => {
     if (isLoadPosts || !hasMorePost) return;

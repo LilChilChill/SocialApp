@@ -19,10 +19,10 @@ const router = express.Router();
 router.post('/register', register);
 router.post('/login', login);
 router.get('/profile', authMiddleware, getUserProfile);
+router.get('/other/:userId', getUserProfile)
 router.put('/update', authMiddleware, upload.single('avatar'), updateUser);
 router.get('/', authMiddleware, getUsers);
 router.get('/search', authMiddleware, searchUsers);
 router.get('/friends', authMiddleware, getFriends);
-router.delete('/friends/:friendId', authMiddleware, removeFriend); // Sửa GET -> DELETE
-
+router.delete('/friends/:friendId', authMiddleware, removeFriend);
 module.exports = router;
