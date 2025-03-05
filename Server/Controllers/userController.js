@@ -115,21 +115,33 @@ const getUsers = async (req, res) => {
     }
 }
 
-const searchUsers = async (req, res) => {
-    const { query } = req.query; 
-    try {
-        const users = await userModel.find({
-            $or: [
-                { name: { $regex: query, $options: 'i' } }
-            ]
-        }).select('-password -friends');
+const removeAccents = require('remove-accents');
 
-        res.status(200).json(users);
+const searchUsers = async (req, res) => {
+    const { query } = req.query;
+    try {
+        if (!query) {
+            return res.status(400).json({ message: 'Query không được để trống' });
+        }
+
+        const users = await userModel.find().select('-password -friends'); // Lấy toàn bộ user
+        
+        const normalizedQuery = removeAccents(query.toLowerCase());
+
+        const filteredUsers = users.filter(user => {
+            const normalizedName = removeAccents(user.name.toLowerCase());
+            return normalizedName.includes(normalizedQuery);
+        });
+
+        res.status(200).json(filteredUsers);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+
 
 const getFriends = async (req, res) => {
     const userId = req.user._id
