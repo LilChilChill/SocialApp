@@ -12,20 +12,21 @@ function logout() {
 
 window.logout = logout
 
-
-
-//Home
 const postsContainer = document.getElementById('posts')
 const postButton = document.getElementById('postButton');
 const postContent = document.getElementById('postContent');
 const postFiles = document.getElementById('postImage'); 
 
-const API_BASE_URL =`${API_URL}/api/feeds/posts` ;
+const API_BASE_URL = `${API_URL}/api/feeds/posts`;
+
+let currentPage = 1
+let hasMorePost = true
+let isLoadPosts = false
 
 const loadPosts = async (page = 1) => {
     currentPage = 1
     hasMorePost = true
-    const res = await fetch(`${API_URL}/api/feeds/posts?page${page}`);
+    const res = await fetch(`${API_URL}/api/feeds/posts?page=${page}`);
 
     if (res.ok) {
         const posts = await res.json();
@@ -37,11 +38,9 @@ const loadPosts = async (page = 1) => {
 
 document.addEventListener('DOMContentLoaded', loadPosts);
 
-
 const displayPosts = (posts) => {
-    postsContainer.innerHTML = '';
     posts.forEach((post) => {
-        if(post.status == 'public') {
+        if (post.status == 'public') {
             const postElement = document.createElement('div');
             postElement.className = 'post';
 
@@ -56,31 +55,31 @@ const displayPosts = (posts) => {
             if (images.length > 0) {
                 let gridClass = '';
                 if (images.length === 2) {
-                  gridClass = 'two-images';
+                    gridClass = 'two-images';
                 } else if (images.length >= 3 && images.length <= 4) {
-                  gridClass = 'three-four-images';
+                    gridClass = 'three-four-images';
                 } else if (images.length > 4) {
-                  gridClass = 'three-four-images';
+                    gridClass = 'three-four-images';
                 }
-              
+
                 filesHtml += `<div class="post-images-grid ${gridClass}">`;
-              
+
                 images.slice(0, 4).forEach((file, index) => {
-                  if (index === 3 && images.length > 4) {
-                    filesHtml += `
-                      <div class="post-image-overlay">
-                        <img src="${file.data}" alt="Hình ảnh" class="post-image">
-                        <span>+${images.length - 4}</span>
-                      </div>
-                    `;
-                  } else {
-                    filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
-                  }
+                    if (index === 3 && images.length > 4) {
+                        filesHtml += `
+                        <div class="post-image-overlay">
+                            <img src="${file.data}" alt="Hình ảnh" class="post-image">
+                            <span>+${images.length - 4}</span>
+                        </div>
+                        `;
+                    } else {
+                        filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                    }
                 });
-              
+
                 filesHtml += `</div>`;
-              }
-            
+            }
+
             if (videos.length > 0) {
                 if (videos.length === 1) {
                     filesHtml += `<video controls class="post-video"><source src="${videos[0].data}" type="${videos[0].contentType}"></video>`;
@@ -114,32 +113,52 @@ const displayPosts = (posts) => {
 };
 
 
-let currentPage = 1
-let hasMorePost = true
-let isLoadPosts = false
-function loadMorePosts() {
-    if(!hasMorePost || isLoadPosts ) 
-        return
+const loadMorePosts = async () => {
+    if (isLoadPosts || !hasMorePost) return;
+    isLoadPosts = true;
 
-    fetch(`${API_URL}/api/feeds/posts?page${currentPage + 1}`,{
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    })
-    .then(response => {
-        if(!response.ok){
-            throw new Error('Lỗi lấy bài viết.')
+    try {
+        const res = await fetch(`${API_URL}/api/feeds/posts?page=${currentPage + 1}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (res.ok) {
+            const posts = await res.json();
+            if (posts.length === 0) {
+                hasMorePost = false;
+            } else {
+                displayPosts(posts);
+                currentPage += 1;
+            }
         }
-        return response.json()
-    })
-    .then(posts => {
-        if(posts.length === 0) {
-            hasMorePost = false
-            return
-        }
-        displayPosts(posts)
-        currentPage += 1
-    })
+    } catch (error) {
+        console.error('Lỗi tải thêm bài viết:', error);
+    }
+
+    isLoadPosts = false;
+};
+
+function showLoading() {
+    document.getElementById('loading').style.display = 'block';
 }
 
+function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+}
 
-document.addEventListener('DOMContentLoaded', loadPosts);
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        showLoading();
+        loadMorePosts().then(() => {
+            hideLoading();
+        });
+    }
+});
+
+window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        loadMorePosts();
+    }
+});

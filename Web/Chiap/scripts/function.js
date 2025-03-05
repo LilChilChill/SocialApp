@@ -301,7 +301,8 @@ function openChat(friendId, friendName, friendAvatar, page = 1) {
 
 function closeChat() {
     event.preventDefault();
-    document.getElementById("chatPopup").style.display = "none";
+    const chatPopup = document.getElementById("chatPopup")
+    chatPopup.style.display = "none";
 }
 window.closeChat = closeChat;
 
