@@ -17,12 +17,15 @@ body, ul, li, a{
     padding: 10px 0;
     background-color: #1877f2;
     color: white;
-    height: 40px;
+    height: 35px;
+    position: fixed;
+    z-index: 3;
   }
   
   .logo {
     font-size: 24px;
     font-weight: bold;
+    margin-left: 10px;
   }
 
   .logo a{
@@ -40,6 +43,7 @@ body, ul, li, a{
     display: flex;
     align-items: center;
     flex-direction: row;
+    margin-right: 10px;
   }
   .navbar-icons span {
     margin: 0 10px;
@@ -71,6 +75,7 @@ body, ul, li, a{
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
     position: relative;
     left: 10%;
+    top: 70px;
   }
   
   .sidebar ul li {
@@ -91,6 +96,8 @@ body, ul, li, a{
   .feed {
     flex: 1;
     padding: 20px;
+    position: relative;
+    top: 30px;
   }
 
   .feed-container {
@@ -158,6 +165,7 @@ body, ul, li, a{
     width: 35px !important;
     height: 35px !important;
     border-radius: 50%;
+    margin-right: 10px;
   }
   
   .post-user {
@@ -179,7 +187,7 @@ body, ul, li, a{
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
-  top: 50px;
+  top: 100px;
   min-height: auto; 
 }
 
@@ -388,6 +396,7 @@ body, ul, li, a{
 .post-images-grid {
   display: grid;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .two-images {

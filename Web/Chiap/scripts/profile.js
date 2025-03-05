@@ -204,7 +204,6 @@ const displayPosts = (posts) => {
                             <button class="delete-post-btn" data-post-id="${post._id}">Xóa bài viết</button>
                         </div>
                     </div>
-
                 </div>
                 <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
                 ${filesHtml}

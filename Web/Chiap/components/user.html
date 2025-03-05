@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Cá Nhân</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles/user.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><a href="home.html">Chiap</a></div>
+        <div style="display: flex; align-items: center;">
+          <input type="text" class="search-bar" id="searchInput" placeholder="Tìm kiếm...">
+          <a href="#" id="searchButton" style="text-decoration: none; color: #000; position: relative; right: 10%;">
+            <i class="fa-solid fa-magnifying-glass" ></i>
+          </a>
+        </div>
+        <div class="navbar-icons">
+          <span><a href=""><i class="fa-solid fa-bell"></i></a></span> 
+          <!-- <span><a href="message.html"><i class="fa-solid fa-message"></i></a></span> -->
+          <span><a href="#" onclick="toggleMessage()"><i class="fa-solid fa-message"></i></a></span>
+          <!-- <span><a href="profile.html"><i class="fa-solid fa-user"></i></a></i></span> -->
+          <!-- <a href="profile.html" id="userAvatar"></a> -->
+           <a href="profile.html">
+            <div id="userAvatar" class="user-avatar"></div>
+           </a>
+        </div>
+    </div>
+
+    <div class="container" id="userInfoContainer">
+        <div id="userInfo" class="user-info"></div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+          <ul>
+            <a href="#" ><li>Feed</li></a>
+          </ul>
+        </div>
+    
+        <div class="feed" id="feed">
+          <div class="feed-container">
+            <div class="posts" id="posts"></div>
+          </div>
+      </div>      
+    </div>
+
+
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-arrow left" onclick="prevImage()">&#10094;</span>
+        <img id="lightboxImage" src="" alt="Hình ảnh">
+        <span class="lightbox-arrow right" onclick="nextImage()">&#10095;</span>
+    </div>
+      
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script type="module" src="../scripts/function.js"></script>
+    <script type="module" src="../scripts/user.js"></script>
+    <script>
+        window.onload = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('userId');
+
+            if (userId) {
+                await getUserProfile(userId);
+            }
+        }
+    </script>
+</body>
+</html>
