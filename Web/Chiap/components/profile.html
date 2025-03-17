@@ -62,7 +62,11 @@
               <div class="post-form" id="post-form">
                 <div id="post-user" class="post-user"></div>
                 <textarea id="postContent" placeholder="Bạn đang nghĩ gì?"></textarea>
-                
+                <select id="postStatus" style="margin-bottom: 10px">
+                  <option value="public">Công khai</option>
+                  <option value="private">Riêng tư</option>
+                  <option value="friends">Bạn bè</option>
+                </select>
                 <input type="file" id="postImage" accept="image/*,video/*,.pdf,.doc,.docx" multiple>
                 <button id="postButton">Đăng bài</button>
               </div>

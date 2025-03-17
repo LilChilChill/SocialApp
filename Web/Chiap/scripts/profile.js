@@ -55,7 +55,7 @@ const displayUserInfo = (user) => {
         <img id="postUser" src="${avatarUrl}" alt="Avatar" >
         <div class="post-user-info">
             <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
-            <select id="postStatus" style="margin-bottom: 10px">
+            <select id="postStatus" style="margin-bottom: 10px" hidden>
                 <option value="public">Công khai</option>
                 <option value="private">Riêng tư</option>
                 <option value="friends">Bạn bè</option>
@@ -210,8 +210,8 @@ const displayPosts = (posts) => {
                     <div class="post-header-info">
                         <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
                         <div class="post-info">
-                            <h4 onclick="goToProfile()">${authorName}</h4>
-                            <p onclick="goToProfile()"><small>${post.status}</small></p>
+                            <h4 onclick="goToProfile('${post.author._id}')">${authorName}</h4>
+                            <p onclick="goToProfile('${post.author._id}')"><small>${post.status}</small></p>
                             <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
