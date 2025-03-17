@@ -121,7 +121,11 @@ const displayPosts = (posts) => {
                     <div class="comment-list">
                         ${post.comments.map(comment => `
                             <div class="comment">
-                                <strong>${comment.user.name || 'Ẩn danh'}:</strong> ${comment.text}
+                                <img src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <div class="comment-content">
+                                    <div class="comment-user">${comment.user?.name || 'Ẩn danh'}</div>
+                                    <div class="comment-text">${comment.text}</div>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
