@@ -719,6 +719,7 @@ body, ul, li, a{
   font-weight: 600;
   color: #333;
   margin-bottom: 2px;
+  cursor: pointer;
 }
 
 .comment-text {

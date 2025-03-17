@@ -129,8 +129,8 @@ const displayPosts = (posts) => {
                     <div class="post-header-info">
                         <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
                         <div class="post-info">
-                            <h4 onclick="goToProfile()">${authorName}</h4>
-                            <p onclick="goToProfile()"><small>${post.status}</small></p>
+                            <h4 onclick="goToProfile('${post.author._id}')">${authorName}</h4>
+                            <p onclick="goToProfile('${post.author._id}')"><small>${post.status}</small></p>
                             <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
