@@ -70,6 +70,10 @@ const displayPosts = (posts) => {
     posts.forEach((post) => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
+        const currentUserId = localStorage.getItem('userId'); // Lấy ID người dùng từ localStorage
+        const isLiked = post.likes.includes(currentUserId); // Kiểm tra người dùng đã like chưa
+        const likeClass = isLiked ? 'fa-solid' : 'fa-regular'; // Định dạng icon
+        const likedClass = isLiked ? 'liked' : ''; // Thêm class "liked" nếu đã like
 
         let documents = post.files.filter(file => file.fileType === 'document');
             let images = post.files.filter(file => file.fileType === 'image');
@@ -136,11 +140,122 @@ const displayPosts = (posts) => {
                 </div>
                 <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
                 ${filesHtml}
+                <div class="post-actions">
+                    <button class="like-btn ${likedClass}" data-post-id="${post._id}">
+                        <i class="${likeClass} fa-heart"></i> <span class="like-count">${post.likes.length}</span>
+                    </button>
+                    <button class="comment-btn">
+                        <i class="fa-regular fa-comment"></i> <span class="like-count">${post.comments.length}</span>
+                    </button>
+                </div>
+                <div class="post-comments">
+                    <div class="comment-list">
+                        ${post.comments.map(comment => `
+                            <div class="comment">
+                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <div class="comment-content">
+                                    <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
+                                    <div class="comment-text">${comment.text}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="comment-input-box">
+                        <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
+                        <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
+                    </div>
+                </div>
             `;
 
         postsContainer.appendChild(postElement);
+
+        const likeBtn = postElement.querySelector('.like-btn');
+        likeBtn.addEventListener('click', async () => {
+            await likePost(post._id, postElement);
+        });
+
+        const commentBtn = postElement.querySelector('.comment-btn');
+        commentBtn.addEventListener('click', () => {
+            const commentSection = postElement.querySelector('.post-comments');
+            commentSection.classList.toggle('active'); // Hiện/ẩn bình luận
+        });
+
+        const commentSubmitBtn = postElement.querySelector('.comment-submit');
+        commentSubmitBtn.addEventListener('click', async () => {
+            const input = postElement.querySelector('.comment-input');
+            const text = input.value.trim();
+            if (text) {
+                await commentPost(post._id, text, postElement);
+                input.value = '';
+            }
+        });
     });
 };
+
+const likePost = async (postId, postElement) => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_BASE_URL}/${postId}/like`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            const likeBtn = postElement.querySelector('.like-btn');
+            const likeIcon = likeBtn.querySelector('i');
+            likeIcon.classList.toggle('fa-solid');
+            likeIcon.classList.toggle('fa-regular');
+            likeIcon.style.color = likeIcon.classList.contains('fa-solid') ? 'red' : 'black';
+            postElement.querySelector('.like-count').textContent = data.likes;
+        }
+    } catch (error) {
+        console.error('Lỗi khi like bài viết:', error);
+    }
+};
+
+// Gửi bình luận
+const commentPost = async (postId, text, postElement) => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_BASE_URL}/${postId}/comment`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify({ text })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            const commentList = postElement.querySelector('.comment-list');
+            commentList.innerHTML = data.comments.map(comment => `
+                <div class="comment">
+                    <strong>${comment.user?.name || 'Ẩn danh'}:</strong> ${comment.text}
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Lỗi khi bình luận:', error);
+    }
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".like-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            this.classList.toggle("liked");
+        });
+    });
+
+    document.querySelectorAll(".comment-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const postElement = this.closest(".post-actions").nextElementSibling;
+            postElement.classList.toggle("active");
+        });
+    });
+});
 
 const goToProfile = (userId) => {
     const currentUserId = localStorage.getItem('userId');
