@@ -132,8 +132,8 @@ const loadProfilePosts = async () => {
 document.addEventListener('DOMContentLoaded', loadProfilePosts);
 
 //Hiển thị bài đăng
-
 const displayPosts = (posts) => {
+    
     postsContainer.innerHTML = '';
     posts.forEach((post) => {
         const postElement = document.createElement('div');
@@ -144,87 +144,128 @@ const displayPosts = (posts) => {
         const likedClass = isLiked ? 'liked' : ''; // Thêm class "liked" nếu đã like
 
         let documents = post.files.filter(file => file.fileType === 'document');
-        let images = post.files.filter(file => file.fileType === 'image');
-        let videos = post.files.filter(file => file.fileType === 'video');
+            let images = post.files.filter(file => file.fileType === 'image');
+            let videos = post.files.filter(file => file.fileType === 'video');
 
-        let filesHtml = '<div class="post-files">';
-        if (documents.length > 0) {
-            filesHtml += documents.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
-        }
-        if (images.length > 0) {
-            let gridClass = images.length === 2 ? 'two-images' : (images.length >= 3 ? 'three-four-images' : '');
-            filesHtml += `<div class="post-images-grid ${gridClass}">`;
-            images.slice(0, 4).forEach((file, index) => {
-                if (index === 3 && images.length > 4) {
-                    filesHtml += `
-                        <div class="post-image-overlay">
-                            <img src="${file.data}" alt="Hình ảnh" class="post-image">
-                            <span>+${images.length - 4}</span>
-                        </div>
-                    `;
-                } else {
-                    filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+            let filesHtml = '<div class="post-files">';
+            if (documents.length > 0) {
+                filesHtml += documents.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
+            }
+            if (images.length > 0) {
+                let gridClass = '';
+                if (images.length === 2) {
+                  gridClass = 'two-images';
+                } else if (images.length >= 3 && images.length <= 4) {
+                  gridClass = 'three-four-images';
+                } else if (images.length > 4) {
+                  gridClass = 'three-four-images';
                 }
-            });
-            filesHtml += `</div>`;
-        }
-        if (videos.length > 0) {
-            filesHtml += videos.length === 1
-                ? `<video controls class="post-video"><source src="${videos[0].data}" type="${videos[0].contentType}"></video>`
-                : `<div class="post-videos-grid">${videos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`).join('')}</div>`;
-        }
-        filesHtml += '</div>';
-
-        const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
-        const authorName = post.author.name || 'Người dùng ẩn danh';
+              
+                filesHtml += `<div class="post-images-grid ${gridClass}">`;
+              
+                images.slice(0, 4).forEach((file, index) => {
+                  if (index === 3 && images.length > 4) {
+                    filesHtml += `
+                      <div class="post-image-overlay">
+                        <img src="${file.data}" alt="Hình ảnh" class="post-image">
+                        <span>+${images.length - 4}</span>
+                      </div>
+                    `;
+                  } else {
+                    filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                  }
+                });
+              
+                filesHtml += `</div>`;
+              }
+            
+            
+            if (videos.length > 0) {
+                if (videos.length === 1) {
+                    filesHtml += `<video controls class="post-video"><source src="${videos[0].data}" type="${videos[0].contentType}"></video>`;
+                } else {
+                    filesHtml += '<div class="post-videos-grid">' + videos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType}"></video>`).join('') + '</div>';
+                }
+            }
+            filesHtml += '</div>';
         
 
-        postElement.innerHTML = `
-            <div class="post-header">
-                <div class="post-header-info">
-                    <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
-                    <div class="post-info">
-                        <h4 onclick="goToProfile()">${authorName}</h4>
-                        <p onclick="goToProfile()"><small>${post.status}</small></p>
-                        <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
-                    </div>
-                </div>
-                <div class="post-setting">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                    <div class="post-menu hidden">
-                        <button class="edit-post-btn" data-post-id="${post._id}" data-title="${post.title}" data-status="${post.status}">Chỉnh sửa bài viết</button>
-                        <button class="delete-post-btn" data-post-id="${post._id}">Xóa bài viết</button>
-                    </div>
-                </div>
-            </div>
-            <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
-            ${filesHtml}
-            <div class="post-actions">
-                <button class="like-btn ${likedClass}" data-post-id="${post._id}">
-                    <i class="${likeClass} fa-heart"></i> <span class="like-count">${post.likes.length}</span>
-                </button>
-                <button class="comment-btn">
-                    <i class="fa-regular fa-comment"></i> <span class="like-count">${post.comments.length}</span>
-                </button>
-            </div>
-            <div class="post-comments">
-                <div class="comment-list">
-                    ${post.comments.map(comment => `
-                        <div class="comment">
-                            <img src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
-                            <div class="comment-content">
-                                <div class="comment-user">${comment.user?.name || 'Ẩn danh'}</div>
-                                <div class="comment-text">${comment.text}</div>
-                            </div>
+            const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
+            const authorName = post.author.name || 'Người dùng ẩn danh';
+            postElement.innerHTML = `
+                <div class="post-header">
+                    <div class="post-header-info">
+                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                        <div class="post-info">
+                            <h4 onclick="goToProfile()">${authorName}</h4>
+                            <p onclick="goToProfile()"><small>${post.status}</small></p>
+                            <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
-                    `).join('')}
+                    </div>
+                    <div class="post-setting">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                        <div class="post-menu hidden">
+                            <button class="edit-post-btn" data-post-id="${post._id}" data-title="${post.title}" data-status="${post.status}">Chỉnh sửa bài viết</button>
+                            <button class="delete-post-btn" data-post-id="${post._id}">Xóa bài viết</button>
+                        </div>
+                    </div>
                 </div>
-                <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
-                <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
-            </div>
-        `;
+                <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
+                ${filesHtml}
+                <div class="post-actions">
+                    <button class="like-btn ${likedClass}" data-post-id="${post._id}">
+                        <i class="${likeClass} fa-heart"></i> <span class="like-count">${post.likes.length}</span>
+                    </button>
+                    <button class="comment-btn">
+                        <i class="fa-regular fa-comment"></i> <span class="like-count">${post.comments.length}</span>
+                    </button>
+                </div>
+                <div class="post-comments">
+                    <div class="comment-list">
+                        ${post.comments.map(comment => `
+                            <div class="comment">
+                                <img src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <div class="comment-content">
+                                    <div class="comment-user">${comment.user?.name || 'Ẩn danh'}</div>
+                                    <div class="comment-text">${comment.text}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
+                    <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
+                </div>
+            `;
+
+            const settingBtn = postElement.querySelector('.post-setting i');
+            const menu = postElement.querySelector('.post-menu');
+
+            if (settingBtn) {
+                settingBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    menu.classList.toggle('show');
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (menu.classList.contains('show') && !menu.contains(e.target) && e.target !== settingBtn) {
+                        menu.classList.remove('show');
+                    }
+                });
+            }
 
         postsContainer.appendChild(postElement);
+        const deleteBtn = postElement.querySelector('.delete-post-btn');
+
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation(); 
+                const postId = deleteBtn.dataset.postId;
+                const confirmDelete = confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
+                if (confirmDelete) {
+                    deletePost(postId)
+                }
+            });
+        }
 
         const likeBtn = postElement.querySelector('.like-btn');
         likeBtn.addEventListener('click', async () => {
@@ -246,10 +287,11 @@ const displayPosts = (posts) => {
                 input.value = '';
             }
         });
+
     });
 };
 
-
+//Lượt thích
 const likePost = async (postId, postElement) => {
     const token = localStorage.getItem('token');
     try {
@@ -314,7 +356,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
 
 const goToProfile = (userId) => {
     const currentUserId = localStorage.getItem('userId');
