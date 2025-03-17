@@ -45,6 +45,7 @@ const getPosts = async (req, res) => {
 
         const posts = await Post.find(filter)
             .populate('author', 'name avatar')
+            .populate('comments.user', 'name avatar') // Populate thông tin người bình luận
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));
@@ -132,7 +133,10 @@ const commentPost = async (req, res) => {
         post.comments.push({ user: user._id, text });
         await post.save();
 
-        res.status(201).json({ message: 'Bình luận thành công.', comments: post.comments });
+        const updatedPost = await Post.findById(postId)
+            .populate('comments.user', 'name avatar'); // Lấy thêm tên và avatar
+
+        res.status(201).json({ message: 'Bình luận thành công.', comments: updatedPost.comments });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Lỗi máy chủ.', error: error.message });

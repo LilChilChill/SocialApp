@@ -283,7 +283,7 @@ body, ul, li, a{
     height: 300px;
     object-fit: cover; 
     cursor: pointer;
-    margin: 5px;
+    /* margin: 5px; */
   } 
   
   
@@ -291,6 +291,7 @@ body, ul, li, a{
     width: 100%;
     height: auto;
     border-radius: 5px;
+    margin-top: 20px;
   }
   
   .post-document {
@@ -555,5 +556,52 @@ body, ul, li, a{
     top: 30%;
     z-index: 4;
   }
-
+  .post-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .like-btn, .comment-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .like-btn i {
+    font-size: 24px;
+    color: #777; /* Mặc định màu xám */
+    transition: color 0.2s ease-in-out;
+  }
+  
+  /* Khi đã like thì đổi màu trái tim thành đỏ */
+  .like-btn.liked i {
+    color: red;
+  }
+  
+  .comment-btn i {
+    font-size: 24px;
+    color: #777; /* Mặc định màu xám */
+  }
+  
+  /* Ẩn phần bình luận mặc định */
+  .post-comments {
+    display: none;
+    margin-top: 10px;
+  }
+  
+  /* Hiện phần bình luận khi được mở */
+  .post-comments.active {
+    display: block;
+  }
+  .liked i {
+    color: red; /* Đổi màu trái tim thành đỏ */
+  }
+  
   
