@@ -232,8 +232,10 @@ const displayPosts = (posts) => {
                             </div>
                         `).join('')}
                     </div>
-                    <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
-                    <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
+                    <div class="comment-input-box">
+                        <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
+                        <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
+                    </div>
                 </div>
             `;
 

@@ -63,10 +63,10 @@ body, ul, li, a{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 200px;
+    width: 300px;
     background-color: #ffffff;
     padding: 10px;
-    height: 90vh;
+    height: 92.5vh;
     position: fixed;
     top: 55px;
     z-index: 2;
@@ -76,6 +76,7 @@ body, ul, li, a{
     padding: 10px 10px;
     cursor: pointer;
     border-radius: 5px;
+    font-size: 18px;
   }
   
   .sidebar ul a{
@@ -86,6 +87,15 @@ body, ul, li, a{
     background-color: #e4e6eb;
   }
   
+  .logout{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logout:hover{
+    background-color: #e4e6eb;
+    border-radius: 5px;
+  }
   
   .feed {
     display: flex;
@@ -94,7 +104,6 @@ body, ul, li, a{
     padding: 25px 20px;
     
   }
-  
   .post {
     background-color: #ffffff;
     padding: 0 15px;
@@ -145,8 +154,8 @@ body, ul, li, a{
     display: flex;
     flex-direction: column;
     padding: 10px 10px;
-    max-width: 250px;
-    height: 90vh;
+    width: 250px;
+    height: 92.5vh;
     background-color: #ffffff;
     justify-content: space-between;
     position: fixed;
@@ -239,7 +248,7 @@ body, ul, li, a{
     margin-bottom: 10px;
     padding: 5px;
     cursor: pointer;
-    margin-left: 15px;
+    /* margin-left: 15px; */
   }
   
   .chatUser:hover{
@@ -254,7 +263,7 @@ body, ul, li, a{
   .posts {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 40%;
     height: auto;
     padding: 20px;
     border-radius: 8px;
@@ -589,11 +598,15 @@ body, ul, li, a{
     font-size: 24px;
     color: #777; /* Mặc định màu xám */
   }
-  
+  .comment-input-box{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   /* Ẩn phần bình luận mặc định */
   .post-comments {
     display: none;
-    margin-top: 10px;
+    margin: 10px 0;
   }
   
   /* Hiện phần bình luận khi được mở */
