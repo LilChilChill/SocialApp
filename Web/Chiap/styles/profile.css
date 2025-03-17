@@ -33,7 +33,7 @@ body, ul, li, a{
   }
   
   .search-bar {
-    width: 300px;
+    width: 350px;
     padding: 8px;
     border-radius: 20px;
     border: none;
@@ -109,7 +109,7 @@ body, ul, li, a{
   }
   
   .post-form {
-    width: 65%;
+    width: 75%;
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 8px;
@@ -142,7 +142,7 @@ body, ul, li, a{
   .posts {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 80%;
     height: auto;
     padding: 20px;
     border-radius: 8px;
@@ -353,7 +353,7 @@ body, ul, li, a{
   border: 1px solid #ddd;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5%;
+  border-radius: 8px;
   background: #fff;
 }
 
@@ -639,11 +639,15 @@ body, ul, li, a{
   font-size: 24px;
   color: #777; /* Mặc định màu xám */
 }
-
+.comment-input-box{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* Ẩn phần bình luận mặc định */
 .post-comments {
   display: none;
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
 /* Hiện phần bình luận khi được mở */
