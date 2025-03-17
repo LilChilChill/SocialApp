@@ -3,6 +3,7 @@ document.title = "Chiap";
 
 // User functions
 const userInfoContainer = document.getElementById('userInfo');
+const postUser = document.getElementById('post-user');
 const updateButton = document.getElementById('updateButton');
 const updateForm = document.getElementById('updateForm');
 const saveButton = document.getElementById('saveButton');
@@ -50,6 +51,18 @@ const displayUserInfo = (user) => {
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
         <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
     `;
+    postUser.innerHTML = `
+        <img id="postUser" src="${avatarUrl}" alt="Avatar" >
+        <div class="post-user-info">
+            <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
+            <select id="postStatus" style="margin-bottom: 10px">
+                <option value="public">Công khai</option>
+                <option value="private">Riêng tư</option>
+                <option value="friends">Bạn bè</option>
+            </select>
+        </div>
+    `
+
 };
 
 updateButton.addEventListener('click', () => {
@@ -224,9 +237,9 @@ const displayPosts = (posts) => {
                     <div class="comment-list">
                         ${post.comments.map(comment => `
                             <div class="comment">
-                                <img src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
                                 <div class="comment-content">
-                                    <div class="comment-user">${comment.user?.name || 'Ẩn danh'}</div>
+                                    <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
                                     <div class="comment-text">${comment.text}</div>
                                 </div>
                             </div>
@@ -394,7 +407,7 @@ postButton.addEventListener('click', async () => {
             headers: { 'Authorization': `Bearer ${token}` },
             body: formData,
         });
-
+        
         if (res.ok) {
             postContent.value = '';
             postFiles.value = '';

@@ -121,9 +121,9 @@ const displayPosts = (posts) => {
                     <div class="comment-list">
                         ${post.comments.map(comment => `
                             <div class="comment">
-                                <img src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
                                 <div class="comment-content">
-                                    <div class="comment-user">${comment.user?.name || 'Ẩn danh'}</div>
+                                    <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
                                     <div class="comment-text">${comment.text}</div>
                                 </div>
                             </div>
@@ -140,25 +140,25 @@ const displayPosts = (posts) => {
             postsContainer.appendChild(postElement);
 
             const likeBtn = postElement.querySelector('.like-btn');
-        likeBtn.addEventListener('click', async () => {
-            await likePost(post._id, postElement);
-        });
+            likeBtn.addEventListener('click', async () => {
+                await likePost(post._id, postElement);
+            });
 
-        const commentBtn = postElement.querySelector('.comment-btn');
-        commentBtn.addEventListener('click', () => {
-            const commentSection = postElement.querySelector('.post-comments');
-            commentSection.classList.toggle('active'); // Hiện/ẩn bình luận
-        });
+            const commentBtn = postElement.querySelector('.comment-btn');
+            commentBtn.addEventListener('click', () => {
+                const commentSection = postElement.querySelector('.post-comments');
+                commentSection.classList.toggle('active'); // Hiện/ẩn bình luận
+            });
 
-        const commentSubmitBtn = postElement.querySelector('.comment-submit');
-        commentSubmitBtn.addEventListener('click', async () => {
-            const input = postElement.querySelector('.comment-input');
-            const text = input.value.trim();
-            if (text) {
-                await commentPost(post._id, text, postElement);
-                input.value = '';
-            }
-        });
+            const commentSubmitBtn = postElement.querySelector('.comment-submit');
+            commentSubmitBtn.addEventListener('click', async () => {
+                const input = postElement.querySelector('.comment-input');
+                const text = input.value.trim();
+                if (text) {
+                    await commentPost(post._id, text, postElement);
+                    input.value = '';
+                }
+            });
         }
     });
 };

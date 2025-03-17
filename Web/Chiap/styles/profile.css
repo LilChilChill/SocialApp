@@ -115,7 +115,22 @@ body, ul, li, a{
     border-radius: 8px;
     margin-bottom: 20px;
   }
-  
+  .post-user{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .post-user-info{
+    margin-left: 15px;
+  }
+  .post-user-info p{
+    margin-bottom: 5px;
+  }
+  #postUser{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
   .post-form textarea {
     width: 90%;
     height: 80px;
