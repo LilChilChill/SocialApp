@@ -39,7 +39,7 @@ const loadPosts = async (page = 1) => {
 document.addEventListener('DOMContentLoaded', loadPosts);
 
 const displayPosts = async (posts) => {
-    const friends = await getFriendsList(); // Lấy danh sách bạn bè từ API
+    const friends = await getFriendsList(); 
 
     posts.forEach((post) => {
         const currentUserId = localStorage.getItem('userId');
@@ -47,13 +47,12 @@ const displayPosts = async (posts) => {
         const likeClass = isLiked ? 'fa-solid' : 'fa-regular';
         const likedClass = isLiked ? 'liked' : '';
 
-        // Kiểm tra trạng thái bài viết
         if (
-            post.author._id === currentUserId || // Luôn hiển thị nếu là bài viết của chính người dùng
+            post.author._id === currentUserId || 
             post.status === 'public' || 
             (post.status === 'friends' && friends.includes(post.author._id))
         ) {
-                    
+
             const postElement = document.createElement('div');
             postElement.className = 'post';
 
@@ -138,17 +137,27 @@ const displayPosts = async (posts) => {
                 const lines = post.title.split(/\r?\n/);
                 const truncatedText = lines.slice(0, 5).join('<br>') + '...';
                 postTitle.innerHTML = truncatedText;
-
+            
+                let previousPosition = 0; // Biến lưu vị trí trước khi mở rộng
+                const offset = 100;
+            
                 toggleBtn.addEventListener('click', () => {
                     if (toggleBtn.textContent === 'Xem thêm') {
+                        // Lưu vị trí của bài viết trước khi mở rộng
+                        previousPosition = postElement.getBoundingClientRect().top + window.scrollY;
+            
                         postTitle.innerHTML = post.title.replace(/\n/g, '<br>');
                         toggleBtn.textContent = 'Thu gọn';
                     } else {
                         postTitle.innerHTML = truncatedText;
                         toggleBtn.textContent = 'Xem thêm';
+            
+                        // Cuộn về đúng vị trí của bài viết ban đầu
+                        window.scrollTo({ top: previousPosition - offset, behavior: 'smooth' });
                     }
                 });
             }
+            
 
             postsContainer.appendChild(postElement);
 
