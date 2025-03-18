@@ -761,3 +761,33 @@ body, ul, li, a{
 .comment-submit:hover {
   background: #0056b3;
 }
+.post-content {
+  position: relative;
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 100%;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.post-title {
+  display: block;
+  white-space: pre-line; /* Giữ định dạng xuống dòng */
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.toggle-content {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 5px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.toggle-content:hover {
+  color: #0056b3;
+}

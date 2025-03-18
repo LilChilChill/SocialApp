@@ -223,7 +223,10 @@ const displayPosts = (posts) => {
                         </div>
                     </div>
                 </div>
-                <p>${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
+                <div class="post-content">
+                    <p class="post-title">${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
+                    ${post.title.split(/\r?\n/).length > 5 ? '<button class="toggle-content">Xem thêm</button>' : ''}
+                </div>
                 ${filesHtml}
                 <div class="post-actions">
                     <button class="like-btn ${likedClass}" data-post-id="${post._id}">
@@ -251,6 +254,25 @@ const displayPosts = (posts) => {
                     </div>
                 </div>
             `;
+
+            const postTitle = postElement.querySelector('.post-title');
+            const toggleBtn = postElement.querySelector('.toggle-content');
+
+            if (toggleBtn) {
+                const lines = post.title.split(/\r?\n/);
+                const truncatedText = lines.slice(0, 5).join('<br>') + '...'; // Cắt bớt nội dung
+                postTitle.innerHTML = truncatedText;
+
+                toggleBtn.addEventListener('click', () => {
+                    if (toggleBtn.textContent === 'Xem thêm') {
+                        postTitle.innerHTML = post.title.replace(/\n/g, '<br>'); // Hiển thị đầy đủ
+                        toggleBtn.textContent = 'Thu gọn';
+                    } else {
+                        postTitle.innerHTML = truncatedText; // Quay lại dạng thu gọn
+                        toggleBtn.textContent = 'Xem thêm';
+                    }
+                });
+            }
 
             const settingBtn = postElement.querySelector('.post-setting i');
             const menu = postElement.querySelector('.post-menu');
