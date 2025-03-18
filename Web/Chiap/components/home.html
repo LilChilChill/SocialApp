@@ -65,9 +65,11 @@
     </div>
 
     <div class="List">
-        <div class="friendList">Đề xuất</div>
         <div class="friendList">
-          Danh sách bạn bè
+          <p>Đề xuất</p>
+        </div>
+        <div class="friendList">
+          <p>Danh sách bạn bè</p>
           <div class="leftContent" id="friendList">
             <div class="loading">Đang tải danh sách bạn bè...</div>
           </div>
@@ -105,18 +107,24 @@
   <span class="lightbox-arrow right" onclick="nextImage()">&#10095;</span>
 </div>
 
+
 <div id="settingsModal" class="modal">
   <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Cài đặt</h2>
-      <p>Đây là nội dung cài đặt của bạn...</p>
-      <!-- Bạn có thể thêm các tùy chọn cài đặt ở đây -->
+      <label class="switch">
+          <input type="checkbox" id="darkModeToggle">
+          <span class="slider round"></span>
+      </label>
+      <span>Bật chế độ tối</span>
   </div>
 </div>
+<div id="loading" style="display: none;" style="background-color: var(--background-color);">Đang tải...</div>
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/home.js"></script>
   <script type="module" src="../scripts/function.js"></script>
-  <script src="../scripts/settings.js"></script>
+  <script type="module" src="../scripts/settings.js"></script>
+  <script type="module" src="../scripts/index.js"></script>
 </body>
 </html>

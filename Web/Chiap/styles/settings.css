@@ -1,3 +1,63 @@
+/* Mặc định là chế độ sáng */
+body {
+    background-color: white;
+    color: black;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Chế độ tối */
+.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+/* Style cho nút bật/tắt */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+
 /* Modal (ẩn mặc định) */
 .modal {
     display: none; /* Ẩn modal ban đầu */
@@ -12,7 +72,7 @@
 
 /* Nội dung Modal */
 .modal-content {
-    background-color: #fff;
+    background-color: var(--background-color);
     margin: 15% auto;
     padding: 20px;
     border-radius: 10px;
@@ -20,7 +80,9 @@
     text-align: center;
     position: relative;
 }
-
+.modal-content h2 ,span{
+    color: var(--white-color);
+}
 /* Nút đóng */
 .close {
     position: absolute;
@@ -28,4 +90,5 @@
     right: 15px;
     font-size: 20px;
     cursor: pointer;
+    color: var(--white-color);
 }

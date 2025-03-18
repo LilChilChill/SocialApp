@@ -319,6 +319,10 @@ const loadMorePosts = async () => {
 function showLoading() {
     document.getElementById('loading').style.display = 'block';
 }
+document.addEventListener("DOMContentLoaded", function() {
+    showLoading();
+});
+
 
 function hideLoading() {
     document.getElementById('loading').style.display = 'none';

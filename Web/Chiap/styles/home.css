@@ -12,8 +12,9 @@ body, ul, li, a{
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    background-color: #1877f2;
-    color: white;
+    /* background-color: #1877f2; */
+    background-color: var(--navbar-background-color);
+    color: var(--white-color);
     position: fixed;
     top: 0;
     z-index: 3;
@@ -26,7 +27,7 @@ body, ul, li, a{
   }
 
   .logo a{
-    color: #ffffff;
+    color: var(--navbar-text-color);
   }
   
   .search-bar {
@@ -49,7 +50,7 @@ body, ul, li, a{
   }
 
   .navbar-icons span a{
-    color: #ffffff;
+    color: var(--navbar-icon-color);
   }
   
   
@@ -64,7 +65,7 @@ body, ul, li, a{
     flex-direction: column;
     justify-content: space-between;
     width: 300px;
-    background-color: #ffffff;
+    background-color: var(--sidebar-background-color);
     padding: 10px;
     height: 92.5vh;
     position: fixed;
@@ -80,11 +81,13 @@ body, ul, li, a{
   }
   
   .sidebar ul a{
-    color: #000;
+    /* color: #000; */
+    color: var(--sidebar-text-color);
   }
 
   .sidebar ul li:hover {
-    background-color: #e4e6eb;
+    /* background-color: #e4e6eb; */
+    background-color: var(--sidebar-hover-background-color);
   }
   
   .logout{
@@ -93,7 +96,8 @@ body, ul, li, a{
     align-items: center;
   }
   .logout:hover{
-    background-color: #e4e6eb;
+    /* background-color: #e4e6eb; */
+    background-color: var(--sidebar-hover-background-color);
     border-radius: 5px;
   }
   
@@ -102,16 +106,19 @@ body, ul, li, a{
     flex: 1;
     justify-content: center;
     padding: 25px 20px;
+    background: var(--feed-background-color);
     
   }
   .post {
-    background-color: #ffffff;
+    background-color: var(--background-color);
     padding: 0 15px;
     margin-bottom: 15px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px var(--box-shadow);
   }
-  
+  .post i{
+    color: var(--white-color);
+  }
   .post-header {
     display: flex;
     align-items: center;
@@ -146,7 +153,8 @@ body, ul, li, a{
   
   .post-content {
     font-size: 14px;
-    color: #333;
+    /* color: #333; */
+    color: var(--post-content-color);
   }
 
   
@@ -156,21 +164,25 @@ body, ul, li, a{
     padding: 10px 10px;
     width: 250px;
     height: 92.5vh;
-    background-color: #ffffff;
+    background-color: var(--background-color);
     justify-content: space-between;
     position: fixed;
     right: 0%;
     top: 55px;
     z-index: 2;
   }
+
+  .friendList p{
+    color: var(--white-color);
+  }
+
   .chat-popup { 
     display: flex;
     position: fixed;
     bottom: 10px;
     right: 20px;
     width: 320px;
-    background: white;
-    border: 1px solid #ccc;
+    background: var(--background-color);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     flex-direction: column;
@@ -200,8 +212,8 @@ body, ul, li, a{
   justify-content: flex-end; 
 }
 .chat-header {
-    background: #007bff;
-    color: white;
+    background: var(--chat-header-background-color);
+    color: var(--white-color);
     padding: 10px;
     font-weight: bold;
     display: flex;  
@@ -225,10 +237,12 @@ body, ul, li, a{
   }
 
   .chat-footer input {
-      width: 100%;
+      width: 90%;
       padding: 5px;
       border: none;
       outline: none;
+      background-color: var(--black-color);
+      color: var(--white-color);
   }
 
   .close-btn {
@@ -343,7 +357,7 @@ body, ul, li, a{
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.6);
-    color: white;
+    color: var(--white-color);
     padding: 10px 20px;
     border-radius: 10px;
     font-weight: bold;
@@ -383,7 +397,7 @@ body, ul, li, a{
     top: 20px;
     right: 40px;
     font-size: 30px;
-    color: white;
+    color: var(--white-color);
     cursor: pointer;
   }
   
@@ -392,7 +406,7 @@ body, ul, li, a{
     top: 50%;
     transform: translateY(-50%);
     font-size: 40px;
-    color: white;
+    color: var(--white-color);
     cursor: pointer;
     user-select: none;
   }
@@ -449,7 +463,7 @@ body, ul, li, a{
     display: flex;
     align-items: flex-end; 
     background-color: #3872fa;
-    color: white;
+    color: var(--white-color);
     font-size: 15px;
   }
   
@@ -479,6 +493,7 @@ body, ul, li, a{
   .post-info{
     display: flex;
     flex-direction: column;
+    color: var(--post-content-color);
   }
   .post-info h4{
     margin-bottom: -5px;
@@ -496,7 +511,7 @@ body, ul, li, a{
     text-align: center;
     padding: 20px;
     font-weight: bold;
-    color: #555;
+    color: #000;
     display: none;
   }
 
@@ -619,7 +634,7 @@ body, ul, li, a{
   .post-comments {
     margin-top: 10px;
     padding: 10px;
-    background: #f9f9f9;
+    background: var(--post-comments-color);
     border-radius: 8px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -636,6 +651,7 @@ body, ul, li, a{
     gap: 10px;
     padding: 10px;
     border-bottom: 1px solid #ddd;
+    color: var(--white-color);
 }
 
 .comment:last-child {
@@ -653,7 +669,7 @@ body, ul, li, a{
 /* Nội dung bình luận */
 .comment-content {
     flex: 1;
-    background: #fff;
+    background: var(--background-color);
     padding: 8px;
     border-radius: 6px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
@@ -661,13 +677,13 @@ body, ul, li, a{
 
 .comment-user {
     font-weight: 600;
-    color: #333;
+    color: var(--post-content-color);
     margin-bottom: 2px;
     cursor: pointer;
 }
 
 .comment-text {
-    color: #555;
+    color: var(--post-content-color);
     font-size: 14px;
 }
 
@@ -682,28 +698,30 @@ body, ul, li, a{
 .comment-input {
     flex: 1;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--post-comments-input);
     border-radius: 5px;
     outline: none;
     transition: border 0.3s;
+    background-color: var(--post-comments-input);
+    color: var(--white-color)
 }
 
 .comment-input:focus {
-    border: 1px solid #007bff;
+    border: 1px solid var(--post-comments-input-focus);
 }
 
 .comment-submit {
     padding: 8px 12px;
     border: none;
-    background: #007bff;
-    color: white;
+    background: var(--post-comments-input-focus);
+    color: #fff;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
 }
 
 .comment-submit:hover {
-    background: #0056b3;
+    background: var(--post-comments-input-focus);
 }
 
 .post-content {
