@@ -8,6 +8,7 @@
   <!-- <title>Home</title> -->
   <link rel="stylesheet" href="../styles/home.css">
   <link rel="stylesheet" href="../styles/addFriend.css">
+  <link rel="stylesheet" href="../styles/settings.css">
 </head>
 <body>
   <div class="navbar">
@@ -48,6 +49,7 @@
         <a href=""><li><i class="fa-solid fa-globe" style="padding-right: 10px;"></i>Ngôn ngữ</li></a>
         <a href=""><li><i class="fa-solid fa-question" style="padding-right: 10px;" ></i>Hỗ trợ</li></a>
         <a href=""><li><i class="fa-solid fa-phone" style="padding-right: 10px;"></i>Liên hệ</li></a>
+        <a href="javascript:void(0);" id="openSettings"><li><i class="fa-solid fa-gear" style="padding-right: 10px;"></i>Cài đặt</li></a>
       </ul>
       <ul>
         <hr>
@@ -103,8 +105,18 @@
   <span class="lightbox-arrow right" onclick="nextImage()">&#10095;</span>
 </div>
 
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Cài đặt</h2>
+      <p>Đây là nội dung cài đặt của bạn...</p>
+      <!-- Bạn có thể thêm các tùy chọn cài đặt ở đây -->
+  </div>
+</div>
+
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/home.js"></script>
   <script type="module" src="../scripts/function.js"></script>
+  <script src="../scripts/settings.js"></script>
 </body>
 </html>
