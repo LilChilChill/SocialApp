@@ -154,6 +154,68 @@ const changePassword = async (req, res) => {
     }
 };
 
+const crypto = require('crypto');
+const { sendResetPasswordEmail } = require('../services/emailService');
+
+const link = process.env.API  
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Email không tồn tại' });
+        }
+
+        // Tạo token ngẫu nhiên
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 phút
+
+        await user.save();
+
+        // Gửi email
+        const resetLink = `${link}/components/reset-password.html?token=${resetToken}`;
+        await sendResetPasswordEmail(email, resetLink);
+
+        res.status(200).json({ message: 'Vui lòng kiểm tra email để đặt lại mật khẩu' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        const user = await userModel.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
+        }
+
+        if (!validator.isStrongPassword(newPassword)) {
+            return res.status(400).json({
+                message: 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt'
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        user.resetPasswordToken = null;
+        user.resetPasswordExpires = null;
+
+        await user.save();
+        res.status(200).json({ message: 'Mật khẩu đã được cập nhật' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+};
 
 
 const getUsers = async (req, res) => {
@@ -245,5 +307,7 @@ module.exports = {
     searchUsers,
     getFriends,
     removeFriend,
-    changePassword
+    changePassword,
+    forgotPassword,
+    resetPassword
 }
