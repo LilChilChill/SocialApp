@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles/addFriend.css">
+    <link rel="stylesheet" href="../styles/infoSettings.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><a href="home.html">Chiap</a></div>
+        <div style="display: flex; align-items: center;">
+          <input type="text" class="search-bar" id="searchInput" placeholder="Tìm kiếm...">
+          <a href="#" id="searchButton" style="text-decoration: none; color: #000; position: absolute; right: 42%;">
+            <i class="fa-solid fa-magnifying-glass" ></i>
+          </a>
+        </div>
+        <div class="navbar-icons">
+          <span><a href=""><i class="fa-solid fa-bell"></i></a></span> 
+          <span><a href="message.html"><i class="fa-solid fa-message"></i></a></span>
+           <a href="profile.html">
+            <div id="userAvatar" class="user-avatar"></div>
+           </a>
+        </div>
+    </div>
+
+    <div class="container" id="userInfoContainer">
+        <button class="button" id="updateButton">Chỉnh sửa</button>
+        <button class="button" id="openChangePasswordForm">Đổi mật khẩu</button>
+    </div>
+
+    <div class="update-form" id="updateForm" style="display: none;">
+    <h2>Cập nhật thông tin</h2>
+    <input type="text" id="name" placeholder="Tên người dùng" value="">
+    <input type="date" id="birthDate" placeholder="Ngày sinh" value="">
+    <select id="gender">
+        <option value="">Chọn giới tính</option>
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+    </select>
+    <input type="text" id="phoneNumber" placeholder="Số điện thoại" value=""> <!-- Thêm ô nhập số điện thoại -->
+    <input type="file" class="file" accept="image/*">
+    <button class="btn" id="saveButton">Lưu thông tin</button>
+    </div>
+
+
+    <div class="update-password-form" id="updatePasswordForm" style="display: none;">
+        <h2>Đổi mật khẩu</h2>
+        <input type="password" id="oldPassword" placeholder="Mật khẩu cũ">
+        <input type="password" id="newPassword" placeholder="Mật khẩu mới">
+        <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu mới">
+        <button class="btn" id="changePasswordButton">Đổi mật khẩu</button>
+    </div>
+    
+    
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script type="module" src="../scripts/settings.js"></script>
+    <script type="module" src="../scripts/infoSettings.js"></script>
+</body>
+</html>

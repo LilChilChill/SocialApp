@@ -7,7 +7,8 @@ const {
     getUsers,
     searchUsers,
     getFriends,
-    removeFriend
+    removeFriend,
+    changePassword
 } = require('../Controllers/userController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
@@ -21,6 +22,7 @@ router.post('/login', login);
 router.get('/profile', authMiddleware, getUserProfile);
 router.get('/other/:userId', getUserProfile)
 router.put('/update', authMiddleware, upload.single('avatar'), updateUser);
+router.put('/change-password', authMiddleware, changePassword);
 router.get('/', authMiddleware, getUsers);
 router.get('/search', authMiddleware, searchUsers);
 router.get('/friends', authMiddleware, getFriends);

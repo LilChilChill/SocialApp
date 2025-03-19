@@ -1,0 +1,217 @@
+body, ul, li, a{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+  }
+.main-container {
+    display: flex;
+    margin: 150px 75px;
+}
+.navbar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    background-color: var(--navbar-background-color);
+    color: var(--white-color);
+    height: 35px;
+    position: fixed;
+    z-index: 4;
+}
+#userAvatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.logo a{
+    color: var(--navbar-text-color);
+}
+
+.search-bar {
+    width: 350px;
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+.navbar-icons{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-right: 10px;
+}
+.navbar-icons span {
+    margin: 0 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.navbar-icons span a{
+    color: var(--navbar-icon-color);
+}
+.update-form {
+    display: none;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--background-color);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 100px;
+    }
+
+    .update-form input,
+    .update-form select {
+    width: calc(100% - 10px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    }
+
+    .update-form input:focus,
+    .update-form select:focus {
+    border-color: #5cb85c; 
+}
+.container {
+    max-width: 1000px;
+    height: 100px;
+    margin: 0 auto;
+    background: rgba(179, 176, 176, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    top: 100px;
+    min-height: auto; 
+}
+.button {
+position: absolute;
+top: 130%;
+left: 80%;
+padding: 12px 24px;
+border: 1px solid #4f4f4f;
+border-radius: 4px;
+transition: all 0.2s ease-in;
+position: relative;
+overflow: hidden;
+font-size: 19px;
+cursor: pointer;
+color: black;
+z-index: 1;
+}
+
+.button:before {
+content: "";
+position: absolute;
+left: 50%;
+transform: translateX(-50%) scaleY(1) scaleX(1.25);
+top: 100%;
+width: 140%;
+height: 180%;
+background-color: rgba(0, 0, 0, 0.05);
+border-radius: 50%;
+display: block;
+transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+z-index: -1;
+}
+
+.button:after {
+content: "";
+position: absolute;
+left: 55%;
+transform: translateX(-50%) scaleY(1) scaleX(1.45);
+top: 180%;
+width: 160%;
+height: 190%;
+background-color: #39bda7;
+border-radius: 50%;
+display: block;
+transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+z-index: -1;
+}
+
+.button:hover {
+color: #ffffff;
+border: 1px solid #39bda7;
+}
+
+.button:hover:before {
+top: -35%;
+background-color: #39bda7;
+transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button:hover:after {
+top: -45%;
+background-color: #39bda7;
+transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+.update-password-form {
+    display: none;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 100px;
+}
+
+.update-password-form h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.update-password-form input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.update-password-form input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.update-password-form .btn {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.update-password-form .btn:hover {
+    background: #0056b3;
+}
+.btn {
+background-color: #5cb85c;
+color: white;
+border: none;
+padding: 10px 15px;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s, transform 0.2s;
+}

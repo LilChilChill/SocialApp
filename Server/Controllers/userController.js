@@ -1,5 +1,5 @@
 const userModel = require('../Models/userModel')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
 const { options } = require('..')
@@ -73,8 +73,7 @@ const getUserProfile = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const userId = req.user._id;
-    const { name, birthDate, gender } = req.body;
-    // const newAvatar = req.file;
+    const { name, birthDate, gender, phoneNumber } = req.body;
 
     try {
         const user = await userModel.findById(userId);
@@ -86,6 +85,12 @@ const updateUser = async (req, res) => {
         if (name && name.length >= 3) updateFields.name = name;
         if (birthDate) updateFields.birthDate = birthDate;
         if (gender) updateFields.gender = gender;
+        if (phoneNumber) {
+            if (!validator.isMobilePhone(phoneNumber, 'vi-VN')) {
+                return res.status(400).json({ message: 'Số điện thoại không hợp lệ' });
+            }
+            updateFields.phoneNumber = phoneNumber;
+        }
 
         if (req.file) {
             const imageUrl = await uploadImageToGCS(req.file, 'avatars');
@@ -104,6 +109,52 @@ const updateUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+const changePassword = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ message: 'Vui lòng nhập đầy đủ thông tin' });
+        }
+
+        if (!validator.isStrongPassword(newPassword)) {
+            return res.status(400).json({
+                message: 'Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt'
+            });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Người dùng không tồn tại' });
+        }
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Mật khẩu hiện tại không đúng' });
+        }
+
+        // Kiểm tra nếu mật khẩu mới trùng với mật khẩu cũ
+        const isSamePassword = await bcrypt.compare(newPassword, user.password);
+        if (isSamePassword) {
+            return res.status(400).json({ message: 'Mật khẩu mới không được trùng với mật khẩu cũ' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedNewPassword;
+        await user.save();
+
+        res.status(200).json({ message: 'Mật khẩu đã được cập nhật thành công' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+};
+
+
 
 const getUsers = async (req, res) => {
     try{
@@ -193,5 +244,6 @@ module.exports = {
     getUsers,
     searchUsers,
     getFriends,
-    removeFriend
+    removeFriend,
+    changePassword
 }
