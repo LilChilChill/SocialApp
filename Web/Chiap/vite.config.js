@@ -20,6 +20,9 @@ export default defineConfig({
         message: path.resolve(__dirname, 'components/message.html'),
         user: path.resolve(__dirname, 'components/user.html'),
         friendNoti: path.resolve(__dirname, 'components/friendNoti.html'),
+        resetPassword: path.resolve(__dirname, 'components/resetPassword.html'),
+        forgotPassword: path.resolve(__dirname, 'components/forgotPassword.html'),
+        userSettings: path.resolve(__dirname, 'components/userSettings.html'),
       }
     }
   }
