@@ -1,5 +1,5 @@
 const userModel = require('../Models/userModel')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
 const { options } = require('..')
