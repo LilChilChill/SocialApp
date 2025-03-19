@@ -158,6 +158,7 @@ const crypto = require('crypto');
 const { sendResetPasswordEmail } = require('../services/emailService');
 
 const link = process.env.API  
+console.log(link)
 const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
@@ -175,7 +176,7 @@ const forgotPassword = async (req, res) => {
         await user.save();
 
         // Gửi email
-        const resetLink = `${link}/components/reset-password.html?token=${resetToken}`;
+        const resetLink = `${link}/components/resetPassword.html?token=${resetToken}`;
         await sendResetPasswordEmail(email, resetLink);
 
         res.status(200).json({ message: 'Vui lòng kiểm tra email để đặt lại mật khẩu' });
