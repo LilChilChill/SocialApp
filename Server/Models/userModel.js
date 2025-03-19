@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
         enum: ['Nam', 'Nữ', 'Khác', 'Male', 'Female', 'Other'],
         default: null
     },
+    phoneNumber: { type: String, default: null },
     avatar: { type: String, default: null }, 
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     isOnline: { type: Boolean, default: false },

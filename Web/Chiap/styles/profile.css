@@ -20,7 +20,7 @@ body, ul, li, a{
     color: var(--white-color);
     height: 35px;
     position: fixed;
-    z-index: 3;
+    z-index: 4;
   }
   
   .logo {
@@ -150,7 +150,7 @@ body, ul, li, a{
   
   .post-form button {
     background-color: var(--post-comments-input-focus);
-    color: var(--white-color);
+    color: #fff;
     border: none;
     padding: 10px 15px;
     border-radius: 4px;
@@ -228,12 +228,15 @@ body, ul, li, a{
 }
 
 .update-form {
-  margin-top: 20px;
-  max-width: 310px;
+  display: none;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--background-color);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
-  left: 35%;
   top: 100px;
-
 }
 
 .update-form input,
@@ -807,3 +810,4 @@ body, ul, li, a{
 .toggle-content:hover {
   color: #0056b3;
 }
+

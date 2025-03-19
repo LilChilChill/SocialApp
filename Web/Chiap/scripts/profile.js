@@ -69,8 +69,9 @@ updateButton.addEventListener('click', () => {
     updateForm.style.display = updateForm.style.display === 'none' ? 'block' : 'none';
     if (updateForm.style.display === 'block') {
         document.getElementById('name').value = currentUser.name || '';
-        document.getElementById('birthDate').value = currentUser.birthDate ? new Date(currentUser.birthDate).toISOString().split('T')[0] : ''; 
+        document.getElementById('birthDate').value = currentUser.birthDate ? new Date(currentUser.birthDate).toISOString().split('T')[0] : '';
         document.getElementById('gender').value = currentUser.gender === 'Nam' ? 'male' : currentUser.gender === 'Nữ' ? 'female' : 'other';
+        document.getElementById('phoneNumber').value = currentUser.phoneNumber || ''; // Hiển thị số điện thoại hiện có
     }
 });
 
@@ -78,9 +79,16 @@ saveButton.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     const name = document.getElementById('name').value || currentUser.name;
     const birthDate = document.getElementById('birthDate').value || currentUser.birthDate;
-    
     let gender = document.getElementById('gender').value || currentUser.gender;
     gender = gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác';
+    const phoneNumber = document.getElementById('phoneNumber').value || currentUser.phoneNumber; // Lấy số điện thoại
+
+    // Kiểm tra hợp lệ số điện thoại (chỉ nhận số, 10-11 ký tự)
+    const phoneRegex = /^[0-9]{10,11}$/;
+    if (phoneNumber && !phoneRegex.test(phoneNumber)) {
+        alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số.');
+        return;
+    }
 
     const avatar = document.getElementById('avatar') ? document.getElementById('avatar').files[0] : null;
     const formData = new FormData();
@@ -88,6 +96,7 @@ saveButton.addEventListener('click', async () => {
     if (name !== currentUser.name) formData.append('name', name);
     if (birthDate !== currentUser.birthDate) formData.append('birthDate', birthDate);
     if (gender !== currentUser.gender) formData.append('gender', gender);
+    if (phoneNumber !== currentUser.phoneNumber) formData.append('phoneNumber', phoneNumber); // Gửi số điện thoại
     if (avatar) formData.append('avatar', avatar);
 
     if (Array.from(formData.keys()).length === 0) {
