@@ -30,15 +30,15 @@ const signUpButton = document.getElementById('signUp');
         const data = await res.json();
 
         if (res.ok) {
-          alert('Đăng ký thành công!');
+          showToast(data.message, "success");
           console.log(data);
           window.location.href = window.location.origin; 
           
         } else {
-          alert(data);
+          showToast("Đã có lỗi xảy ra. Vui lòng thử lại.", "error");
         }
       } catch (error) {
-        console.error('Error:', error);
+        showToast("Đã có lỗi xảy ra. Vui lòng thử lại.", "error");
       }
     });
 
@@ -59,16 +59,17 @@ const signUpButton = document.getElementById('signUp');
         const data = await res.json();
 
         if (res.ok) {
-          alert('Đăng nhập thành công!');
+          showToast(data.message, "success");
           localStorage.setItem('token', data.token);
           console.log("Token lưu vào localStorage:", localStorage.getItem("token"));
           localStorage.setItem('username', data.name)
+          localStorage.setItem('userEmail', data.email)
           localStorage.setItem('userId', data._id)
           window.location.href = window.location.origin + '/components/home.html';
 
           console.log("Chuyển hướng sang home.html");
         } else {
-          alert(data);
+          showToast("Đã có lỗi xảy ra. Vui lòng thử lại.", "error");
         }
       } catch (error) {
         console.error('Error:', error);

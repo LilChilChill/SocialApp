@@ -181,23 +181,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const forgotPasswordLink = document.querySelector("#updatePasswordForm a");
     const backToChangePassword = document.getElementById("backToChangePassword");
     const sendForgotPasswordButton = document.getElementById("sendForgotPassword");
-    const API_URL = import.meta.env.VITE_API_URL; // Đảm bảo API_URL có giá trị
+    const API_URL = import.meta.env.VITE_API_URL; 
+    const loggedInUserEmail = localStorage.getItem("userEmail");
 
-    // Khi nhấn "Forgot your password?"
     forgotPasswordLink.addEventListener("click", function (event) {
         event.preventDefault();
-        changePasswordForm.style.display = "none"; // Ẩn form đổi mật khẩu
-        forgotPasswordForm.style.display = "block"; // Hiển thị form quên mật khẩu
+        changePasswordForm.style.display = "none"; 
+        forgotPasswordForm.style.display = "block"; 
     });
 
-    // Khi nhấn "Quay lại"
     backToChangePassword.addEventListener("click", function (event) {
         event.preventDefault();
-        forgotPasswordForm.style.display = "none"; // Ẩn form quên mật khẩu
-        changePasswordForm.style.display = "block"; // Hiển thị lại form đổi mật khẩu
+        forgotPasswordForm.style.display = "none"; 
+        changePasswordForm.style.display = "block"; 
     });
 
-    // Khi gửi yêu cầu đặt lại mật khẩu
     sendForgotPasswordButton.addEventListener("click", async function () {
         const email = document.getElementById("forgotEmail").value;
         if (!email) {
@@ -205,6 +203,11 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        if (!loggedInUserEmail || email !== loggedInUserEmail) {
+            alert("Email không khớp với tài khoản đang đăng nhập!");
+            return;
+        }
+        
         try {
             const response = await fetch(`${API_URL}/api/users/forgot-password`, {
                 method: "POST",
