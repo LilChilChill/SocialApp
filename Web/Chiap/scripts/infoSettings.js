@@ -172,4 +172,205 @@ changePasswordButton.addEventListener('click', async () => {
     }
 });
 
+
 getUserInfo();
+
+document.addEventListener("DOMContentLoaded", function () {
+    const changePasswordForm = document.getElementById("updatePasswordForm");
+    const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+    const forgotPasswordLink = document.querySelector("#updatePasswordForm a");
+    const backToChangePassword = document.getElementById("backToChangePassword");
+    const sendForgotPasswordButton = document.getElementById("sendForgotPassword");
+    const API_URL = import.meta.env.VITE_API_URL; // Đảm bảo API_URL có giá trị
+
+    // Khi nhấn "Forgot your password?"
+    forgotPasswordLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        changePasswordForm.style.display = "none"; // Ẩn form đổi mật khẩu
+        forgotPasswordForm.style.display = "block"; // Hiển thị form quên mật khẩu
+    });
+
+    // Khi nhấn "Quay lại"
+    backToChangePassword.addEventListener("click", function (event) {
+        event.preventDefault();
+        forgotPasswordForm.style.display = "none"; // Ẩn form quên mật khẩu
+        changePasswordForm.style.display = "block"; // Hiển thị lại form đổi mật khẩu
+    });
+
+    // Khi gửi yêu cầu đặt lại mật khẩu
+    sendForgotPasswordButton.addEventListener("click", async function () {
+        const email = document.getElementById("forgotEmail").value;
+        if (!email) {
+            alert("Vui lòng nhập email!");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/users/forgot-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+            alert(data.message)
+            {
+                forgotPasswordForm.style.display = "none";
+                changePasswordForm.style.display = "block";
+            }
+
+        } catch (error) {
+            console.error("Lỗi:", error);
+            alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+        }
+    });
+});
+
+
+const searchInput = document.getElementById('searchInput');
+const userList = document.getElementById('userList');
+
+const searchUsers = async () => {
+    const query = searchInput.value.trim()
+    // const query = removeAccents(searchInput.value.trim().toLowerCase());
+    userList.innerHTML = ''
+    notification.style.display = 'none'
+    error.style.display = 'none'
+
+    if (!query) {
+        error.innerHTML = 'Vui lòng nhập tên để tìm kiếm.';
+        error.style.display = 'block';
+        return;
+    }
+
+    const token = localStorage.getItem('token'); 
+
+    if (!token) {
+        error.innerHTML = 'Vui lòng đăng nhập để thực hiện hành động này.'; 
+        error.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/users/search?query=${query}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.json();
+            error.innerHTML = errorMessage.message;
+            error.style.display = 'block';
+            return;
+        }
+
+        const users = await response.json();
+
+        if (users.length === 0) {
+            userList.innerHTML = '<p>Không tìm thấy người dùng nào.</p>';
+        } else {
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.classList.add('user-item');
+                
+                const avatarUrl = user.avatar ? user.avatar : '../img/default-avatar.png';
+                
+                userItem.innerHTML = `
+                    <div class='userName'> 
+                        <img onclick="goToProfile('${user._id}')" src="${avatarUrl}" alt="${user.name}" id="avatar">
+                        <span onclick="goToProfile('${user._id}')">${user.name}</span>    
+                    </div>
+                    <button onclick="addFriend('${user._id}')">Thêm bạn</button>
+                `;
+                userList.appendChild(userItem);
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        error.innerHTML = 'Có lỗi xảy ra trong quá trình tìm kiếm.';
+        error.style.display = 'block';
+    }
+};
+
+
+
+const addFriend = async (receiverId) => {
+    notification.style.display = 'none'; 
+    error.style.display = 'none'; 
+
+    const token = localStorage.getItem('token'); 
+
+    if (!token) {
+        error.innerHTML = 'Vui lòng đăng nhập để thực hiện hành động này.'; 
+        error.style.display = 'block';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/friends/add`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ receiverId }) 
+        });
+
+        if (response.ok) {
+            notification.innerHTML = `Đã gửi lời mời kết bạn tới người dùng ID: ${receiverId}`;
+            notification.style.display = 'block';
+            notification.style.justifyContent = 'center';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        } else {
+            const errorMessage = await response.json();
+            error.innerHTML = `Lỗi: ${errorMessage.message}`;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 2000);
+        }
+    } catch (error) {
+        console.error(error);
+        error.innerHTML = 'Có lỗi xảy ra khi gửi lời mời kết bạn.';
+        error.style.display = 'block';
+    }
+};
+
+window.addFriend = addFriend;
+
+searchButton.addEventListener('click', searchUsers);
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        searchUsers();
+        userList.style.display = 'flex';
+    }
+});
+
+let debounceTimer;
+
+searchInput.addEventListener('input', () => {
+    userList.style.display = 'flex';
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+        if (searchInput.value.trim() !== '') {
+            searchUsers();
+        } else {
+            userList.innerHTML = '';
+            userList.style.display = 'none';
+        }
+    }, 300);
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        userList.style.display = 'none'
+        searchInput.value = '';
+    }
+})

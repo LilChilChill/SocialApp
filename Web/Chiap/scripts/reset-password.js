@@ -6,6 +6,8 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async fu
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    // Kiểm tra nếu có token trong localStorage
+    const userToken = localStorage.getItem("token");
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -23,7 +25,14 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async fu
 
         const data = await response.json();
         alert(data.message);
-        if (response.ok) window.location.href = window.location.origin;
+        if (response.ok) 
+        {
+            if (userToken) {
+                window.location.href =  window.location.origin + "/components/home";
+            } else {
+                window.location.href = window.location.origin; 
+            }
+        }
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
