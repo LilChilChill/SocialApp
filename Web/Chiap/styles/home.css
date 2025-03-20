@@ -5,6 +5,9 @@ body, ul, li, a{
     text-decoration: none;
     font-family: Arial, sans-serif;
   }
+  body{
+    background-color: var(--background-color);
+  }
   .navbar {
     display: flex;
     width: 100%;
