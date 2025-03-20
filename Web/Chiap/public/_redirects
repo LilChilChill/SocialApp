@@ -1,2 +1,8 @@
-/components/* /index.html 200
-/* /index.html 200
+/home           /components/home.html           200!
+/profile        /components/profile.html        200!
+/message        /components/message.html        200!
+/user           /components/user.html           200!
+/friendNoti     /components/friendNoti.html     200!
+/resetPassword  /components/resetPassword.html  200!
+/forgotPassword /components/forgotPassword.html 200!
+/userSettings   /components/userSettings.html   200!
