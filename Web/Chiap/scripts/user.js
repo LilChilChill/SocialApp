@@ -23,7 +23,7 @@ const getUserProfile = async (userId) => {
     }
 };
 const displayUserInfo = (user) => {
-    const avatarUrl = user.avatar ? user.avatar : '../img/default-avatar.png';
+    const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
 
     userInfo.innerHTML = `
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">

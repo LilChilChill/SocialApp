@@ -45,7 +45,7 @@ const getUserInfo = async () => {
 
 const displayUserInfo = (user) => {
     localStorage.setItem('userId', user._id);
-    const avatarUrl = user.avatar ? user.avatar : '../img/default-avatar.png';
+    const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
 
     userInfoContainer.innerHTML = `
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
