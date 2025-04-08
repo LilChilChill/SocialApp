@@ -385,9 +385,9 @@ body, ul, li, a{
   }
   .lightbox-download {
     position: absolute;
-    top: 12px;
+    top: 15px;
     right: 60px;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
     color: white;
     background: rgba(0, 0, 0, 0.5);
