@@ -97,7 +97,7 @@ const searchUsers = async () => {
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
                 
-                const avatarUrl = user.avatar ? user.avatar : '../img/default-avatar.png';
+                const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
                 
                 userItem.innerHTML = `
                     <div class='userName'> 
@@ -225,7 +225,7 @@ function getFriends() {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar ? friend.avatar : '../img/default-avatar.png';
+                const friendAvatar = friend.avatar ? friend.avatar : '../assets/profile-default.png';
 
                 const friendItem = document.createElement('div');
                 friendItem.classList.add('friend-item');
@@ -337,7 +337,6 @@ function closeChat() {
     chatPopup.style.display = "none";
     const messageInput = document.getElementById("messageInput")
     messageInput.value = '';
-    
 }
 window.closeChat = closeChat;
 
@@ -381,6 +380,26 @@ const closeLightbox = () => {
 };
 window.closeLightbox = closeLightbox
 
+const downloadImage = async () => {
+    const imageSrc = document.getElementById("lightboxImage").src;
+    
+    try {
+      const response = await fetch(imageSrc);
+      const blob = await response.blob();
+      
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "downloaded-image.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    } catch (error) {
+      console.error("Lỗi tải ảnh:", error);
+    }
+  };
+window.downloadImage = downloadImage;
+    
 const prevImage = () => {
   if (currentIndex > 0) {
     currentIndex--;
