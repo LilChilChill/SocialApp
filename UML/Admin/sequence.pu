@@ -1,0 +1,19 @@
+@startuml
+actor Admin
+participant "Hệ thống" as System
+participant "Cơ sở dữ liệu" as Database
+
+Admin -> System : Đăng nhập
+System -> Database : Xác thực Admin
+Database --> System : Trả về thông tin xác thực
+
+Admin -> System : Truy cập danh sách bài viết vi phạm
+System -> Database : Lấy danh sách bài viết bị báo cáo
+Database --> System : Trả về danh sách bài viết
+
+Admin -> System : Chọn bài viết cần xóa
+System -> Database : Xóa bài viết khỏi hệ thống
+Database --> System : Xác nhận bài viết đã bị xóa
+
+System -> Admin : Hiển thị thông báo thành công
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+actor User
+participant "Website" as System
+participant "Database" as DB
+participant "Storage" as MediaStorage
+
+User -> System : Nhập nội dung bài viết
+User -> System : Chọn ảnh/video (tuỳ chọn)
+
+alt Có ảnh/video
+    System -> MediaStorage : Lưu ảnh/video
+    MediaStorage --> System : Trả về đường dẫn ảnh/video
+end
+
+System -> DB : Kiểm tra dữ liệu bài viết
+DB --> System : Trả về kết quả
+
+alt Hợp lệ
+    System -> DB : Lưu bài viết vào database
+    System --> User : Hiển thị bài viết lên News Feed
+else Không hợp lệ
+    System --> User : Hiển thị lỗi "Bài viết không hợp lệ"
+end
+@enduml

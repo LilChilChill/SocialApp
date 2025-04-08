@@ -14,7 +14,7 @@ body, ul, li, a{
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    /* background-color: #1877f2; */
+    
     background-color: var(--navbar-background-color);
     color: var(--white-color);
     position: fixed;
@@ -66,10 +66,10 @@ body, ul, li, a{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 300px;
+    width: 250px;
     background-color: var(--sidebar-background-color);
     padding: 10px;
-    height: 92.5vh;
+    height: 91.5vh;
     position: fixed;
     top: 55px;
     z-index: 2;
@@ -83,12 +83,12 @@ body, ul, li, a{
   }
   
   .sidebar ul a{
-    /* color: #000; */
+    
     color: var(--sidebar-text-color);
   }
 
   .sidebar ul li:hover {
-    /* background-color: #e4e6eb; */
+    
     background-color: var(--sidebar-hover-background-color);
   }
   
@@ -98,7 +98,7 @@ body, ul, li, a{
     align-items: center;
   }
   .logout:hover{
-    /* background-color: #e4e6eb; */
+    
     background-color: var(--sidebar-hover-background-color);
     border-radius: 5px;
   }
@@ -155,7 +155,7 @@ body, ul, li, a{
   
   .post-content {
     font-size: 14px;
-    /* color: #333; */
+    
     color: var(--post-content-color);
   }
 
@@ -165,7 +165,7 @@ body, ul, li, a{
     flex-direction: column;
     padding: 10px 10px;
     width: 250px;
-    height: 92.5vh;
+    height: 91.5vh;
     background-color: var(--background-color);
     justify-content: space-between;
     position: fixed;
@@ -255,6 +255,8 @@ body, ul, li, a{
   .leftContent {
     flex: 1;
     overflow-y: auto;
+    scrollbar-color: #000;
+    height: 40vh;
   }
 
   .chatUser{
@@ -264,11 +266,11 @@ body, ul, li, a{
     margin-bottom: 10px;
     padding: 5px;
     cursor: pointer;
-    /* margin-left: 15px; */
+    
   }
   
   .chatUser:hover{
-    background-color: #c0c0c0;
+    background-color: var(--sidebar-hover-background-color);
     border-radius: 10px;
   }
   
@@ -279,7 +281,7 @@ body, ul, li, a{
   .posts {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 45%;
     height: auto;
     padding: 20px;
     border-radius: 8px;
@@ -308,7 +310,7 @@ body, ul, li, a{
     height: 300px;
     object-fit: cover; 
     cursor: pointer;
-    /* margin: 5px; */
+    
   } 
   
   
@@ -485,7 +487,7 @@ body, ul, li, a{
     padding: 10px;
     border-radius: 10px;
     margin: 10px 0;
-    background-color: #f7f7f7;
+    background-color: var(--background-color);
     z-index: 4;
     top: 6%;
     right: 1%;
@@ -522,6 +524,9 @@ body, ul, li, a{
     .sidebar{
       display: none;
     }
+    .List{
+      width: 170px;
+    } 
     .container {
       padding: 10px;
     }
@@ -602,36 +607,36 @@ body, ul, li, a{
   
   .like-btn i {
     font-size: 24px;
-    color: #777; /* Mặc định màu xám */
+    color: #777; 
     transition: color 0.2s ease-in-out;
   }
   
-  /* Khi đã like thì đổi màu trái tim thành đỏ */
+  
   .like-btn.liked i {
     color: red;
   }
   
   .comment-btn i {
     font-size: 24px;
-    color: #777; /* Mặc định màu xám */
+    color: #777; 
   }
   .comment-input-box{
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  /* Ẩn phần bình luận mặc định */
+  
   .post-comments {
     display: none;
     margin: 10px 0;
   }
   
-  /* Hiện phần bình luận khi được mở */
+  
   .post-comments.active {
     display: block;
   }
   .liked i {
-    color: red; /* Đổi màu trái tim thành đỏ */
+    color: red; 
   }
   .post-comments {
     margin-top: 10px;
@@ -642,8 +647,8 @@ body, ul, li, a{
 }
 
 .comment-list {
-    max-height: 250px; /* Giới hạn chiều cao */
-    overflow-y: auto; /* Cuộn nếu quá dài */
+    max-height: 250px; 
+    overflow-y: auto; 
     padding: 5px 0;
 }
 
@@ -660,7 +665,7 @@ body, ul, li, a{
     border-bottom: none;
 }
 
-/* Avatar */
+
 .comment-avatar {
     width: 40px;
     height: 40px;
@@ -668,7 +673,7 @@ body, ul, li, a{
     object-fit: cover;
 }
 
-/* Nội dung bình luận */
+
 .comment-content {
     flex: 1;
     background: var(--background-color);
@@ -689,7 +694,7 @@ body, ul, li, a{
     font-size: 14px;
 }
 
-/* Ô nhập bình luận */
+
 .comment-input-container {
     display: flex;
     align-items: center;
@@ -737,7 +742,7 @@ body, ul, li, a{
 
 .post-title {
   display: block;
-  white-space: pre-line; /* Giữ định dạng xuống dòng */
+  white-space: pre-line; 
   word-wrap: break-word;
   overflow: hidden;
   margin: 0;

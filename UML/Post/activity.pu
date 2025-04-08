@@ -1,0 +1,18 @@
+@startuml
+start
+:Nhập nội dung bài viết;
+:Chọn ảnh/video (nếu có);
+if (Có ảnh/video?) then (Có)
+    :Lưu ảnh/video vào hệ thống;
+endif
+
+:Kiểm tra nội dung bài viết;
+if (Bài viết hợp lệ?) then (Có)
+    :Lưu bài viết vào Database;
+    :Hiển thị bài viết lên News Feed;
+    stop
+else (Không)
+    :Hiển thị lỗi "Bài viết không hợp lệ";
+    stop
+endif
+@enduml

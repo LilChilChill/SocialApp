@@ -1,0 +1,22 @@
+@startuml
+actor Guest
+participant "Website" as System
+participant "Database" as DB
+participant "Mail Server" as Email
+
+Guest -> System : Nhập thông tin đăng ký
+System -> DB : Kiểm tra email đã tồn tại?
+DB --> System : Trả về kết quả
+
+alt Email đã tồn tại
+    System --> Guest : Hiển thị lỗi "Email đã tồn tại"
+else Email hợp lệ
+    System -> DB : Lưu tài khoản vào Database
+    System -> Email : Gửi email xác nhận
+    Email --> Guest : Nhận email xác nhận
+end
+
+Guest -> System : Xác nhận email
+System -> DB : Kích hoạt tài khoản
+System --> Guest : Đăng ký thành công
+@enduml

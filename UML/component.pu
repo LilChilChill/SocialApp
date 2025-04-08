@@ -1,0 +1,38 @@
+@startuml
+component "Frontend" as FE {
+    component "Web App"
+    component "Mobile App"
+}
+
+component "Backend" as BE {
+    component "API Gateway"
+    component "Authentication Service"
+    component "User Management Service"
+    component "Post Management Service"
+    component "Chat Service"
+    component "Notification Service"
+}
+
+database "MongoDB" as DB {
+    entity "User Collection"
+    entity "Post Collection"
+    entity "Message Collection"
+    entity "Notification Collection"
+    entity "Report Collection"
+}
+
+component "Storage" {
+    component "Google Cloud Storage"
+}
+
+component "External Services" {
+    component "Firebase Auth"
+    component "Cloud Messaging"
+}
+
+FE --> BE : "Gửi request API"
+BE --> DB : "Truy vấn dữ liệu"
+BE --> Storage : "Lưu/truy xuất tệp"
+BE --> "External Services" : "Xác thực & gửi thông báo"
+
+@enduml

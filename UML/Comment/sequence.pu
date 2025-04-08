@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "Website" as System
+participant "Database" as DB
+
+User -> System : Nhập nội dung bình luận
+System -> DB : Kiểm tra nội dung bình luận
+DB --> System : Trả về kết quả
+
+alt Bình luận hợp lệ
+    System -> DB : Lưu bình luận vào database
+    System --> User : Hiển thị bình luận trên bài viết
+else Bình luận không hợp lệ
+    System --> User : Hiển thị lỗi "Bình luận không hợp lệ"
+end
+@enduml

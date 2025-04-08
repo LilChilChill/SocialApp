@@ -64,19 +64,22 @@ body, ul, li, a{
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
-    background: var(--white-color);
+    background: var(--form-color);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
     top: 100px;
-    }
+  }
+  .update-form h2{
+    color: var(--white-color);
+  }
 
     .update-form input,
     .update-form select {
     width: calc(100% - 10px);
     padding: 10px;
     margin: 5px 0;
-    border: 1px solid #ccc;
+    border: 1px ;
     border-radius: 5px;
     transition: border-color 0.3s;
     }
@@ -164,7 +167,7 @@ transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
-    background: #fff;
+    background: var(--form-color);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -174,7 +177,7 @@ transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 .update-password-form h2 {
     text-align: center;
     margin-bottom: 15px;
-    color: #333;
+    color: var(--white-color);
 }
 
 .update-password-form input {

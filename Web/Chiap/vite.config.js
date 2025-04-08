@@ -23,6 +23,7 @@ export default defineConfig({
         resetPassword: path.resolve(__dirname, 'components/resetPassword.html'),
         forgotPassword: path.resolve(__dirname, 'components/forgotPassword.html'),
         userSettings: path.resolve(__dirname, 'components/userSettings.html'),
+        notification: path.resolve(__dirname, 'components/notification.html'),
       }
     }
   }

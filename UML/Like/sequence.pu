@@ -1,0 +1,17 @@
+@startuml
+actor User
+participant "Website" as System
+participant "Database" as DB
+
+User -> System : Nhấn nút Thích/Bỏ thích
+System -> DB : Kiểm tra trạng thái thích
+DB --> System : Trả về trạng thái
+
+alt Chưa thích bài viết
+    System -> DB : Lưu lượt thích vào database
+    System --> User : Cập nhật hiển thị (Tăng lượt thích)
+else Đã thích bài viết
+    System -> DB : Xoá lượt thích khỏi database
+    System --> User : Cập nhật hiển thị (Giảm lượt thích)
+end
+@enduml

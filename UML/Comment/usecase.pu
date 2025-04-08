@@ -1,0 +1,12 @@
+@startuml
+actor User
+actor System
+
+rectangle "Bình luận bài viết" {
+    User -- (Nhập nội dung bình luận)
+    (Nhập nội dung bình luận) --> (Kiểm tra nội dung)
+    (Kiểm tra nội dung) --> (Lưu bình luận vào database)
+    (Lưu bình luận vào database) --> System
+    System -- (Hiển thị bình luận)
+}
+@enduml

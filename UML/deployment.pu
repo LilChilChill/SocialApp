@@ -1,0 +1,45 @@
+@startuml
+node "Người dùng" {
+    [Web Browser]
+    [Mobile App]
+}
+
+node "Load Balancer" as LB
+
+node "Web Server" as WS {
+    [React Frontend]
+}
+
+node "Backend Server" as BE {
+    [API Gateway]
+    [Authentication Service]
+    [User Management Service]
+    [Post Management Service]
+    [Chat Service]
+    [Notification Service]
+}
+
+database "MongoDB Database" as DB {
+    [User Collection]
+    [Post Collection]
+    [Message Collection]
+    [Notification Collection]
+}
+
+node "Storage Server" as Storage {
+    [Google Cloud Storage]
+}
+
+node "External Services" as Ext {
+    [Firebase Auth]
+    [Cloud Messaging]
+}
+
+[Web Browser] --> LB
+[Mobile App] --> LB
+LB --> WS
+WS --> BE
+BE --> DB
+BE --> Storage
+BE --> Ext
+@enduml

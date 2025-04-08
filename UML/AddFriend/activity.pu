@@ -1,0 +1,23 @@
+@startuml
+start
+:Người dùng A gửi yêu cầu kết bạn;
+:Kiểm tra yêu cầu có hợp lệ không?;
+if (Hợp lệ?) then (Có)
+    :Lưu yêu cầu vào Database;
+    :Thông báo đến người dùng B;
+else (Không)
+    :Hiển thị lỗi;
+    stop
+endif
+
+:Người dùng B xem yêu cầu kết bạn;
+if (Chấp nhận yêu cầu?) then (Có)
+    :Cập nhật danh sách bạn bè;
+    :Thông báo đến cả hai người dùng;
+    stop
+else (Không)
+    :Xoá yêu cầu kết bạn;
+    :Thông báo bị từ chối;
+    stop
+endif
+@enduml

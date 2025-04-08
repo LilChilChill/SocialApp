@@ -1,0 +1,13 @@
+@startuml
+actor Guest
+actor System
+
+rectangle "Đăng ký tài khoản" {
+    Guest -- (Nhập thông tin đăng ký)
+    Guest -- (Xác nhận email) 
+    (Nhập thông tin đăng ký) --> (Kiểm tra dữ liệu)
+    (Kiểm tra dữ liệu) --> (Tạo tài khoản mới)
+    (Tạo tài khoản mới) --> System
+    System --> (Gửi email xác nhận)
+}
+@enduml

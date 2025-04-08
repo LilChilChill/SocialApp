@@ -1,0 +1,18 @@
+@startuml
+start
+:Người dùng nhập tin nhắn;
+:Nhấn nút Gửi;
+:Kiểm tra nội dung tin nhắn;
+if (Hợp lệ?) then (Có)
+    :Lưu tin nhắn vào Database;
+    :Gửi tin nhắn qua WebSocket;
+    :Hiển thị tin nhắn trên giao diện;
+else (Không)
+    :Hiển thị lỗi (Tin nhắn trống);
+    stop
+endif
+
+:Người nhận nhận được tin nhắn;
+:Hiển thị tin nhắn trong hộp chat;
+stop
+@enduml

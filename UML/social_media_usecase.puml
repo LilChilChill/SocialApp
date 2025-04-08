@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+
+actor Guest
+actor User
+actor Admin
+
+rectangle "Social Media Website" {
+  
+  package "Guest Features" #lightgray {
+    Guest --> (Đăng ký)
+    Guest --> (Đăng nhập)
+  }
+
+  package "User Features" #lightblue {
+    User --> (Đăng xuất)
+    User --> (Chỉnh sửa hồ sơ)
+    User --> (Đăng bài)
+    User --> (Bình luận)
+    User --> (Thích bài viết)
+    User --> (Kết bạn)
+    User --> (Nhắn tin)
+  }
+
+  package "Messaging" #lightyellow {
+    (Nhắn tin) --> (Gửi hình ảnh) : "Gồm"
+    (Nhắn tin) --> (Gửi video) : "Gồm"
+  }
+
+  package "Admin Features" #lightpink {
+    Admin --> (Quản lý người dùng)
+    Admin --> (Xóa bài vi phạm)
+    Admin --> (Xem báo cáo vi phạm)
+  }
+}
+@enduml

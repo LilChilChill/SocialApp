@@ -1,0 +1,23 @@
+@startuml
+actor "Người dùng A" as UserA
+actor "Người dùng B" as UserB
+participant "Website" as System
+participant "Database" as DB
+
+UserA -> System : Gửi yêu cầu kết bạn
+System -> DB : Lưu yêu cầu kết bạn
+DB --> System : Xác nhận lưu
+
+UserB -> System : Xem danh sách yêu cầu kết bạn
+System -> DB : Lấy danh sách yêu cầu kết bạn
+DB --> System : Trả về danh sách
+
+UserB -> System : Chấp nhận/Từ chối yêu cầu
+alt Chấp nhận yêu cầu
+    System -> DB : Cập nhật danh sách bạn bè
+    System --> UserA : Thông báo đã kết bạn
+else Từ chối yêu cầu
+    System -> DB : Xoá yêu cầu kết bạn
+    System --> UserA : Thông báo bị từ chối
+end
+@enduml

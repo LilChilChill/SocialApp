@@ -27,7 +27,6 @@ const getUserInfo = async () => {
         if (res.ok) {
             currentUser = await res.json();
             displayUserInfo(currentUser);
-            console.log('Thông tin người dùng:', currentUser);
         } else {
             const errorMsg = await res.json();
             alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');

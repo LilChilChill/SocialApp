@@ -1,0 +1,35 @@
+@startuml
+start
+:Admin đăng nhập;
+:Truy cập trang quản lý người dùng;
+:Hiển thị danh sách người dùng;
+
+while (Admin muốn thao tác?) 
+    :Chọn tài khoản cần thao tác;
+    
+    if (Thao tác là khóa tài khoản?) then
+        :Cập nhật trạng thái thành "Bị khóa";
+        :Hiển thị thông báo thành công;
+    else 
+        if (Thao tác là mở khóa tài khoản?) then
+            :Cập nhật trạng thái thành "Hoạt động";
+            :Hiển thị thông báo thành công;
+        else 
+            if (Thao tác là xóa tài khoản?) then
+                :Xác nhận xóa tài khoản;
+                if (Xác nhận xóa?) then
+                    :Xóa tài khoản khỏi hệ thống;
+                    :Hiển thị thông báo thành công;
+                else
+                    :Hủy thao tác;
+                endif
+            endif
+        endif
+    endif
+
+    :Cập nhật danh sách người dùng;
+endwhile
+
+:Đăng xuất;
+stop
+@enduml

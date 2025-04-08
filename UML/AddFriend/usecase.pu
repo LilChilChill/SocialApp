@@ -1,0 +1,20 @@
+@startuml
+actor "Người dùng A" as UserA
+actor "Người dùng B" as UserB
+actor "Hệ thống" as System
+
+rectangle "Kết bạn" {
+    UserA -- (Gửi yêu cầu kết bạn)
+    (Gửi yêu cầu kết bạn) --> System
+    System -- (Lưu yêu cầu kết bạn)
+
+    UserB -- (Chấp nhận yêu cầu kết bạn)
+    UserB -- (Từ chối yêu cầu kết bạn)
+    
+    (Chấp nhận yêu cầu kết bạn) --> System
+    System -- (Cập nhật danh sách bạn bè)
+    
+    (Từ chối yêu cầu kết bạn) --> System
+    System -- (Xoá yêu cầu kết bạn)
+}
+@enduml

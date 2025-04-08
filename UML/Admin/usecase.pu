@@ -1,0 +1,24 @@
+@startuml
+actor "Admin" as Admin
+
+rectangle "Hệ thống Mạng Xã Hội" {
+    (Đăng nhập) as Login
+    (Quản lý người dùng) as ManageUsers
+    (Khóa/Mở khóa tài khoản) as BanUser
+    (Xóa tài khoản) as DeleteUser
+    (Quản lý bài viết) as ManagePosts
+    (Xóa bài viết vi phạm) as DeletePost
+    (Xem báo cáo vi phạm) as ViewReports
+    (Đăng xuất) as Logout
+}
+
+Admin --> Login
+Admin --> ManageUsers
+ManageUsers --> BanUser
+ManageUsers --> DeleteUser
+Admin --> ManagePosts
+ManagePosts --> DeletePost
+ManagePosts --> ViewReports
+Admin --> Logout
+
+@enduml
