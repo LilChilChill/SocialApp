@@ -1,0 +1,12 @@
+@startuml
+actor User
+actor System
+
+rectangle "Thích bài viết" {
+    User -- (Nhấn nút Thích)
+    (Nhấn nút Thích) --> (Kiểm tra trạng thái)
+    (Kiểm tra trạng thái) --> (Cập nhật trạng thái Like trong database)
+    (Cập nhật trạng thái Like trong database) --> System
+    System -- (Cập nhật số lượt thích hiển thị)
+}
+@enduml

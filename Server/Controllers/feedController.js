@@ -45,7 +45,7 @@ const getPosts = async (req, res) => {
 
         const posts = await Post.find(filter)
             .populate('author', 'name avatar')
-            .populate('comments.user', 'name avatar') // Populate thông tin người bình luận
+            .populate('comments.user', 'name avatar')
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));

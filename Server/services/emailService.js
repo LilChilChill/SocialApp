@@ -15,12 +15,11 @@ const sendResetPasswordEmail = async (email, resetLink) => {
             to: email,
             subject: 'ĐẶT LẠI MẬT KHẨU',
             headers: {
-                'X-Priority': '1', // 1: Cao nhất, 5: Thấp nhất
+                'X-Priority': '1',
                 'X-MSMail-Priority': 'High',
                 'Importance': 'high'
             },
             html: `
-                <p><strong style="color:red;">Lưu ý: Đây là email quan trọng!</strong></p>
                 <p>Bạn đã yêu cầu đặt lại mật khẩu.</p>
                 <p>Nhấn vào link bên dưới để đặt lại mật khẩu:</p>
                 <a href="${resetLink}">${resetLink}</a>

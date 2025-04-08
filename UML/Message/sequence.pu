@@ -1,0 +1,16 @@
+@startuml
+actor "Người dùng A" as UserA
+actor "Người dùng B" as UserB
+participant "Website" as System
+participant "Database" as DB
+
+UserA -> System : Nhập tin nhắn và nhấn gửi
+System -> DB : Lưu tin nhắn vào Database
+DB --> System : Xác nhận lưu thành công
+
+System -> UserB : Gửi tin nhắn đến người nhận (qua WebSocket)
+UserB -> System : Xem tin nhắn mới
+System -> DB : Truy xuất tin nhắn từ Database
+DB --> System : Trả về nội dung tin nhắn
+System --> UserB : Hiển thị tin nhắn mới
+@enduml

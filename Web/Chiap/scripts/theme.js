@@ -19,8 +19,10 @@ export const LightTheme = {
     BOX_SHADOW: "#0000004d",
     PROFILE_BG_COLOR: "#f0f2f5",
     POST_FORM_BG_COLOR: "#f9f9f9",
-    POST_FORM_TXT_AREA_BG_COLOR: "#fff"
-
+    POST_FORM_TXT_AREA_BG_COLOR: "#fff",
+    FORM_COLOR: "#C6C6C4",
+    LINK_COLOR: "#683097"
+    
 };
 
 export const DarkTheme = {
@@ -44,8 +46,9 @@ export const DarkTheme = {
     BOX_SHADOW: "#1a1a1a4d",
     PROFILE_BG_COLOR: "#18191A",
     POST_FORM_BG_COLOR: "#1e1e1e",
-    POST_FORM_TXT_AREA_BG_COLOR: "#303030"
-
+    POST_FORM_TXT_AREA_BG_COLOR: "#303030",
+    FORM_COLOR: "#39393b",
+    LINK_COLOR: "#9D4AA6"
 
 };
 

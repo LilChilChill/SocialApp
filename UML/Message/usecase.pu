@@ -1,0 +1,21 @@
+@startuml
+actor "Người dùng A" as UserA
+actor "Người dùng B" as UserB
+actor "Hệ thống" as System
+
+rectangle "Nhắn tin" {
+    UserA -- (Gửi tin nhắn)
+    (Gửi tin nhắn) --> System
+    System -- (Lưu tin nhắn vào Database)
+    System -- (Gửi tin nhắn đến người nhận)
+
+    UserB -- (Nhận tin nhắn)
+    (Nhận tin nhắn) --> System
+    System -- (Hiển thị tin nhắn mới)
+    
+    UserA -- (Xem lịch sử tin nhắn)
+    UserB -- (Xem lịch sử tin nhắn)
+    (Xem lịch sử tin nhắn) --> System
+    System -- (Truy xuất tin nhắn từ Database)
+}
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+actor User
+rectangle "Chức năng" {
+    User -- (Đăng nhập)
+    User -- (Đăng ký)
+    User -- (Nhắn tin)
+}
+@enduml

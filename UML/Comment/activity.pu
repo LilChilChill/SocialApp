@@ -1,0 +1,13 @@
+@startuml
+start
+:Nhập nội dung bình luận;
+:Kiểm tra nội dung bình luận;
+if (Bình luận hợp lệ?) then (Có)
+    :Lưu bình luận vào Database;
+    :Hiển thị bình luận trên bài viết;
+    stop
+else (Không)
+    :Hiển thị lỗi "Bình luận không hợp lệ";
+    stop
+endif
+@enduml

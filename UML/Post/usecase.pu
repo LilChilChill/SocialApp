@@ -1,0 +1,14 @@
+@startuml
+actor User
+actor System
+
+rectangle "Đăng bài viết" {
+    User -- (Nhập nội dung bài viết)
+    User -- (Chọn ảnh/video)  
+    (Nhập nội dung bài viết) --> (Kiểm tra dữ liệu)
+    (Chọn ảnh/video) --> (Kiểm tra dữ liệu)
+    (Kiểm tra dữ liệu) --> (Lưu bài viết vào database)
+    (Lưu bài viết vào database) --> System
+    System -- (Hiển thị bài viết lên News Feed)
+}
+@enduml

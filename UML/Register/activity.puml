@@ -1,0 +1,16 @@
+@startuml
+start
+:Nhập thông tin đăng ký;
+if (Email đã tồn tại?) then (Có)
+    :Hiển thị lỗi "Email đã tồn tại";
+    stop
+else (Không)
+    :Lưu tài khoản vào Database;
+    :Gửi email xác nhận;
+endif
+
+:Người dùng xác nhận email;
+:Kích hoạt tài khoản;
+:Hiển thị thông báo "Đăng ký thành công";
+stop
+@enduml

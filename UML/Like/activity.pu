@@ -1,0 +1,14 @@
+@startuml
+start
+:Người dùng nhấn nút Thích/Bỏ thích;
+:Kiểm tra trạng thái thích;
+if (Đã thích bài viết?) then (Có)
+    :Xoá lượt thích khỏi Database;
+    :Giảm số lượt thích hiển thị;
+    stop
+else (Chưa thích)
+    :Lưu lượt thích vào Database;
+    :Tăng số lượt thích hiển thị;
+    stop
+endif
+@enduml

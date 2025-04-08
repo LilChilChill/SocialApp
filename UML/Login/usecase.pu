@@ -1,0 +1,12 @@
+@startuml
+actor User
+actor System
+
+rectangle "Đăng nhập hệ thống" {
+    User -- (Nhập email và mật khẩu)
+    (Nhập email và mật khẩu) --> (Kiểm tra thông tin)
+    (Kiểm tra thông tin) --> (Đăng nhập thành công) : "Nếu đúng"
+    (Kiểm tra thông tin) --> (Hiển thị lỗi) : "Nếu sai"
+    System -- (Ghi lại lịch sử đăng nhập)
+}
+@enduml

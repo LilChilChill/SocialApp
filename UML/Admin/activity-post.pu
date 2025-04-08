@@ -1,0 +1,28 @@
+@startuml
+start
+:Admin đăng nhập;
+:Truy cập trang quản lý bài viết;
+:Hiển thị danh sách bài viết bị báo cáo;
+
+while (Admin muốn thao tác?) 
+    :Chọn bài viết cần xử lý;
+    
+    if (Xóa bài viết?) then
+        :Xác nhận xóa bài viết;
+        if (Xác nhận xóa?) then
+            :Xóa bài viết khỏi hệ thống;
+            :Hiển thị thông báo thành công;
+        else
+            :Hủy thao tác;
+        endif
+    else if (Giữ lại bài viết?) then
+        :Gỡ báo cáo vi phạm;
+        :Hiển thị thông báo thành công;
+    endif
+
+    :Cập nhật danh sách bài viết;
+endwhile
+
+:Đăng xuất;
+stop
+@enduml

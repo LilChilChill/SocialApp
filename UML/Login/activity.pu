@@ -1,0 +1,12 @@
+@startuml
+start
+:Nhập email và mật khẩu;
+if (Email & mật khẩu đúng?) then (Có)
+    :Cập nhật trạng thái đăng nhập;
+    :Hiển thị trang chủ;
+    stop
+else (Không)
+    :Hiển thị lỗi "Sai thông tin đăng nhập";
+    stop
+endif
+@enduml
