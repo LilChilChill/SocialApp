@@ -55,5 +55,37 @@ server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
-const link = process.env.API  
-console.log(link)
+
+
+// const { MongoClient } = require("mongodb");
+// const fs = require("fs");
+// const dbName = "chatApp"
+// async function exportCollections() {
+//     const client = new MongoClient(uri);
+    
+//     try {
+//       await client.connect();
+//       const db = client.db(dbName);
+  
+//       // Lấy danh sách collection
+//       const collections = await db.listCollections().toArray();
+//       let databaseData = {};
+  
+//       for (const collection of collections) {
+//         const collectionName = collection.name;
+//         const data = await db.collection(collectionName).find().toArray();
+//         databaseData[collectionName] = data;
+//       }
+  
+//       // Lưu vào file JSON
+//       fs.writeFileSync("mongo_export.json", JSON.stringify(databaseData, null, 2));
+//       console.log("✅ Dữ liệu đã được xuất ra file mongo_export.json");
+      
+//     } catch (error) {
+//       console.error("❌ Lỗi khi lấy dữ liệu:", error);
+//     } finally {
+//       await client.close();
+//     }
+//   }
+  
+//   exportCollections();

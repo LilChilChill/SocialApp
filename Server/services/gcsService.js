@@ -85,4 +85,17 @@ const deleteFileFromGCS = async (fileUrl) => {
     }
 };
 
-module.exports = { uploadImageToGCS, deleteFileFromGCS };
+
+const updateAvatar = async (fileUrl) => {
+    if (!fileUrl) return; // Nếu không có ảnh cũ thì không cần xóa
+
+    try {
+        const filePath = fileUrl.replace(`https://storage.googleapis.com/${bucketName}/`, '');
+        await bucket.file(filePath).delete();
+        console.log(`Đã xóa file: ${filePath}`);
+    } catch (error) {
+        console.error(`Lỗi khi xóa file từ GCS: ${error.message}`);
+    }
+};
+
+module.exports = { uploadImageToGCS, deleteFileFromGCS, updateAvatar };

@@ -94,7 +94,7 @@ const displayPosts = async (posts) => {
                         <div class="post-info">
                             <h4 onclick="goToProfile('${post.author._id}')" style="cursor: pointer;">${authorName}</h4>
                             <p><small>${post.status}</small></p>
-                            <p><small>${new Date(post.createdAt).toLocaleString()}</small></p>
+                            <a><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
                     <div class="post-setting"><i class="fa-solid fa-ellipsis-vertical"></i></div>
