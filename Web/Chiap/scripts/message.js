@@ -133,17 +133,33 @@ socket.on('signal', ({ type, data }) => {
 
 function connectSocket() {
     socket.on('connect', () => {
+        // console.log('Đã kết nối với server:', socket.id);
+
         const userId = localStorage.getItem('userId');
-        console.log('Đã kết nối với server:', socket.id);
         if (userId) {
             socket.emit('register', userId);
-            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+            // console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
         } else {
             console.error('Không tìm thấy userId trong localStorage.');
         }
     });
+
+    socket.on('disconnect', () => {
+        console.warn('Mất kết nối với server.');
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+        console.log(`Đã kết nối lại sau lần thử thứ ${attemptNumber}`);
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            socket.emit('register', userId);
+            console.log(`Đã gửi lại sự kiện đăng ký userId: ${userId} sau khi reconnect.`);
+        }
+    });
 }
+
 window.connectSocket = connectSocket;
+connectSocket()
 
 socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
@@ -280,7 +296,6 @@ function openChat(friendId, name, avatar, page = 1) {
 
         chatArea.scrollTop = chatArea.scrollHeight;
         fetchAllImages()
-        connectSocket()
     })
     .catch(error => {
         console.error('Lỗi khi lấy tin nhắn:', error);
@@ -369,7 +384,6 @@ async function compressImage(file, maxSizeMB = 5, quality = 0.8) {
 
 window.openImage = openImage
 
-// Gửi tin nhắn
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
     const content = messageInput.value.trim();
@@ -383,12 +397,13 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     }
 
     let fileToSend = selectedFile;
+    let previewUrl = null;
 
     // Nếu có file và là ảnh, thực hiện nén
     if (fileToSend && fileToSend.type.startsWith('image/')) {
         try {
             fileToSend = await compressImage(fileToSend);
-            var previewUrl = URL.createObjectURL(fileToSend);
+            previewUrl = URL.createObjectURL(fileToSend); // Tạo URL tạm thời để hiển thị
         } catch (error) {
             console.error('Lỗi khi nén ảnh:', error);
             return;
@@ -403,10 +418,38 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         messageData.append('file', fileToSend);
     }
 
+    // Tạo tin nhắn hiển thị ngay lập tức trước khi lưu vào DB
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', 'sent');
+
+    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
+        chatArea.innerHTML = '';
+    }
+
+    if (content) {
+        messageDiv.innerHTML = `
+            <div class="msgContent">
+                <div class="messageContent">
+                    <p>${content.replace(/\n/g, '<br>')}</p>
+                </div>
+                ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
+            </div>
+        `;
+    } else if (previewUrl) {
+        messageDiv.innerHTML = `
+            <div class="msgContent">
+                <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
+            </div>
+        `;
+    }
+
+    document.getElementById('chatArea').appendChild(messageDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
     fetch(`${API_URL}/api/messages`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}` 
         },
         body: messageData
     })
@@ -416,7 +459,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         document.getElementById('inputPreview').innerHTML = '';
 
         const messagePayload = {
-            chatType: 'private',  // Hoặc 'group' nếu gửi tin nhắn nhóm
+            chatType: 'private',
             receiverId: currentFriendId,
             sender: localStorage.getItem('userId'),
             content: content,
@@ -426,47 +469,25 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         };
 
         // Gửi tin nhắn qua socket
-        // socket.emit('sendMessage', messagePayload);
         socket.emit('sendMessage', { ...messagePayload, fileUrl: data.messageData.fileUrl });
 
-        // Cập nhật lại ảnh từ server (tránh hiển thị URL tạm)
-        setTimeout(() => {
-            const imgElement = messageDiv.querySelector(".imgContent");
-            if (imgElement && data.messageData.fileUrl) {
-                imgElement.src = data.messageData.fileUrl;
-            }
-        }, 1000);
-
-        selectedFile = null;
-
-        // Hiển thị tin nhắn ngay trên giao diện người gửi
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'sent');
-
-        if (content) {
-            messageDiv.innerHTML = `
-                <div class="msgContent">
-                    <div class="messageContent">
-                        <p>${content.replace(/\n/g, '<br>')}</p>
-                    </div>
-                    ${previewUrl ? `<img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>` : ''}
-                </div>
-            `;
-        } else if (messagePayload.fileUrl) {
-            messageDiv.innerHTML = `
-                <div class="msgContent">
-                    <img src="${previewUrl}" class="imgContent" onclick="openImage('${previewUrl}')"/>
-                </div>
-            `;
+        // Cập nhật ảnh từ server để thay thế URL tạm thời
+        if (data.messageData.fileUrl) {
+            setTimeout(() => {
+                const imgElement = messageDiv.querySelector(".imgContent");
+                if (imgElement) {
+                    imgElement.src = data.messageData.fileUrl;
+                }
+            }, 1000);
         }
 
-        document.getElementById('chatArea').appendChild(messageDiv);
-        chatArea.scrollTop = chatArea.scrollHeight;
+        selectedFile = null;
     })
     .catch(error => {
         console.error('Lỗi khi gửi tin nhắn:', error);
     });
 });
+
 
 
 // Nhận tin nhắn
@@ -475,34 +496,28 @@ socket.on('receiveMessage', (messageData) => {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', messageData.sender === currentFriendId ? 'received' : 'sent');
 
-    const fileDataUrl = messageData.file && messageData.file.data && typeof messageData.file.data === 'string'
+    const fileDataUrl = messageData.fileUrl || (messageData.file && messageData.file.data
         ? `data:${messageData.file.contentType};base64,${messageData.file.data}`
-        : null;
+        : null);
 
     const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
 
-    if (messageData.content == '') {
-        messageDiv.innerHTML = `
+    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
+        chatArea.innerHTML = '';
+    }
+    messageDiv.innerHTML = `
         <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
         <div class="msgContent" id="msgContent">
-            ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
-        </div>
-        `;
-    } else {
-        messageDiv.innerHTML = `
-        <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
-        <div class="msgContent" id="msgContent">
-            <div class="messageContent">
-                <p>${messageData.content.replace(/\n/g, '<br>')}</p>
-            </div>
+            ${messageData.content ? `<div class="messageContent"><p>${messageData.content.replace(/\n/g, '<br>')}</p></div>` : ''}
             ${fileDataUrl ? `<img src="${fileDataUrl}" class="imgContent" onclick="openImage(this.src)" />` : ''}
         </div>
     `;
-    }
+    
 
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
-})
+});
+
 
 window.toggleImages = toggleImages;
 
