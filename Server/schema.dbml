@@ -1,0 +1,69 @@
+Table groupchats {
+  _id ObjectId [pk]
+}
+
+Table messages {
+  _id ObjectId [pk]
+  sender string
+  receiver string
+  content string
+  fileUrl object
+  fileType object
+  isRead boolean
+  date string
+  timestamp string
+  __v number
+}
+
+Table groups {
+  _id ObjectId [pk]
+}
+
+Table posts {
+  _id ObjectId [pk]
+  author string
+  title string
+  files object
+  likes object
+  shares object
+  status string
+  comments object
+  createdAt string
+  updatedAt string
+  __v number
+}
+
+Table friends {
+  _id ObjectId [pk]
+}
+
+Table friendrequests {
+  _id ObjectId [pk]
+  sender string
+  receiver string
+  status string
+  createdAt string
+  updatedAt string
+  __v number
+}
+
+Table users {
+  _id ObjectId [pk]
+  name string
+  email string
+  password string
+  birthDate string
+  gender string
+  friends object
+  createdAt string
+  updatedAt string
+  __v number
+  avatar string
+  isOnline boolean
+  lastActive string
+  phoneNumber string
+  resetPasswordExpire string
+  resetPasswordToken string
+  resetPasswordExpires string
+}
+

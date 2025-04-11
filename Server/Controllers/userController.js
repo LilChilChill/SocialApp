@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
 const { options } = require('..')
-const { uploadImageToGCS } = require('../services/gcsService');
+const { uploadImageToGCS, updateAvatar } = require('../services/gcsService');
 
 const register = async (req, res) => {
     try{
@@ -71,6 +71,45 @@ const getUserProfile = async (req, res) => {
 };
 
 
+// const updateUser = async (req, res) => {
+//     const userId = req.user._id;
+//     const { name, birthDate, gender, phoneNumber } = req.body;
+
+//     try {
+//         const user = await userModel.findById(userId);
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         const updateFields = {};
+//         if (name && name.length >= 3) updateFields.name = name;
+//         if (birthDate) updateFields.birthDate = birthDate;
+//         if (gender) updateFields.gender = gender;
+//         if (phoneNumber) {
+//             if (!validator.isMobilePhone(phoneNumber, 'vi-VN')) {
+//                 return res.status(400).json({ message: 'Số điện thoại không hợp lệ' });
+//             }
+//             updateFields.phoneNumber = phoneNumber;
+//         }
+
+//         if (req.file) {
+//             const imageUrl = await uploadImageToGCS(req.file, 'avatars');
+//             updateFields.avatar = imageUrl;
+//         }
+
+//         const updatedUser = await userModel.findByIdAndUpdate(
+//             userId,
+//             updateFields,
+//             { new: true, runValidators: true }
+//         ).select('-password');
+
+//         res.status(200).json(updatedUser);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
+
 const updateUser = async (req, res) => {
     const userId = req.user._id;
     const { name, birthDate, gender, phoneNumber } = req.body;
@@ -93,6 +132,13 @@ const updateUser = async (req, res) => {
         }
 
         if (req.file) {
+            console.log(req.file); // Kiểm tra xem file có tồn tại không
+            // 📌 Xóa ảnh cũ trên GCS nếu có
+            if (user.avatar) {
+                await updateAvatar(user.avatar);
+            }
+
+            // 📌 Upload ảnh mới
             const imageUrl = await uploadImageToGCS(req.file, 'avatars');
             updateFields.avatar = imageUrl;
         }
@@ -104,6 +150,7 @@ const updateUser = async (req, res) => {
         ).select('-password');
 
         res.status(200).json(updatedUser);
+        console.log('User updated successfully:', updatedUser);
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Server error' });

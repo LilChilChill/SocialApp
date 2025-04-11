@@ -1,0 +1,1451 @@
+{
+  "groupchats": [],
+  "messages": [
+    {
+      "_id": "67bd3f1e9a221da9a32ab2f7",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "67590d52de7bd393739cf18b",
+      "content": "test",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "10:55",
+      "timestamp": "2025-02-25T03:55:10.340Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd43c09a221da9a32ab35d",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "test message",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "11:14",
+      "timestamp": "2025-02-25T04:14:56.296Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd43c49a221da9a32ab361",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "?",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "11:15",
+      "timestamp": "2025-02-25T04:15:00.494Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd43c79a221da9a32ab363",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "test",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "11:15",
+      "timestamp": "2025-02-25T04:15:03.733Z",
+      "__v": 0
+    },
+    {
+      "_id": "67be68f97c190b4b2355798c",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "catos",
+      "fileUrl": "https://storage.googleapis.com/chiap-storage/messages/4a785a6f-4c58-4a58-8a02-1fa56e89ce6f-image_10.jpg",
+      "fileType": "image/jpeg",
+      "isRead": false,
+      "date": "01:06",
+      "timestamp": "2025-02-26T01:06:01.773Z",
+      "__v": 0
+    },
+    {
+      "_id": "67be8a32b5de1e94a7ceed09",
+      "sender": "67590d52de7bd393739cf18b",
+      "receiver": "6755af4f48fc6ab20fc67a35",
+      "content": "catos",
+      "fileUrl": "https://storage.googleapis.com/chiap-storage/messages/126a3ab0-4620-4ae4-81d5-e707736a820b-image_10.jpg",
+      "fileType": "image/jpeg",
+      "isRead": false,
+      "date": "10:27",
+      "timestamp": "2025-02-26T03:27:46.334Z",
+      "__v": 0
+    },
+    {
+      "_id": "67be9c585dd22894304554b7",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "",
+      "fileUrl": "https://storage.googleapis.com/chiap-storage/messages/18f8d508-6408-4f33-b6ca-692869ee9165-image_5.jpg",
+      "fileType": "image/jpeg",
+      "isRead": false,
+      "date": "11:45",
+      "timestamp": "2025-02-26T04:45:12.296Z",
+      "__v": 0
+    },
+    {
+      "_id": "67becdd7804ed2600faf5d84",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af7048fc6ab20fc67a3e",
+      "content": "no",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "15:16",
+      "timestamp": "2025-02-26T08:16:23.974Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c50fefec114d092f4a6597",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af7048fc6ab20fc67a3e",
+      "content": "test",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "09:11",
+      "timestamp": "2025-03-03T02:11:59.079Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c51526ec114d092f4a66ad",
+      "sender": "6755af8648fc6ab20fc67a41",
+      "receiver": "6755af4f48fc6ab20fc67a35",
+      "content": "no",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "09:34",
+      "timestamp": "2025-03-03T02:34:14.200Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c66f1229677faf9d4118d0",
+      "sender": "6755af8648fc6ab20fc67a41",
+      "receiver": "6755af4f48fc6ab20fc67a35",
+      "content": "file",
+      "isRead": false,
+      "date": "10:10",
+      "files": [],
+      "timestamp": "2025-03-04T03:10:10.009Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c6a8f0aa1f95fb3fac16e4",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "catos",
+      "fileUrl": "https://storage.googleapis.com/chiap-storage/messages/821f9fcd-b6aa-4ee6-a54b-6f8e86eeac82-20250223082807.png",
+      "fileType": "image/jpeg",
+      "isRead": false,
+      "date": "14:17",
+      "timestamp": "2025-03-04T07:17:04.743Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f85b06c59a18aa988e0",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "anh DL làm gì m =))",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "14:34",
+      "timestamp": "2025-03-04T14:34:45.973Z",
+      "__v": 0
+    },
+    {
+      "_id": "67d82b563f7afd10f6d4350f",
+      "sender": "6755af8648fc6ab20fc67a41",
+      "receiver": "6755af7048fc6ab20fc67a3e",
+      "content": "VÃI CẢ L LINH CHI",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "14:01",
+      "timestamp": "2025-03-17T14:01:58.525Z",
+      "__v": 0
+    },
+    {
+      "_id": "67dad62317eaead97a94c560",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "??",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "21:35",
+      "timestamp": "2025-03-19T14:35:15.694Z",
+      "__v": 0
+    },
+    {
+      "_id": "67deaf1d84e4cbe4d0185d6d",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "https://www.youtube.com/watch?v=5aVzmgajggI",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "12:37",
+      "timestamp": "2025-03-22T12:37:49.460Z",
+      "__v": 0
+    },
+    {
+      "_id": "67deafac84e4cbe4d0185d73",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "https://www.youtube.com/watch?v=7PGQuVo6rQk",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "12:40",
+      "timestamp": "2025-03-22T12:40:12.671Z",
+      "__v": 0
+    },
+    {
+      "_id": "67deb07c84e4cbe4d0185d79",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "6755af8648fc6ab20fc67a41",
+      "content": "https://www.youtube.com/watch?v=qcnd4-vqaQ8",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "12:43",
+      "timestamp": "2025-03-22T12:43:40.472Z",
+      "__v": 0
+    },
+    {
+      "_id": "67f4dff1af68566273b18839",
+      "sender": "67daf19fdd1484d1d941b992",
+      "receiver": "6755af4f48fc6ab20fc67a35",
+      "content": "123",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "15:36",
+      "timestamp": "2025-04-08T08:36:01.093Z",
+      "__v": 0
+    },
+    {
+      "_id": "67f7d83a0a1f87057cc8d7a5",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "67590d52de7bd393739cf18b",
+      "content": "message",
+      "fileUrl": null,
+      "fileType": null,
+      "isRead": false,
+      "date": "21:39",
+      "timestamp": "2025-04-10T14:39:54.518Z",
+      "__v": 0
+    }
+  ],
+  "groups": [],
+  "posts": [
+    {
+      "_id": "67bd81ff5a1130dd1e1234d9",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "test",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-25T08:40:31.295Z",
+      "updatedAt": "2025-02-25T08:40:31.295Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd820b5a1130dd1e1234dd",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "post\r\nNEw",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-25T08:40:43.162Z",
+      "updatedAt": "2025-02-25T08:40:43.162Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd823f5a1130dd1e1234e1",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "123",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/629465e6-5e5d-4ff4-9ee0-1074e51b1670.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67bd823f5a1130dd1e1234e2"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-25T08:41:35.036Z",
+      "updatedAt": "2025-02-25T08:41:35.036Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd83b11789fe4401b923b6",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "file",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/a5149fc6-6215-40aa-813f-6eb986a2319e.docx",
+          "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "_id": "67bd83b11789fe4401b923b7"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-25T08:47:45.781Z",
+      "updatedAt": "2025-02-25T08:47:45.782Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bd8efbc07844baa60d8623",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "test \r\nfunction",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/3d68d023-4f97-41e9-acde-47731ebc88f0.png",
+          "contentType": "image/png",
+          "_id": "67bd8efbc07844baa60d8624"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/df70aa5d-6c90-48bd-abaa-78c9ed1b3eae.png",
+          "contentType": "image/png",
+          "_id": "67bd8efbc07844baa60d8625"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-25T09:35:55.021Z",
+      "updatedAt": "2025-02-25T09:35:55.021Z",
+      "__v": 0
+    },
+    {
+      "_id": "67be85d7758581ec0bf3ea97",
+      "author": "67590d52de7bd393739cf18b",
+      "title": "New Post",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/db860991-282c-4624-8d16-bec455f948d7.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67be85d7758581ec0bf3ea98"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-26T03:09:11.169Z",
+      "updatedAt": "2025-02-26T03:09:11.169Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bea07dbbcf919a88f92f2e",
+      "author": "67bea00bbbcf919a88f92f09",
+      "title": "White VAN",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-26T05:02:53.607Z",
+      "updatedAt": "2025-02-26T05:02:53.607Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bebec0783744e171e16e01",
+      "author": "67bea00bbbcf919a88f92f09",
+      "title": "Image and file",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/b7950c6e-4ead-4a8f-a3ca-443d0498f8a0.docx",
+          "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "_id": "67bebec0783744e171e16e02"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-26T07:12:00.366Z",
+      "updatedAt": "2025-02-26T07:12:00.366Z",
+      "__v": 0
+    },
+    {
+      "_id": "67bec189804ed2600faf5bb1",
+      "author": "67bea00bbbcf919a88f92f09",
+      "title": "Video",
+      "files": [
+        {
+          "fileType": "video",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/ec14fe40-373f-4435-b3da-b4e4abc740a8.mp4",
+          "contentType": "video/mp4",
+          "_id": "67bec189804ed2600faf5bb2"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-02-26T07:23:53.649Z",
+      "updatedAt": "2025-02-26T07:23:53.649Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c51b22ec114d092f4a6713",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "pdf\r\nNew file",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/65e93844-a4ba-42a6-9d90-ad19db592a77.pdf",
+          "contentType": "application/pdf",
+          "_id": "67c51b22ec114d092f4a6714"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-03T02:59:46.151Z",
+      "updatedAt": "2025-03-03T02:59:46.151Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c5281cec114d092f4a685d",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "test multiple file",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/59c72823-0d62-401b-b9d6-0951b4df5363.pdf",
+          "contentType": "application/pdf",
+          "_id": "67c5281cec114d092f4a685e"
+        },
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/3b6eae93-3d2c-4274-a102-f9c84c4e61ea.docx",
+          "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "_id": "67c5281cec114d092f4a685f"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/3c3a45d3-97e8-443b-bfa5-e1e2ecf6a93a.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c5281cec114d092f4a6860"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/992a70d5-4507-49c0-841d-68c9d200b1e6.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c5281cec114d092f4a6861"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-03T03:55:08.048Z",
+      "updatedAt": "2025-03-03T03:55:08.048Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c5288fec114d092f4a6883",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "multiple file",
+      "files": [
+        {
+          "fileType": "video",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/fad46bb5-5ff5-4a71-b1c2-f35de4d4578d.mp4",
+          "contentType": "video/mp4",
+          "_id": "67c5288fec114d092f4a6884"
+        },
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/cebffa92-2055-43de-a576-d8aa495cfe5f.docx",
+          "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "_id": "67c5288fec114d092f4a6885"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/83f996f2-126b-4698-824f-b75fd55aa2a1.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c5288fec114d092f4a6886"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/d76d27f1-6545-4088-95bb-804411cfad70.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c5288fec114d092f4a6887"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-03T03:57:03.243Z",
+      "updatedAt": "2025-03-03T03:57:03.243Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c529ddec114d092f4a68fc",
+      "author": "67bea00bbbcf919a88f92f09",
+      "title": "Post",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/55df5fdb-452d-4e6a-99ed-62a67b837606.pdf",
+          "contentType": "application/pdf",
+          "_id": "67c529ddec114d092f4a68fd"
+        },
+        {
+          "fileType": "video",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/b7e22622-9c9a-42f9-808f-7f7b4151a5b3.mp4",
+          "contentType": "video/mp4",
+          "_id": "67c529ddec114d092f4a68fe"
+        },
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/47f3cd51-2086-4aa1-a57c-fde35514e201.docx",
+          "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "_id": "67c529ddec114d092f4a68ff"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-03T04:02:37.650Z",
+      "updatedAt": "2025-03-03T04:02:37.650Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c6a551b654355f81896ccb",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "4 Image",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/1572abe1-e3ef-4a52-80f5-9874248a8a4c.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c6a551b654355f81896ccc"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/a2a8ec76-db49-43ea-a14a-70badba3616e.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c6a551b654355f81896ccd"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/e531c260-00ed-4552-b875-10e18211a366.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c6a551b654355f81896cce"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/bc58409f-b0cc-47d2-b247-ab6dd0592b36.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67c6a551b654355f81896ccf"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-04T07:01:37.261Z",
+      "updatedAt": "2025-03-04T10:00:59.862Z",
+      "__v": 2
+    },
+    {
+      "_id": "67c6b263aa1f95fb3fac1ac7",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "Tiêu đề mới\nprivate",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/6af3d221-9858-41ff-84a0-6e0fff874ff4.pdf",
+          "contentType": "application/pdf",
+          "_id": "67c6b263aa1f95fb3fac1ac8"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "private",
+      "comments": [],
+      "createdAt": "2025-03-04T07:57:23.945Z",
+      "updatedAt": "2025-03-04T09:45:08.021Z",
+      "__v": 12
+    },
+    {
+      "_id": "67c6cc45ac4ef96caa23104e",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "image",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/6750bfa1-9126-43ae-b373-6052f9e3fb8f.png",
+          "contentType": "image/png",
+          "_id": "67c6cc45ac4ef96caa23104f"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/d5ef2422-0800-42e8-8dc6-338ad0d55f44.png",
+          "contentType": "image/png",
+          "_id": "67c6cc45ac4ef96caa231050"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/2f617f0f-a304-4562-9ea9-688af1684068.png",
+          "contentType": "image/png",
+          "_id": "67c6cc46ac4ef96caa231051"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/b449d48f-9214-4b28-80bc-bbb18cd51df5.png",
+          "contentType": "image/png",
+          "_id": "67c6cc46ac4ef96caa231052"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/4833e5e1-b807-47d6-9459-b1a5f85c86f0.png",
+          "contentType": "image/png",
+          "_id": "67c6cc46ac4ef96caa231053"
+        }
+      ],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "private",
+      "comments": [],
+      "createdAt": "2025-03-04T09:47:50.002Z",
+      "updatedAt": "2025-03-05T07:47:26.044Z",
+      "__v": 5
+    },
+    {
+      "_id": "67c70e57b06c59a18aa987b7",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Địt mẹ sao lại thế",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:29:43.057Z",
+      "updatedAt": "2025-03-18T02:14:52.775Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f0bb06c59a18aa987bc",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "dis lồn",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:32:43.467Z",
+      "updatedAt": "2025-03-18T02:14:48.047Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f33b06c59a18aa987e4",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Hôm thứ 2 tôi có đi làm với quản lý nhà hàng tôi tên là anh D",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:33:23.057Z",
+      "updatedAt": "2025-03-18T02:14:42.623Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f3bb06c59a18aa987e9",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Anh DL chứ",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:33:31.908Z",
+      "updatedAt": "2025-03-18T02:14:39.000Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f52b06c59a18aa98814",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Anh DL sáng hôm đấy bảo tôi phế vãi l vì tôi quên bật mạng",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:33:54.027Z",
+      "updatedAt": "2025-03-18T02:14:35.391Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f68b06c59a18aa98899",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Tôi ngậm ngùi chấp nhận, nhịn nhục chờ thời cơ.",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:34:16.385Z",
+      "updatedAt": "2025-03-18T02:14:29.116Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f85b06c59a18aa988de",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "VÀ đúng như suy nghĩ của tôi. Ông trời có mắt, lúc đó là vào khoảng 14h23p48s",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:34:45.213Z",
+      "updatedAt": "2025-03-18T02:14:21.959Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f8cb06c59a18aa988e5",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Tôi đi ship về",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:34:52.879Z",
+      "updatedAt": "2025-03-18T02:14:17.355Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70f9eb06c59a18aa9898c",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Anh DL bảo tôi cứu anh với Dũng ơi",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:35:10.022Z",
+      "updatedAt": "2025-03-18T02:14:12.297Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70fbfb06c59a18aa989e6",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Tôi ra xem thì ra là ông ý kbt bấm đơn grab. ĐỊT CỤ QUẢN LÝ LỒN GÌ Đ BT BẤM ĐƠN GRAB ( đấy là tôi nghĩ thế )",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:35:43.802Z",
+      "updatedAt": "2025-03-18T02:14:08.773Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c70fecb06c59a18aa98ab2",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Và ngay khi tôi chạm vào máy pos để bấm đơn thì tôi đã bấm ngay được. Lỡ miệng tưởng mình chợ búa",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:36:28.683Z",
+      "updatedAt": "2025-03-18T02:14:02.586Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c71001b06c59a18aa98adc",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Tôi thốt lên địt mẹ phế vãi lồn ( tôi ns thật là tôi đã nói như thế )",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:36:49.748Z",
+      "updatedAt": "2025-03-18T02:13:58.051Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c71015b06c59a18aa98b02",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Anh DL lúc đó có nhìn tôi với ánh mặt của 1 con chó dại",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:37:09.252Z",
+      "updatedAt": "2025-03-18T02:13:52.628Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c71032b06c59a18aa98b9d",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Trong đầu anh lúc đấy chắc muốn cắn xé tôi lắm vì có 2 bàn ăn và 1 anh grab lấy đơn.",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:37:38.875Z",
+      "updatedAt": "2025-03-18T02:13:48.831Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c71045b06c59a18aa98bc0",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Nma anh lại dở thói đàn bà",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:37:57.740Z",
+      "updatedAt": "2025-03-18T02:13:44.569Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c71056b06c59a18aa98be2",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Anh lầm bẩm như một con phò cụ thể là giống một anh tên là L",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:38:14.985Z",
+      "updatedAt": "2025-03-18T02:13:39.591Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c7108eb06c59a18aa98dfc",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Tôi lúc đấy chỉ bt nói câu. Đm vào làm bánh đi đứng đây làm gì hả anh?? ( tôi thề là ô ý nhìn tôi với cái ánh mắt căm thù, ăn tươi nuốt sống, như Minh béo thấy trẻ con )",
+      "files": [],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:39:10.187Z",
+      "updatedAt": "2025-03-18T02:13:32.399Z",
+      "__v": 1
+    },
+    {
+      "_id": "67c710c1b06c59a18aa98e38",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Đơn muộn mẹ 10p r, cmay làm ăn kiểu gì đấy ( Anh GRAB nói ). Nhìn chung, Anh DL lúc đấy là nghe chửi từ phía tôi và anh Grab",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:40:01.380Z",
+      "updatedAt": "2025-03-18T02:13:25.815Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c710eab06c59a18aa98e72",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "Sau bài học này tôi mới có một suy nghĩ đừng bao giờ xúc phạm một ai trong khi bản thân mình không tài giỏi",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:40:42.656Z",
+      "updatedAt": "2025-03-18T02:13:18.217Z",
+      "__v": 0
+    },
+    {
+      "_id": "67c710f8b06c59a18aa98e8e",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "ĐỊT MẸ PHAN DUY LINH VLXX LƯU QUANG LÂM",
+      "files": [],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-04T14:40:56.482Z",
+      "updatedAt": "2025-03-18T02:13:12.444Z",
+      "__v": 1
+    },
+    {
+      "_id": "67c7fe67bbd917910eb8ece7",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "test",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/77778f1a-ac6b-47ad-996f-9163de06a37f.png",
+          "contentType": "image/png",
+          "_id": "67c7fe67bbd917910eb8ece8"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/a0727e08-b92c-4cd1-aab4-82b82b1f8323.png",
+          "contentType": "image/png",
+          "_id": "67c7fe67bbd917910eb8ece9"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/c624a69d-d9a5-44c8-922e-98ab72760c92.png",
+          "contentType": "image/png",
+          "_id": "67c7fe67bbd917910eb8ecea"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/6cef0281-4750-4597-92fc-5922a0768d96.png",
+          "contentType": "image/png",
+          "_id": "67c7fe67bbd917910eb8eceb"
+        }
+      ],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35",
+        "67590d52de7bd393739cf18b"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-05T07:33:59.955Z",
+      "updatedAt": "2025-03-05T07:33:59.955Z",
+      "__v": 2
+    },
+    {
+      "_id": "67d7834e54543ab24aec1137",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "New Post",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/70a48250-c712-4388-aeeb-fcbfbd7c5700.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67d7834e54543ab24aec1138"
+        }
+      ],
+      "likes": [
+        "67590d52de7bd393739cf18b",
+        "6755af4f48fc6ab20fc67a35",
+        "6755af8648fc6ab20fc67a41",
+        "6755af7048fc6ab20fc67a3e",
+        "67daf19fdd1484d1d941b992"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "art",
+          "_id": "67d7842154543ab24aec1192",
+          "createdAt": "2025-03-17T02:08:33.089Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "new",
+          "_id": "67d78596f690df72bf36c552",
+          "createdAt": "2025-03-17T02:14:46.498Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "lại",
+          "_id": "67d785e19115d5e00c8182de",
+          "createdAt": "2025-03-17T02:16:01.043Z"
+        },
+        {
+          "user": "67590d52de7bd393739cf18b",
+          "text": "wow",
+          "_id": "67d7931569cd6cfc15768bbe",
+          "createdAt": "2025-03-17T03:12:21.178Z"
+        },
+        {
+          "user": "6755af8648fc6ab20fc67a41",
+          "text": "Vãi cả l CHÚC ANH",
+          "_id": "67d82a0d3f7afd10f6d43457",
+          "createdAt": "2025-03-17T13:56:29.496Z"
+        },
+        {
+          "user": "67590d52de7bd393739cf18b",
+          "text": "M ngu",
+          "_id": "67d8efecbeb54f4b70bd787b",
+          "createdAt": "2025-03-18T04:00:44.603Z"
+        }
+      ],
+      "createdAt": "2025-03-17T02:05:02.336Z",
+      "updatedAt": "2025-03-17T02:05:02.336Z",
+      "__v": 59
+    },
+    {
+      "_id": "67d82da03f7afd10f6d43577",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "Đăng bài lại được rồi đấy",
+      "files": [],
+      "likes": [],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-17T14:11:44.188Z",
+      "updatedAt": "2025-03-17T14:11:44.188Z",
+      "__v": 0
+    },
+    {
+      "_id": "67d82dd33f7afd10f6d435a3",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "helo",
+      "files": [],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "Thả tim ngay",
+          "_id": "67d82e533f7afd10f6d435c4",
+          "createdAt": "2025-03-17T14:14:43.726Z"
+        }
+      ],
+      "createdAt": "2025-03-17T14:12:35.423Z",
+      "updatedAt": "2025-03-17T14:12:35.423Z",
+      "__v": 2
+    },
+    {
+      "_id": "67d831c43f7afd10f6d43693",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "CHUYÊN MỤC MỖI NGÀY MỘT CÂU CHUYỆN CÙNG TÔI - NAD\nTIÊU ĐỀ: TÔI LÀ MỘT THẰNG BIẾN THÁI PHÂN BIỆT LGBT\n\nCâu chuyện bắt đầu vào một buổi sáng, tôi đi làm cùng với quản lý của \n\nnhà hàng tôi tên là Pằng Chíu ( tên như con cặc ). Mọi chuyện xảy ra \n\nrất suôn sẻ từ 8h sáng CHO ĐẾN 11H, đúng vậy có một đơn hàng khá to\n\ntại nhà hàng ( cụ thể là ở một trường học nào đó tôi không có nhớ )\n\nđương nhiên bọn tôi làm rất là bình thường thậm chí tôi còn phải lên \n\nhỗ trợ các quầy. Một lúc sau, có vẻ rất ổn tuy nhiên tôi lại bất cẩn \n\nlàm rơi hộp sốt salad thậm chí lại còn văng vào quản lý ( con mẹ đen \n\nthế) thế là tôi vôi vàng dọn dẹp không quên xin lỗi quản lý nhưng chỗ \n\nnày mới vãi lồn thay vì tôi xin lỗi là em xin lỗi anh thì tôi lại lỡ \n\nmồm bảo em xin lỗi CHỊ. Trong đầu tôi lúc đấy cũng không nghĩ gì nhưng \n\nmà đối với những người LGBT thì họ lại coi đấy là sự xúc phạm - Câu hỏi \n\nđặt ra: Tôi có sai khi nói thế không? Tôi có phân biệt không?. Lúc đấy \n\ndo cũng làm nhiều quầy tôi cũng đã thấm mệt thì khi nói câu xin lỗi \n\nquản lý tôi lại bảo: Tao vả chết con mẹ mày bây giờ!. Các bạn biết rồi \n\nđấy đã mệt còn nghe chửi xong nó còn hét vào mặt tôi ( OMG tôi như phát \n\nđiên). \n\nTôi bảo: Em làm cái đéo gì mà anh chửi em?.\n\nCon lồn đấy bảo: Mày phân biệt bọn tao đúng không mày ghét bọn tao đúng \n\nkhông?\n\nTôi thề với mọi người mặt tôi lúc đấy như CỨT NGÂM, tôi đéo hiểu tôi \n\nlàm gì nhưng tôi vẫn tỉnh táo lắm tôi lại nhẹ nhàng đáp\n\nTôi bảo: CÁI ĐỊT MẸ, EM LÀM CÁI GÌ MÀ PHÂN BIỆT ANH. THẦN KINH À ( Nhẹ \n\nnhàng đúng không mn)\n\nXong cuộc cãi vã bắt đầu xảy ra và đỉnh điểm nhất là tôi nói câu:\n\n",
+      "files": [],
+      "likes": [
+        "6755af8648fc6ab20fc67a41",
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [
+        {
+          "user": "6755af8648fc6ab20fc67a41",
+          "text": "Mọi người nghĩ sao",
+          "_id": "67d832933f7afd10f6d436c7",
+          "createdAt": "2025-03-17T14:32:51.367Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "Tôi ủng hộ anh này, anh này ko sai",
+          "_id": "67d833033f7afd10f6d436d1",
+          "createdAt": "2025-03-17T14:34:43.767Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "Bao giờ anh này định nghỉ thế=))",
+          "_id": "67d833563f7afd10f6d436ed",
+          "createdAt": "2025-03-17T14:36:06.287Z"
+        },
+        {
+          "user": "67d975d28da87ce45d104250",
+          "text": "DIT ME DUNG BEO",
+          "_id": "67d975f58da87ce45d104295",
+          "createdAt": "2025-03-18T13:32:37.148Z"
+        }
+      ],
+      "createdAt": "2025-03-17T14:29:24.037Z",
+      "updatedAt": "2025-03-20T05:41:00.201Z",
+      "__v": 8
+    },
+    {
+      "_id": "67d8d468beb54f4b70bd6c6c",
+      "author": "67590d52de7bd393739cf18b",
+      "title": "Friends only",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/012cf740-fa3e-40df-aa17-08c79af783b7.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67d8d468beb54f4b70bd6c6d"
+        }
+      ],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35",
+        "67590d52de7bd393739cf18b"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [
+        {
+          "user": "67590d52de7bd393739cf18b",
+          "text": "wow",
+          "_id": "67d8f53ebeb54f4b70bd7bc5",
+          "createdAt": "2025-03-18T04:23:26.771Z"
+        }
+      ],
+      "createdAt": "2025-03-18T02:03:20.669Z",
+      "updatedAt": "2025-03-18T02:03:20.669Z",
+      "__v": 3
+    },
+    {
+      "_id": "67d9758c8da87ce45d104211",
+      "author": "6755af7048fc6ab20fc67a3e",
+      "title": "Bài đăng mới",
+      "files": [
+        {
+          "fileType": "document",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/5b17a4b4-5364-49bf-872a-7f4aa5b8ee87.pdf",
+          "contentType": "application/pdf",
+          "_id": "67d9758c8da87ce45d104212"
+        }
+      ],
+      "likes": [
+        "6755af7048fc6ab20fc67a3e"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [],
+      "createdAt": "2025-03-18T13:30:52.011Z",
+      "updatedAt": "2025-03-18T13:30:52.011Z",
+      "__v": 3
+    },
+    {
+      "_id": "67da24ed00a53ad5ce918dd9",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "TEST",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/74a99a9e-fdf8-4528-b921-cae999122790.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67da24ed00a53ad5ce918dda"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/685e08b9-913b-46ac-b20b-63d0ce1c39a9.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67da24ed00a53ad5ce918ddb"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/39bf5dc9-9028-41e5-8155-58bfb5d85227.png",
+          "contentType": "image/png",
+          "_id": "67da24ed00a53ad5ce918ddc"
+        },
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/f9963480-7449-4230-b07c-05b1c73c3e19.png",
+          "contentType": "image/png",
+          "_id": "67da24ed00a53ad5ce918ddd"
+        }
+      ],
+      "likes": [
+        "67bea00bbbcf919a88f92f09",
+        "6755af4f48fc6ab20fc67a35",
+        "67daf19fdd1484d1d941b992"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [],
+      "createdAt": "2025-03-19T01:59:09.985Z",
+      "updatedAt": "2025-03-19T01:59:09.985Z",
+      "__v": 3
+    },
+    {
+      "_id": "67dc4bb84cbbee07b363fc90",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "CHUYÊN MỤC MỖI NGÀY MỘT CÂU CHUYỆN CÙNG TÔI - NAD\nLẦN NÀY KHÔNG CÓ TIÊU ĐỀ CHÚNG TA CÙNG NHẬN XÉT CÂU CHUYỆN SAU NHÉ\n\nCâu chuyện vừa xảy ra cách đây 15p sau khi tôi tìm hiểu câu chuyện bi thương này. Trước tiên, chúng ta nói về em C thì em C là một người luôn \ncó sự năng động trong công việc, em rất giống bạn tôi ở điểm em không hề than vãn mệt mỏi khi làm và em rất chăm chỉ làm việc nên tôi rất quý em và luôn hỗ trợ chỉ bảo em nhiệt tình. Em có bề ngoài cao ráo, đẹp trai và là vì người miền Nam ra Bắc làm nên em rất hiền tuy nhiên ai cũng có khuyết điểm em C khó có thể đứng két và mắc khá nhiều lỗi điển hình là mấy lỗi liên quan đến voucher. Chúng ta cùng đến các mạch của sự kiện chính, hôm nay e C bất ngờ rời nhóm tôi rất hốt hoảng, không suy nghĩ nhiều tôi liền nhắn tin hỏi thăm thì em nhắn với tôi là:\n\"em thấy em đi làm ở đây tâm trạng cứ nặng nề và mệt mỏi quá\"\n\"em định sáng mai mới nhắn chào anh\"\n\"Cảm ơn anh đã giúp đỡ em trong thời gian qua. Chúc anh mạnh khỏe và có cuộc sống thật hạnh phúc nhé!\"\nVậy chuyện gì đã xảy ra? Bắt đầu về dòng sự kiện, thứ tư tức ngày 19 tháng 3 em C có bị đền một đơn 350k ( tôi đbt tại sao) và đến hôm nay tức thứ 5 ngày 20 tháng 3 em lại tiếp tục đền 200k vì lỗi voucher. Có vẻ vì đi làm phải đền nhiều quá e C đã quyết định nghỉ việc - tại sao tôi biết câu chuyện này? Bạn T là người kể với tôi rằng em C đóng ca rất đầy đủ chỉnh chu xong từ 9h và em có nhờ T rửa bát nốt rồi lên nch với quản lý xin nghỉ và T cũng là người nói với tôi về hôm thứ 4 và hôm nay. \nAi trên đời cũng đều có lỗi trong công việc, không ai là hoàn hảo vậy chúng ta cùng bàn luận về vấn đề này nhé\nĐầu tiên, ta sẽ đi đến vấn đề CSR trong nhà hàng thì em C là một người làm cũng tương đối lâu, em rất nhiệt tình nhưng bù lại em lại không giỏi trong việc tính toán, kiểm kê nên em cũng hay có lỗi và tôi cũng hỗ trợ em nhất nhiều. Em C đã đền khá nhiều đơn có những đơn đều là lỗi của em nhưng có những đơn dù không phải lỗi em em cũng đền ( y hệt tôi) nhưng vấn đề đặt ra là gì??\nThứ hai, hỗ trợ, tinh thần giúp đỡ là gì? Em C luôn luôn nhiệt tình hỗ trợ mọi người kể cả việc đền tiền như vậy nhưng sao khi em mắc lỗi lại không ai hỗ trợ em. Dù chỉ là 20k hay thậm chí là 10k cũng không một ai giúp đỡ?? ĐỊT MẸ NHƯ CON CẶC. Nhiều lúc bếp cũng làm sai toàn đòi CSR up sale để không phải đền lúc up được thì vui lúc k up đc csr cũng luôn mở mồm ra share bill không than vãn và đòi hỏi, mồm thì bảo cho cno đền cho nhớ ừ thì bếp làm sai csr có ai nói câu đấy không hay luôn hỗ trợ. Cuối cùng, làm CSR rất hay bị quản lý đì về sale hay cách bán hàng. Các bạn có làm đúng nma 3 con dở người quản lý cno vẫn nói CSR không bao giờ bênh CSR bằng trong bếp - quá bất công. \nHmm teamwork là gì?? Tsao không ai hỗ trợ nhau vậy dù nhắc đến tiền là vấn đề nhạy cảm nhưng nếu người ta đã giúp đỡ mình sao không giúp đỡ lại ( đm cái bọn chỉ bt nhận đ bt cho đi). Câu chuyện này làm tôi nhớ đến vấn đề đền đơn ngày trước của tôi chỉ có bạn tôi NCC đứng ra giúp đỡ còn lại không một ai ( CẢM ƠN EM <3). Mọi người nghĩ sao về vấn đề này",
+      "files": [],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "Câu truyện của anh này khiến tôi nhớ lại một thời hoàng kim, quá vô đạo bất lương.",
+          "_id": "67dcc83b92d64ab3617da652",
+          "createdAt": "2025-03-21T02:00:27.902Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "ngU",
+          "_id": "67deace384e4cbe4d0185c8c",
+          "createdAt": "2025-03-22T12:28:19.888Z"
+        },
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "ngU",
+          "_id": "67deace484e4cbe4d0185c95",
+          "createdAt": "2025-03-22T12:28:20.150Z"
+        }
+      ],
+      "createdAt": "2025-03-20T17:09:12.170Z",
+      "updatedAt": "2025-03-20T17:29:39.902Z",
+      "__v": 4
+    },
+    {
+      "_id": "67e4251afa8988a6b9f846c2",
+      "author": "6755af8648fc6ab20fc67a41",
+      "title": "HEHEHE Cả nhà ơi lại là tôi NGUYỄN ANH DŨNG AKA DŨNG GIÓ TAI đây và chào mừng các bạn đến với CHUYÊN MỤC MỖI NGÀY MỘT CÂU CHUYỆN CÙNG TÔI - NAD\r\nTiêu đề: Lỗ Hổng Trong Quản Lý Nhà Hàng Có Thể Bị Lợi Dụng\r\nHôm đó là vào một buổi sáng, chúng tôi nhận được tin có một bàn tiệc khoảng 20 đến 25 người vào ăn (chúng tôi đã biết từ 3 đến 4 hôm trước rồi). Chúng tôi vừa mở ca và phải chuẩn bị đồ trước khi bàn tiệc đến, tôi không nhớ lúc đó là vào mấy giờ, khoảng thời gian như nào nhưng mà anh L ( cục mỡ ) có dặn tôi là tôi phải tiếp bàn khách này một cách đàng hoàng và không có sai sót vì toàn khách quen và khách mới. Tôi đồng ý và cười nhưng có vẻ nụ cười của tôi khiến a L không vui, anh bảo tôi nghiêm túc vào m cứ như tg ngáo, nghiện ý tập trung làm đi không là mất uy tín. \r\nTÔI UẤT, đúng là tôi có hút thuốc nhưng tôi không chấp nhận bị chửi là một thằng nghiện. Theo wikipedia, Nghiện là sự lặp lại liên tục của một hành vi bất chấp hậu quả xấu hoặc sự rối loạn thần kinh để dẫn đến những hành vi như vậy.Theo một định nghĩa khác nghiện là một rối loạn não đặc trưng bởi sự tham gia bắt buộc trong các kích thích trong hệ thống thưởng phạt của não mặc dù dẫn đến hậu quả bất lợi. Tôi hút thuốc để giải tỏa cảm xúc, những hoài bão tuổi 21 chứ không phải vì nghiện.\r\nCó vẻ lúc đó lòng tự ái tôi khá cao nên trong đầu tôi nảy ra những suy nghĩ thật xấu ( địt mẹ con lợn L, sáng đến hốc 1 cái bánh mỳ 2 cái bánh ngọt mà vẫn kêu đói, con lợn béo ị ngu l, ham ăn, xấu tính, đàn bà, óc chó ) E hèm, thế là đủ rồi không tôi lại bị coi là mất dạy hề hề\r\nBACK TO THE MAIN STORY, khoảng 12h trưa bàn tiệc đã tới với oder hiện tại là 3tr2 thì khách cũng thưởng thức và có vẻ như họ vẫn đói. Kì lạ thay khách có vẻ rất biết cách chi trả khi không ai chịu nhường ai thanh toán, khách trước khi thanh toán có đặt thêm để ăn và rơi vào khoảng 2 combo 699k NHƯNG khách lại đưa tôi 1tr4 và bảo là em cầm đi tí trừ bill sau tại chị không muốn bạn chị trả nhiều. TÔI NGHĨ BỤNG HÈ HÈ THỜI TỚI RỒI MẤY CON CHÓ ƠI, là một tg liều chết ham sống tôi liền cầm ngay 1tr4 đấy và KHÔNG HỀ BẤM ĐƠN tôi chạy xuống bảo bếp làm đơn này đơn này ( CÁC BẠN NGHĨ TÔI SẼ NÓI VỚI BẾP ). KHÔNG, tôi bảo máy pos đang lỗi ko nhập được đơn - tôi nói như này vì nó đang lỗi thật nên không ai nghi ngờ và thế là HÚP. \r\nCác bạn đang nghĩ sao quản lý lại không biết và khách cũng sẽ thắc mắc giá cả. KHÔNG KHÔNG KHÔNG, với một tư cách là nhân viên 2 năm tại nhà hàng đơn giản tôi chỉ cần đọc bill tổng số tiền phải trả và nói là có người đã trả trước cho chị 1/3 bill rồi ạ ( QUÁ DỄ VỚI TÔI ). \r\nCòn quản lý thì sao, hahah một cục mỡ chỉ biết đi đi đi lại, khách đến thì chui vào bếp hoặc trốn lên trên ngồi thì biết gì. A L lúc đấy mải mê cầm đt nhắn tin chửi nhân viên thì mọi thứ bên trong hay bên ngoài đều được tôi lo toan hết rồi, khi tôi bảo bill lỗi anh L không hề có mặt ở đấy. VẬY ANH Ý Ở ĐÂU, NÓ RA NGOÀI ĐƯỜNG ĐỨNG NHƯ MẤY CON CAVE VẪY KHÁCH VẬY ĐỊT MẸ NHÂN VIÊN LÀM TỤT L CÒN NÓ RA NGOÀI ĐỨNG GỌI KHÁCH VÀO ĂN.\r\nNhưng a L cũng có nghi khi thấy khách ăn lâu và ăn nhiều thế mà bill chỉ dừng ở 3tr2? Tôi liền nói luôn: Khách còn chê đắt ý anh, khách chủ yếu nói chuyện là chính còn bảo em là sao đắt thế dạo này lên giá à, đồ ăn ngon nma giá cả hơi lệch. Cách duy nhất để ông ý hết nghi ngờ là nói về điểm yếu giá cả trong món ăn, thái độ của khách như nào và đúng như tôi dự đoán với một cái tính cách đàn bà, ái kỉ, ích kỉ, thối tha, bần tiện, chưa học đại học như a L thì a dựng hết cả lông b*** lên a chửi khách và anh hoàn toàn quên con mẹ nó mất những gì anh thắc mắc.\r\nKhép lại câu chuyện, bài học cảnh tỉnh cho việc không quan tâm đến khách hàng mà cứ đi chơi ra ngoài hóng mát, TRỐN VIỆC thì đây là kết quả!!!\r\nCẢM ƠN MỌI NGƯỜI ĐÃ ĐỌC",
+      "files": [],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "public",
+      "comments": [
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "Và thế là chúng tôi đã có thêm 2 con game mới để chơi =))",
+          "_id": "67e42635fa8988a6b9f846f9",
+          "createdAt": "2025-03-26T16:07:17.307Z"
+        },
+        {
+          "user": "6755af8648fc6ab20fc67a41",
+          "text": "QUÁ ĐÃ",
+          "_id": "67e42681fa8988a6b9f84748",
+          "createdAt": "2025-03-26T16:08:33.264Z"
+        }
+      ],
+      "createdAt": "2025-03-26T16:02:34.681Z",
+      "updatedAt": "2025-03-26T16:02:34.681Z",
+      "__v": 3
+    },
+    {
+      "_id": "67f7d7c60a1f87057cc8d771",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "Friend only",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/55f032c7-4519-42e6-b1d6-651d5d77db37.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67f7d7c60a1f87057cc8d772"
+        }
+      ],
+      "likes": [
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "shares": [],
+      "status": "friends",
+      "comments": [
+        {
+          "user": "6755af4f48fc6ab20fc67a35",
+          "text": "castos",
+          "_id": "67f8804cf8bd1e5cce66f956",
+          "createdAt": "2025-04-11T02:37:00.884Z"
+        }
+      ],
+      "createdAt": "2025-04-10T14:37:58.310Z",
+      "updatedAt": "2025-04-10T14:37:58.310Z",
+      "__v": 2
+    },
+    {
+      "_id": "67f87d38f8bd1e5cce66f902",
+      "author": "6755af4f48fc6ab20fc67a35",
+      "title": "Riêng tư",
+      "files": [
+        {
+          "fileType": "image",
+          "data": "https://storage.googleapis.com/chiap-storage/posts/fab5cefb-3b78-491b-b012-8fd85dcf0db3.jpg",
+          "contentType": "image/jpeg",
+          "_id": "67f87d38f8bd1e5cce66f903"
+        }
+      ],
+      "likes": [],
+      "shares": [],
+      "status": "private",
+      "comments": [],
+      "createdAt": "2025-04-11T02:23:52.331Z",
+      "updatedAt": "2025-04-11T02:23:52.331Z",
+      "__v": 0
+    }
+  ],
+  "friends": [],
+  "friendrequests": [
+    {
+      "_id": "67c51a54ec114d092f4a6704",
+      "sender": "6755af8648fc6ab20fc67a41",
+      "receiver": "6755af7048fc6ab20fc67a3e",
+      "status": "pending",
+      "createdAt": "2025-03-03T02:56:20.239Z",
+      "updatedAt": "2025-03-03T02:56:20.239Z",
+      "__v": 0
+    },
+    {
+      "_id": "67f4e2ec72184b23cd0673ec",
+      "sender": "6755af4f48fc6ab20fc67a35",
+      "receiver": "67f4e20272184b23cd0672f4",
+      "status": "pending",
+      "createdAt": "2025-04-08T08:48:44.417Z",
+      "updatedAt": "2025-04-08T08:48:44.417Z",
+      "__v": 0
+    }
+  ],
+  "users": [
+    {
+      "_id": "6755af4f48fc6ab20fc67a35",
+      "name": "Cường Chí",
+      "email": "cuongchi404@gmail.com",
+      "password": "$2b$10$mFfitTwNQiIRnyeYQC2.b.oKXVZk.LpX/Qj1k5TbaYV9gx5o4gpO6",
+      "birthDate": "2002-07-11",
+      "gender": "Khác",
+      "friends": [
+        "6755af8648fc6ab20fc67a41",
+        "67590d52de7bd393739cf18b",
+        "6755af7048fc6ab20fc67a3e",
+        "67bea00bbbcf919a88f92f09",
+        "67daf19fdd1484d1d941b992"
+      ],
+      "createdAt": "2024-12-08T14:38:07.164Z",
+      "updatedAt": "2025-04-10T15:13:41.401Z",
+      "__v": 5,
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/0b9c5091-b176-4364-a737-263dfe85af2c-imgDogCard.png",
+      "isOnline": false,
+      "lastActive": "2025-02-26T07:06:48.748Z",
+      "phoneNumber": "0968566203",
+      "resetPasswordExpire": "2025-03-19T17:11:48.078Z",
+      "resetPasswordToken": "301a327bf366668f278504b8339ce44faaf9f38e7440c1594a292180e023bebd",
+      "resetPasswordExpires": "2025-03-19T16:43:52.177Z"
+    },
+    {
+      "_id": "6755af7048fc6ab20fc67a3e",
+      "name": "Linh Chi",
+      "email": "linhchi@gmail.com",
+      "password": "$2a$10$/lOcTzT/NN2urQEuntFNKuJ9HR8NtPiFKZgN9ev2eGS7FJfEA4TZy",
+      "birthDate": "2003-01-10",
+      "gender": "Nữ",
+      "friends": [
+        "6755af4f48fc6ab20fc67a35",
+        "6755af8648fc6ab20fc67a41"
+      ],
+      "createdAt": "2024-12-08T14:38:40.634Z",
+      "updatedAt": "2025-03-05T09:40:32.524Z",
+      "__v": 2,
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/ef299289-9ccc-46a8-8ce6-44e1bafc8900-472347838_601215612648852_9212551440564771346_n.jpg",
+      "isOnline": false,
+      "lastActive": "2025-02-26T07:06:48.829Z"
+    },
+    {
+      "_id": "6755af8648fc6ab20fc67a41",
+      "name": "Dũng Nguyễn",
+      "email": "dung1102@gmail.com",
+      "password": "$2a$10$ZbArbuurvEEiDS//xE5TOeCDcfK1NvhMsxnvAr6.nAZvh0Po3pPsS",
+      "birthDate": "2003-12-18",
+      "gender": "Nam",
+      "friends": [
+        "6755af4f48fc6ab20fc67a35",
+        "6768d56765da27b323c55ec5",
+        "67bea00bbbcf919a88f92f09",
+        "6755af7048fc6ab20fc67a3e",
+        "67590d52de7bd393739cf18b",
+        "67d975d28da87ce45d104250"
+      ],
+      "createdAt": "2024-12-08T14:39:02.529Z",
+      "updatedAt": "2025-03-18T13:33:00.456Z",
+      "__v": 6,
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/ae194516-a8e6-4354-b69c-492027ec8e8c-images.jpg",
+      "isOnline": false,
+      "lastActive": "2025-02-26T07:00:30.647Z"
+    },
+    {
+      "_id": "67590d52de7bd393739cf18b",
+      "name": "Chúc Anh",
+      "email": "chucanh@gmail.com",
+      "password": "$2a$10$IrmSPVXbbX5m.Y5LHmIIZ.C2MkjfgknaNFojzxSuzwz2v39UDq5Zi",
+      "birthDate": "2003-02-12",
+      "gender": "Nữ",
+      "friends": [
+        "6755af4f48fc6ab20fc67a35",
+        "6755af8648fc6ab20fc67a41"
+      ],
+      "__v": 2,
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/b746db63-8953-42a7-97f4-ca89722c2c58-image_10.jpg",
+      "updatedAt": "2025-03-05T09:40:33.681Z",
+      "isOnline": false,
+      "lastActive": "2025-03-05T09:40:33.640Z"
+    },
+    {
+      "_id": "67bea00bbbcf919a88f92f09",
+      "name": "Kids",
+      "email": "hieu333@gmail.com",
+      "password": "$2b$10$QgbNUVBe5laI0pV.DwqLz.wKPqPGQPED4uKlhnxKN9cd/ygSSsv0y",
+      "birthDate": "2001-01-01",
+      "gender": "Nam",
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/4fc4d2de-027c-449e-a5a6-9dc05ab02161-pexels-photo-14918477.jpeg",
+      "friends": [
+        "6755af8648fc6ab20fc67a41",
+        "6755af4f48fc6ab20fc67a35"
+      ],
+      "isOnline": false,
+      "lastActive": "2025-02-26T05:00:59.992Z",
+      "createdAt": "2025-02-26T05:00:59.995Z",
+      "updatedAt": "2025-03-19T17:22:03.664Z",
+      "__v": 2
+    },
+    {
+      "_id": "67d975d28da87ce45d104250",
+      "name": "Tuấn Minh",
+      "email": "minhoang@gmail.com",
+      "password": "$2b$10$f8kyop918u7pxvZwXydfwelO9agwDBWDgtiH99UEAkd2ZyQeOo1qO",
+      "birthDate": "2001-01-01",
+      "gender": "Nam",
+      "avatar": "https://storage.googleapis.com/chiap-storage/avatars/ba350cb6-4341-40bd-9420-1216b9404b07-image_1.jpg",
+      "friends": [
+        "6755af8648fc6ab20fc67a41"
+      ],
+      "isOnline": false,
+      "lastActive": "2025-03-18T13:32:02.937Z",
+      "createdAt": "2025-03-18T13:32:02.937Z",
+      "updatedAt": "2025-03-18T13:33:50.053Z",
+      "__v": 1
+    },
+    {
+      "_id": "67f7deee78bad853d4922522",
+      "name": "TEST",
+      "email": "cn613302@gmail.com",
+      "password": "$2b$10$UvvfrQK5etQEI5AdhmiU6OpbYu6j8F.kXPJkR.DKuc746fBI9AupO",
+      "birthDate": "1111-11-11",
+      "gender": "Khác",
+      "phoneNumber": "0923456789",
+      "avatar": null,
+      "friends": [],
+      "isOnline": false,
+      "resetPasswordToken": null,
+      "resetPasswordExpires": null,
+      "lastActive": "2025-04-10T15:08:30.802Z",
+      "createdAt": "2025-04-10T15:08:30.805Z",
+      "updatedAt": "2025-04-10T15:09:06.913Z",
+      "__v": 0
+    }
+  ]
+}

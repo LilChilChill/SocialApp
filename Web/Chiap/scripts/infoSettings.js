@@ -39,6 +39,7 @@ const getUserInfo = async () => {
 };
 
 const displayUserInfo = (user) => {
+    console.log('avatar:', user.avatar);
     localStorage.setItem('userId', user._id);
     const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
 
@@ -46,17 +47,6 @@ const displayUserInfo = (user) => {
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
         <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
     `;
-    postUser.innerHTML = `
-        <img id="postUser" src="${avatarUrl}" alt="Avatar" >
-        <div class="post-user-info">
-            <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
-            <select id="postStatus" style="margin-bottom: 10px" hidden>
-                <option value="public">Công khai</option>
-                <option value="private">Riêng tư</option>
-                <option value="friends">Bạn bè</option>
-            </select>
-        </div>
-    `
 
 };
 
@@ -71,6 +61,7 @@ updateButton.addEventListener('click', () => {
 });
 
 saveButton.addEventListener('click', async () => {
+    
     const token = localStorage.getItem('token');
     const name = document.getElementById('name').value || currentUser.name;
     const birthDate = document.getElementById('birthDate').value || currentUser.birthDate;
@@ -78,14 +69,13 @@ saveButton.addEventListener('click', async () => {
     gender = gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác';
     const phoneNumber = document.getElementById('phoneNumber').value || currentUser.phoneNumber; // Lấy số điện thoại
 
-    // Kiểm tra hợp lệ số điện thoại (chỉ nhận số, 10-11 ký tự)
     const phoneRegex = /^[0-9]{10,11}$/;
     if (phoneNumber && !phoneRegex.test(phoneNumber)) {
         alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số.');
         return;
     }
 
-    const avatar = document.getElementById('avatar') ? document.getElementById('avatar').files[0] : null;
+    const avatar = document.getElementById('files') ? document.getElementById('files').files[0] : null;
     const formData = new FormData();
 
     if (name !== currentUser.name) formData.append('name', name);
@@ -119,8 +109,9 @@ saveButton.addEventListener('click', async () => {
             alert(errorMsg.message || 'Cập nhật thông tin không thành công.');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('lỗi:', error);
         alert('Có lỗi xảy ra. Vui lòng thử lại.');
+
     }
 });
 
