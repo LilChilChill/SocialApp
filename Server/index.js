@@ -11,20 +11,12 @@ const feedRoute = require('./Routes/feedRoute');
 const messageRoute = require('./Routes/messageRoute');
 const socketHandler = require('./socket.js');
 
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"]
-    }
-});
-
 const app = express();
 module.exports = app;
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // Routes
 app.use("/api/users", userRoute);
@@ -38,7 +30,12 @@ app.get("/", (req, res) => {
 
 const server = http.createServer(app);
 
-
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST']
+    }
+});
 
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI;
@@ -58,6 +55,8 @@ server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
+const link = process.env.API  
+console.log(link)
 
 
 // const { MongoClient } = require("mongodb");
