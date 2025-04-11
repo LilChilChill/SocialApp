@@ -11,6 +11,14 @@ const feedRoute = require('./Routes/feedRoute');
 const messageRoute = require('./Routes/messageRoute');
 const socketHandler = require('./socket.js');
 
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"]
+    }
+});
+
 const app = express();
 module.exports = app;
 
@@ -30,13 +38,7 @@ app.get("/", (req, res) => {
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-    cors: {
-        origin: ["https://chixap.netlify.app", "http://localhost:5173"],
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"]
-    }
-});
+
 
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI;
