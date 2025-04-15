@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../styles/message.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../styles/loading.css">
     <!-- <title>Ứng dụng Chat</title> -->
 </head>
 <body>
@@ -24,8 +25,11 @@
             </div>  
 
             <div class="leftContent" id="friendList">
-                <div class="loading">Đang tải danh sách bạn bè...</div>
-                
+                <div id="loading" style="position: relative; top: 30%; left: 30%"> 
+                    <svg viewBox="25 25 50 50">
+                      <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                  </div>
             </div>
             <div class="leftContent" id="groupChat" style="display: none;">
                 <div id="createGroupSection">

@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../styles/home.css">
   <link rel="stylesheet" href="../styles/addFriend.css">
   <link rel="stylesheet" href="../styles/settings.css">
+  <link rel="stylesheet" href="../styles/loading.css">
 </head>
 <body>
   <div class="navbar">
@@ -71,7 +72,11 @@
         <div class="friendList">
           <p>Danh sách bạn bè</p>
           <div class="leftContent" id="friendList">
-            <div class="loading">Đang tải danh sách bạn bè...</div>
+            <div id="loading" style="position: relative; top: 30%"> 
+              <svg viewBox="25 25 50 50">
+                <circle r="20" cy="50" cx="50"></circle>
+              </svg>
+            </div>
           </div>
         </div>
     </div>
@@ -131,6 +136,7 @@
 </div>
 
 
+
 <div id="settingsModal" class="modal">
   <div class="modal-content">
       <span class="close">&times;</span>
@@ -143,7 +149,11 @@
   </div>
 </div>
 
-<div id="loading" style="display: none;" style="background-color: var(--background-color);">Đang tải...</div>
+<div id="loading" style="position: relative; top: 50%"> 
+  <svg viewBox="25 25 50 50">
+    <circle r="20" cy="50" cx="50"></circle>
+  </svg>
+</div>
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/home.js"></script>

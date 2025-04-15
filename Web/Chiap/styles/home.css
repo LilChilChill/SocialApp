@@ -6,7 +6,7 @@ body, ul, li, a{
     font-family: Arial, sans-serif;
   }
   body{
-    background-color: var(--background-color);
+    background-color: var(--white-color);
   }
   .navbar {
     display: flex;
@@ -67,7 +67,7 @@ body, ul, li, a{
     flex-direction: column;
     justify-content: space-between;
     width: 250px;
-    background-color: var(--sidebar-background-color);
+    background-color: var(--feed-background-color);
     padding: 10px;
     height: 91.5vh;
     position: fixed;
@@ -166,7 +166,7 @@ body, ul, li, a{
     padding: 10px 10px;
     width: 250px;
     height: 91.5vh;
-    background-color: var(--background-color);
+    background-color: var(--feed-background-color);
     justify-content: space-between;
     position: fixed;
     right: 0%;
@@ -236,11 +236,14 @@ body, ul, li, a{
       flex-direction: column;
       background-color: var(--background-color);
   }
-  .chat-body::-webkit-scrollbar {
+  ::-webkit-scrollbar {
       width: 8px;
   }
-  .chat-body::-webkit-scrollbar-thumb {
-      background-color: var(--black-color);
+  ::-webkit-scrollbar-thumb{
+    background-color: #555;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--white-color); 
   }
   .chat-footer {
       padding: 10px;
@@ -267,15 +270,7 @@ body, ul, li, a{
     scrollbar-color: #000;
     height: 40vh;
   }
-  .leftContent::-webkit-scrollbar {
-      width: 8px;
-  }
-  .leftContent::-webkit-scrollbar-thumb{
-    background-color: var(--black-color);
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
+
   .chatUser{
     display: flex;
     height: 50px;
@@ -302,6 +297,7 @@ body, ul, li, a{
     height: auto;
     padding: 20px;
     border-radius: 8px;
+    
   }
  
   .post-avatar{
@@ -804,7 +800,7 @@ body, ul, li, a{
 .rightFooter {
   padding: 10px;
   background-color: var(--background-color);
-  border-top: 1px solid var(--black-color);
+  border-top: 1px solid var(--form-color);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -893,3 +889,4 @@ body, ul, li, a{
 .icon i {
   color: var(--text-color);
 }
+
