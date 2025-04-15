@@ -23,7 +23,7 @@ const getUserProfile = async (userId) => {
     }
 };
 const displayUserInfo = (user) => {
-    const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
+    const avatarUrl = user.avatar ? user.avatar : '../img/profile-default.png';
 
     userInfo.innerHTML = `
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
@@ -122,7 +122,7 @@ const displayPosts = (posts) => {
             filesHtml += '</div>';
         
 
-            const avatarUrl = post.author.avatar ? post.author.avatar : '../assets/profile-default.png';
+            const avatarUrl = post.author.avatar ? post.author.avatar : '../img/profile-default.png';
             const authorName = post.author.name || 'Người dùng ẩn danh';
             postElement.innerHTML = `
                 <div class="post-header">
@@ -155,7 +155,7 @@ const displayPosts = (posts) => {
                     <div class="comment-list">
                         ${post.comments.map(comment => `
                             <div class="comment">
-                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../assets/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../img/profile-default.png'}" alt="Avatar" class="comment-avatar">
                                 <div class="comment-content">
                                     <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
                                     <div class="comment-text">${comment.text}</div>
