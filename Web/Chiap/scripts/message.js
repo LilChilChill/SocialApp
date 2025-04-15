@@ -16,117 +16,6 @@ let hasMoreImages = true;
 let localStream;
 let peerConnection;
 
-// Cấu hình STUN server
-const configuration = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-};
-
-// Khởi tạo voice call
-async function startVoiceCall() {
-    try {
-        // Yêu cầu truy cập microphone
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        
-        // Tạo PeerConnection
-        peerConnection = new RTCPeerConnection(configuration);
-        
-        // Thêm luồng âm thanh vào kết nối
-        localStream.getTracks().forEach(track => {
-            peerConnection.addTrack(track, localStream);
-        });
-
-        // Nghe ICE candidates từ local peer
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                sendSignal('new-ice-candidate', event.candidate);
-            }
-        };
-
-        // Khi nhận remote stream, phát âm thanh
-        peerConnection.ontrack = event => {
-            const audioElement = document.createElement('audio');
-            audioElement.srcObject = event.streams[0];
-            audioElement.autoplay = true;
-            document.body.appendChild(audioElement);
-        };
-
-        // Tạo offer SDP
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-
-        // Gửi offer đến peer khác
-        sendSignal('voice-call-offer', offer);
-
-    } catch (error) {
-        console.error('Lỗi khi bắt đầu voice call:', error);
-    }
-}
-
-// Nhận và xử lý tín hiệu từ peer
-function handleSignal(type, data) {
-    switch (type) {
-        case 'voice-call-offer':
-            handleOffer(data);
-            break;
-        case 'voice-call-answer':
-            handleAnswer(data);
-            break;
-        case 'new-ice-candidate':
-            handleNewICECandidate(data);
-            break;
-    }
-}
-
-// Xử lý offer nhận được
-async function handleOffer(offer) {
-    try {
-        peerConnection = new RTCPeerConnection(configuration);
-        
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                sendSignal('new-ice-candidate', event.candidate);
-            }
-        };
-
-        peerConnection.ontrack = event => {
-            const audioElement = document.createElement('audio');
-            audioElement.srcObject = event.streams[0];
-            audioElement.autoplay = true;
-            document.body.appendChild(audioElement);
-        };
-
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        localStream.getTracks().forEach(track => {
-            peerConnection.addTrack(track, localStream);
-        });
-
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-
-        sendSignal('voice-call-answer', answer);
-    } catch (error) {
-        console.error('Lỗi xử lý offer:', error);
-    }
-}
-
-// Xử lý answer từ remote peer
-async function handleAnswer(answer) {
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-}
-
-// Xử lý ICE candidate mới
-function handleNewICECandidate(candidate) {
-    const newCandidate = new RTCIceCandidate(candidate);
-    peerConnection.addIceCandidate(newCandidate).catch(e => console.error(e));
-}
-
-// Hàm giả lập gửi tín hiệu (thay bằng socket hoặc WebRTC signaling thực tế)
-function sendSignal(type, data) {
-    socket.emit('signal', { type, data }); // Sử dụng socket.io hoặc WebSocket
-}
-
 socket.on('signal', ({ type, data }) => {
     handleSignal(type, data);
 });
@@ -261,7 +150,6 @@ function openChat(friendId, name, avatar, page = 1) {
                 const fileType = message.fileType;
                 let filePreviewHtml = '';
 
-                // Kiểm tra và tạo preview cho file
                 if (fileUrl) {
                     if (fileType.startsWith('image/')) {
                         filePreviewHtml = `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>`;
@@ -270,7 +158,7 @@ function openChat(friendId, name, avatar, page = 1) {
                     } else if (fileType === 'application/pdf') {
                         filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
                     } else {
-                        filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tệp không xác định'}</a>`;
+                        filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tải xuống file'}</a>`;
                     }
                 }
 
@@ -502,7 +390,7 @@ document.getElementById('sendButton').addEventListener('click', async () => {
                 } else if (fileLink) {
                     fileLink.href = data.messageData.fileUrl;
                 }
-            }, 1000);
+            }, 0);
         }
 
         selectedFile = null;

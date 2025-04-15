@@ -465,8 +465,54 @@
   }
   
   #inputPreview {
-    display: block;
-  }
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px;
+    background-color: #f3f4f6; /* màu nền nhạt */
+    border-radius: 10px;
+    border: 1px solid #d1d5db; /* đường viền nhạt */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+#inputPreview img,
+#inputPreview video {
+    max-width: 120px;
+    max-height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#inputPreview img:hover,
+#inputPreview video:hover {
+    transform: scale(1.05);
+}
+
+.fileItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 150px;
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.fileItem i {
+    font-size: 24px;
+    margin-bottom: 5px;
+    color: #6b7280;
+}
+
   
   .chatLeft, .chatRight{
     display: none;

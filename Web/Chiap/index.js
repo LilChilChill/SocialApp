@@ -35,13 +35,11 @@ const signUpButton = document.getElementById('signUp');
           window.location.href = window.location.origin; 
           
         } else {
-          alert("Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
-          console.error(data.message);
+          alert(data.message);
         }
       } catch (error) {
         alert("Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
         console.error(data.message);
-        console.error(error);
       }
     });
 
@@ -71,7 +69,7 @@ const signUpButton = document.getElementById('signUp');
 
           console.log("Chuyển hướng sang home.html");
         } else {
-          alert("Email hoặc mật khẩu không chính xác. Vui lòng thử lại.")
+          alert(data.message);
         }
       } catch (error) {
         console.error('Error:', error);

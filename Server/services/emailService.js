@@ -34,4 +34,31 @@ const sendResetPasswordEmail = async (email, resetLink) => {
     }
 };
 
-module.exports = { sendResetPasswordEmail };
+const sendVerificationEmail = async (email, verifyLink) => {
+    try {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'XÁC NHẬN ĐĂNG KÝ TÀI KHOẢN',
+            headers: {
+                'X-Priority': '1',
+                'X-MSMail-Priority': 'High',
+                'Importance': 'high'
+            },
+            html: `
+                <h3>Chào mừng bạn đến với ứng dụng của chúng tôi!</h3>
+                <p>Nhấn vào liên kết bên dưới để xác nhận tài khoản của bạn:</p>
+                <a href="${verifyLink}">${verifyLink}</a>
+                <p>Nếu bạn không đăng ký, vui lòng bỏ qua email này.</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('Email xác nhận đăng ký đã được gửi!');
+    } catch (error) {
+        console.error('Lỗi gửi email xác nhận:', error);
+    }
+};
+
+
+module.exports = { sendResetPasswordEmail, sendVerificationEmail };
