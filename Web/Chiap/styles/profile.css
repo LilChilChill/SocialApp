@@ -34,7 +34,7 @@ body, ul, li, a{
   }
   
   .search-bar {
-    width: 350px;
+    width: 300px;
     padding: 8px;
     border-radius: 20px;
     border: none;
@@ -822,4 +822,3 @@ body, ul, li, a{
 .toggle-content:hover {
   color: #0056b3;
 }
-

@@ -22,7 +22,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #1877f2;
+    background-color: var(--navbar-background-color);
     color: white;
   }
   
@@ -56,13 +56,13 @@
   .mainContent {
     display: flex;
     height: 94vh;
-    background-color: #fff;
+    background-color: var(--background-color);
   }
   
   .left {
     width: 25%;
-    background-color: #f5f5f5;
-    border-right: 1px solid #ddd;
+    background-color: var(--background-color);
+    border-right: 1px solid var(--black-color);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -77,7 +77,7 @@
   
   .side{
     width: 30%;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
     flex-direction: column;
     /* align-items: center; */
     padding: 10px
@@ -89,6 +89,12 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
+  }
+  .headerSide p{
+    color: var(--text-color);
+  }
+  .headerSide i{
+    color: var(--text-color);
   }
   
   #headerAva{
@@ -107,11 +113,11 @@
   .file a{
     text-decoration: none;
     padding: 5px;
-    color: #000;
+    color: var(--text-color);
   }
   
   .file a:hover{
-    background-color: #d4d4d4;
+    background-color: var(--form-color);
     border-radius: 10px;
   }
   
@@ -131,9 +137,11 @@
   .form__field {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--black-color);
     border-radius: 5px;
     font-size: 16px;
+    background-color: var(--post-comments-color);
+    color: var(--text-color);
   }
   
   .user-info{
@@ -166,7 +174,7 @@
     padding: 10px;
     text-decoration: none;
     font-size: 15px;
-    color: #333;
+    color: var(--text-color);
     font-weight: bold;
     border-radius: 5px;
     white-space: nowrap;
@@ -188,35 +196,38 @@
   
   .right .header {
     padding: 20px;
-    background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--black-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .right .header p {
+  .right .header p, span {
     font-size: 18px;
+    color: var(--text-color);
   }
   
-  
+  .right .header i{
+    color: var(--icon-color);
+  }
   
   .rightContent {
     flex: 1;
     padding: 20px;
     overflow-y:auto;
-    background-color: #fafafa;
+    background-color: var(--background-color)
   }
   ::-webkit-scrollbar {
     width: 10px;
   }
   
   ::-webkit-scrollbar-track {
-    background: #f1f1f1; 
+    background: var(--background-color); 
   }
    
   ::-webkit-scrollbar-thumb {
-    background: #888; 
+    background: var(--black-color); 
   }
   
   ::-webkit-scrollbar-thumb:hover {
@@ -224,8 +235,8 @@
   }
   .rightFooter {
     padding: 20px;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
+    background-color: var(--background-color);
+    border-top: 1px solid var(--black-color);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -244,10 +255,11 @@
     width: auto;
     padding: 10px;
     cursor: pointer;
+    color: var(--text-color);
   }
   
   .chatFunction i:hover{
-    background-color: #ddd;
+    background-color: var(--form-color);
     border-radius: 50%;
     cursor: pointer;
   }
@@ -259,7 +271,7 @@
     align-items: flex-start;
     flex-grow: 1;
     border-radius: 20px;
-    background-color: #ccc;
+    background-color: var(--text-area-color);
   }
   
   .chatInput textarea {
@@ -276,7 +288,7 @@
     overflow-y: hidden;
     border-width: 0;
     /* margin-right: 25px; */
-    background-color: #ccc;
+    background-color: var(--text-area-color);
   }
   
   .chatInput textarea:focus{
@@ -286,14 +298,15 @@
   #sendButton {
     width: auto;
     padding: 10px;
-    background-color: #fff;
+    background-color: var(--background-color);
     border: none;
     font-size: 16px;
     margin-left: 5px;
+    color: var(--text-color);
   }
   
   #sendButton:hover{
-    background-color: #ddd;
+    background-color: var(--form-color);
     border-radius: 50%;
     cursor: pointer;
   }
@@ -323,7 +336,7 @@
   }
   
   .chatUser:hover{
-    background-color: #c0c0c0;
+    background-color: var(--form-color);
     border-radius: 10px;
   }
   
@@ -395,7 +408,7 @@
   }
   
   #deleteChatButton:hover {
-    background-color: #d4d4d4;
+    background-color: var(--form-color);
     border-radius: 10px;
   }
   
@@ -420,11 +433,11 @@
   }
   
   .received .messageContent {
-    background-color: #c0c0c0; 
+    background-color: var(--message-bg-color); 
     align-items: flex-start;
     align-self: flex-start;
     justify-content: flex-start;
-    color: #000000cc;
+    color: var(--pure-white);
   }
   
   .sent .msgContent{
@@ -436,8 +449,8 @@
   .sent .messageContent {
     display: flex;
     align-items: flex-end; 
-    background-color: #3872fa;
-    color: white;
+    background-color: var(--message-bg-color);
+    color: var(--pure-white);
   }
   
   .send .msgContent a:hover{
@@ -449,13 +462,6 @@
     align-items: flex-start;
     flex-direction: column;
   }
-  /* 
-  .received .messageContent {
-    display: flex;
-    align-items: flex-start; 
-    flex-direction: column;
-  } */
-  
   .imgPreview {
     max-width: 30%;
     border-radius: 8px; 
@@ -472,10 +478,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    padding: 8px;
-    background-color: #f3f4f6; /* màu nền nhạt */
+    padding: 10px;
+    background-color: var(--text-area-color); /* màu nền nhạt */
     border-radius: 10px;
-    border: 1px solid #d1d5db; /* đường viền nhạt */
+    border: 1px solid var(--text-area-color); /* đường viền nhạt */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -538,9 +544,6 @@
     justify-content: flex-start;
   }
   
-  
-  
-  
   .icon{
     position:static;
     display: flex;
@@ -548,6 +551,7 @@
     flex-wrap: wrap;
     cursor: pointer;
     padding-left: 10px;
+    color: var(--icon-color);
   }
   
   .headerIcon a {
@@ -702,7 +706,7 @@
     padding: 10px;
     /* border: 1px solid #ccc; */
     border-radius: 5px;
-    background: #f9f9f9;
+    background: var(--post-comment-input);
   }
 
   .image-container img {
