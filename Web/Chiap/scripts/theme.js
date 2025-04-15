@@ -1,4 +1,6 @@
 export const LightTheme = {
+    PURE_WHITE: '#ffffff',
+    PURE_BLACK: '#000000',
     WHITE_COLOR: '#000000',
     BLACK_COLOR: '#ffffff',
     BACKGROUND_COLOR: "#ffffff",
@@ -8,7 +10,7 @@ export const LightTheme = {
     NAVBAR_TEXT_COLOR: "#ffffff",
     NAVBAR_ICON_COLOR: "#feffff",
     SIDEBAR_BACKGROUND_COLOR: "#ffffff",
-    SIDEBAR_HOVER_BACKGROUND_COLOR: "e4e6eb",
+    SIDEBAR_HOVER_BACKGROUND_COLOR: "#e4e6eb",
     SIDEBAR_TEXT_COLOR: "#010611",
     SIDEBAR_ICON_COLOR: "#000401",
     CHAT_HEADER_BACKGROUND_COLOR: "#007bff",
@@ -21,11 +23,15 @@ export const LightTheme = {
     POST_FORM_BG_COLOR: "#f9f9f9",
     POST_FORM_TXT_AREA_BG_COLOR: "#fff",
     FORM_COLOR: "#C6C6C4",
-    LINK_COLOR: "#683097"
-    
+    LINK_COLOR: "#683097",
+    TEXT_AREA_COLOR: "#e4e6eb",
+    ICON_COLOR: "#000",
+    MESSAGE_BG_COLOR: "#3872fa"
 };
 
 export const DarkTheme = {
+    PURE_WHITE: '#ffffff',
+    PURE_BLACK: '#000000',
     WHITE_COLOR: '#FFFFFF',
     BLACK_COLOR: '#000000',
     BACKGROUND_COLOR: "#1a1a1a",
@@ -48,8 +54,10 @@ export const DarkTheme = {
     POST_FORM_BG_COLOR: "#1e1e1e",
     POST_FORM_TXT_AREA_BG_COLOR: "#303030",
     FORM_COLOR: "#39393b",
-    LINK_COLOR: "#9D4AA6"
-
+    LINK_COLOR: "#9D4AA6",
+    TEXT_AREA_COLOR: "#333333",
+    ICON_COLOR: "#737373",
+    MESSAGE_BG_COLOR: "#333333"
 };
 
 

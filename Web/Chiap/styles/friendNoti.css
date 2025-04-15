@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     /* background: url('../img/f12.jpg') no-repeat center center fixed; */
-    background-color: cadetblue;
+    background-color: var(--background-color);
     background-size: cover;
 }
 
@@ -20,8 +20,8 @@ body, ul, li, a{
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #1877f2;
-    color: white;
+    background-color: var(--navbar-background-color);
+    color: var(--white-color) ;
   }
   
   .logo {
@@ -74,7 +74,7 @@ h1 {
     margin-top: 20px;
 }
 .friend-request-item {
-    background: white;
+    background: var(--black-color);
     padding: 15px;
     margin: 10px;
     border-radius: 5px;
@@ -83,6 +83,9 @@ h1 {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.friend-request-item span {
+    color: var(--text-color);
 }
 button {
     padding: 5px 10px;
@@ -93,7 +96,7 @@ button {
 }
 .accept-button {
     background-color: #28a745;
-    color: white;
+    color: var(--text-color);
 }
 .accept-button:hover {
     background-color: #218838;

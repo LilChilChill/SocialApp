@@ -320,7 +320,7 @@ function connectSocket() {
 }
 
 window.connectSocket = connectSocket;
-connectSocket()
+
 
 socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
