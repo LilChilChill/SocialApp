@@ -493,8 +493,7 @@ body, ul, li, a{
   }
   .chatMessage{
     position: fixed;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     padding: 10px;
     border-radius: 10px;
     margin: 10px 0;
@@ -772,4 +771,100 @@ body, ul, li, a{
 
 .toggle-content:hover {
   color: #0056b3;
+}
+.fileLink {
+  display: inline-block;
+  margin-top: 5px;
+  color: #007bff;
+  text-decoration: underline;
+  word-break: break-all;
+}
+.videoContent {
+  max-width: 250px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+.rightFooter {
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.chatFunction {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+}
+
+
+
+.chatFunction i {
+  font-size: 18px;
+  width: auto;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.chatFunction i:hover{
+  background-color: #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.chatInput {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  border-radius: 20px;
+  background-color: #ccc;
+}
+
+.chatInput textarea {
+  width: 100%;
+  height: 15px;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+  word-wrap: break-word;
+  resize: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+  border-width: 0;
+  /* margin-right: 25px; */
+  background-color: #ccc;
+}
+
+.chatInput textarea:focus{
+  outline: none;
+}
+
+#sendButton {
+  width: auto;
+  padding: 10px;
+  background-color: #fff;
+  border: none;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+#sendButton:hover{
+  background-color: #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.icon{
+  position:relative;
+  top: 9px;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  cursor: pointer;
+  padding-left: 10px;
 }

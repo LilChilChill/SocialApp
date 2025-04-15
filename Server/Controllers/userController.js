@@ -4,6 +4,9 @@ const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
 const { options } = require('..')
 const { uploadImageToGCS, updateAvatar } = require('../services/gcsService');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const { sendResetPasswordEmail, sendVerificationEmail } = require('../services/emailService');
 
 const register = async (req, res) => {
     try{
@@ -11,15 +14,15 @@ const register = async (req, res) => {
 
         let user = await userModel.findOne({email})
         if (user) 
-            return res.status(400).json({message: 'Email already exists'})
+            return res.status(400).json({message: 'Email đã tồn tại'})
         if (!name || !email || !password) 
-            return res.status(400).json({message: 'All fields are required'})
+            return res.status(400).json({message: 'Vui lòng nhập đầy đủ thông tin'})
         if (!validator.isEmail(email)) 
-            return res.status(400).json({message: 'Invalid email'})
+            return res.status(400).json({message: 'Email không hợp lệ'})
         if (!validator.isStrongPassword(password))
-            return res.status(400).json({message: 'Password should be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character'})
-        if (name.length < 3) 
-            return res.status(400).json({message: 'Name should be at least 3 characters long'})
+            return res.status(400).json({message: 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt'})
+        if (name.length < 2) 
+            return res.status(400).json({message: 'Tên phải có ít nhất 2 ký tự'})
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
@@ -40,11 +43,11 @@ const login = async (req, res) => {
     try{
         const user = await userModel.findOne({ email})
         if (!user)
-            return res.status(404).json({message: 'User not found'})
+            return res.status(404).json({message: 'Người dùng không tồn tại'})
 
         const isValidPassword = await bcrypt.compare(password, user.password)
         if (!isValidPassword)
-            return res.status(401).json({message: 'Invalid Password'})
+            return res.status(401).json({message: 'Mật khẩu không đúng'})
         
         const token = createToken(user._id)
         res.status(200).json({_id: user._id, name: user.name, email, avatar: user.avatar, token})
@@ -69,46 +72,6 @@ const getUserProfile = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
-
-// const updateUser = async (req, res) => {
-//     const userId = req.user._id;
-//     const { name, birthDate, gender, phoneNumber } = req.body;
-
-//     try {
-//         const user = await userModel.findById(userId);
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-
-//         const updateFields = {};
-//         if (name && name.length >= 3) updateFields.name = name;
-//         if (birthDate) updateFields.birthDate = birthDate;
-//         if (gender) updateFields.gender = gender;
-//         if (phoneNumber) {
-//             if (!validator.isMobilePhone(phoneNumber, 'vi-VN')) {
-//                 return res.status(400).json({ message: 'Số điện thoại không hợp lệ' });
-//             }
-//             updateFields.phoneNumber = phoneNumber;
-//         }
-
-//         if (req.file) {
-//             const imageUrl = await uploadImageToGCS(req.file, 'avatars');
-//             updateFields.avatar = imageUrl;
-//         }
-
-//         const updatedUser = await userModel.findByIdAndUpdate(
-//             userId,
-//             updateFields,
-//             { new: true, runValidators: true }
-//         ).select('-password');
-
-//         res.status(200).json(updatedUser);
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// };
 
 const updateUser = async (req, res) => {
     const userId = req.user._id;
@@ -200,9 +163,6 @@ const changePassword = async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 };
-
-const crypto = require('crypto');
-const { sendResetPasswordEmail } = require('../services/emailService');
 
 const link = process.env.API  
 console.log(link)

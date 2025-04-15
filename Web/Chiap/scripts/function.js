@@ -1,7 +1,23 @@
 const API_URL = import.meta.env.VITE_API_URL;
+const socket = io(`${API_URL}`);
 
 const userAvatar = document.getElementById('userAvatar');
 let currentUser = {};
+
+let currentFriendId = null;
+let friendAvatar = null;
+let friendName = null; 
+let currentPage = 1;
+let selectedFile = null; 
+let cachedImages = [];
+let imagesFetched = false;
+let tempImages = [];
+let currentImageIndex = 0;
+let hasMoreImages = true;
+
+let localStream;
+let peerConnection;
+
 
 function listDisplay() {
     document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
@@ -220,6 +236,8 @@ function getFriends() {
     .then(friends => {
         const friendList = document.getElementById('friendList');
         friendList.innerHTML = ''; 
+        const chatMessage = document.getElementById('chatMessage');
+        chatMessage.style.display = 'none';
 
         if (friends.length === 0) {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
@@ -229,8 +247,10 @@ function getFriends() {
 
                 const friendItem = document.createElement('div');
                 friendItem.classList.add('friend-item');
-                friendItem.onclick = () => openChat(friend._id, friend.name, friendAvatar);
-
+                friendItem.onclick = () => {
+                    connectSocket(),
+                    openChat(friend._id, friend.name, friendAvatar);
+                };
                 friendItem.innerHTML = `
                     <div class='chatUser'>
                         <img src="${friendAvatar}" alt="${friend.name}" class="avatar">
@@ -240,6 +260,14 @@ function getFriends() {
                     </div>
                 `;
                 friendList.appendChild(friendItem);
+                
+                const friendItemClone = friendItem.cloneNode(true);
+                chatMessage.appendChild(friendItemClone);
+
+                friendItemClone.onclick = () => {
+                    chatMessage.style.display = 'none';
+                    openChat(friend._id, friend.name, friendAvatar);
+                };
             });
         }
     })
@@ -260,33 +288,49 @@ const goToProfile = (userId) => {
     }
 };
 
-const socket = io(`${API_URL}`);
-socket.on('receiveMessage', (message) => {
-    // console.log('Nhận tin nhắn:', message);
-});
 
 socket.on('disconnect', () => {
     console.log(Error);
 });
 function connectSocket() {
     socket.on('connect', () => {
-        const userId = localStorage.getItem('userId');
         // console.log('Đã kết nối với server:', socket.id);
+
+        const userId = localStorage.getItem('userId');
         if (userId) {
             socket.emit('register', userId);
-            console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
+            // console.log(`Đã gửi sự kiện đăng ký userId: ${userId}`);
         } else {
             console.error('Không tìm thấy userId trong localStorage.');
         }
     });
-}
-window.connectSocket = connectSocket;
 
+    socket.on('disconnect', () => {
+        console.warn('Mất kết nối với server.');
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+        console.log(`Đã kết nối lại sau lần thử thứ ${attemptNumber}`);
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            socket.emit('register', userId);
+            console.log(`Đã gửi lại sự kiện đăng ký userId: ${userId} sau khi reconnect.`);
+        }
+    });
+}
+
+window.connectSocket = connectSocket;
+connectSocket()
+
+socket.on('receiveMessage', (message) => {
+    // console.log('Nhận tin nhắn:', message);
+});
+const chatArea = document.getElementById('chatArea');
 function openChat(friendId, friendName, friendAvatar, page = 1) {
     const chatPopup = document.getElementById("chatPopup")
     document.getElementById("username").textContent = friendName;
     document.getElementById("avatar").src = friendAvatar
-    const chatArea = document.getElementById('chatMessages');
+    const chatArea = document.getElementById('chatArea');
 
     fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
         method: 'GET',
@@ -307,12 +351,26 @@ function openChat(friendId, friendName, friendAvatar, page = 1) {
                 messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
 
                 const fileUrl = message.fileUrl;
+                const fileType = message.fileType;
+                let filePreviewHtml = '';
+
+                if (fileUrl) {
+                    if (fileType.startsWith('image/')) {
+                        filePreviewHtml = `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>`;
+                    } else if (fileType.startsWith('video/')) {
+                        filePreviewHtml = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
+                    } else if (fileType === 'application/pdf') {
+                        filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
+                    } else {
+                        filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tải xuống file'}</a>`;
+                    }
+                }
 
                 messageDiv.innerHTML = `
                     ${message.sender === friendId ? `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : '<img src="" alt="Bạn" style="display: none;">'}
                     <div class="msgContent">
                         ${message.content ? `<div class="messageContent"><p>${message.content.replace(/\n/g, '<br>')}</p></div>` : ''}
-                        ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>` : ''}
+                        ${filePreviewHtml}
                     </div>
                 `;
                 chatArea.appendChild(messageDiv);
@@ -320,7 +378,6 @@ function openChat(friendId, friendName, friendAvatar, page = 1) {
         }
 
         chatArea.scrollTop = chatArea.scrollHeight;
-        connectSocket()
     })
     .catch(error => {
         console.error('Lỗi khi lấy tin nhắn:', error);
@@ -335,8 +392,10 @@ function closeChat() {
     event.preventDefault();
     const chatPopup = document.getElementById("chatPopup")
     chatPopup.style.display = "none";
-    const messageInput = document.getElementById("messageInput")
+    const messageInput = document.getElementById("chatInput")
     messageInput.value = '';
+    const fileInput = document.getElementById("inputPreview")
+    fileInput.innerHTML = '';
 }
 window.closeChat = closeChat;
 
@@ -358,7 +417,6 @@ document.addEventListener("keydown", function(event) {
     }
 })
 
-getFriends();
 
 let currentIndex = 0;
 let currentImages = [];
@@ -429,3 +487,230 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox();
 });
 
+//-------------------------------MESSAGE FUNCTION
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const fileInput = event.target;
+    selectedFile = fileInput.files[0]; 
+
+    const chatInput = document.getElementById('inputPreview');
+    chatInput.innerHTML = ''; 
+
+    if (selectedFile) {
+        if (selectedFile.type.startsWith('image/')) {
+            chatInput.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" alt="Selected File" class="imgPreview"/>`;
+        } else {
+            chatInput.innerHTML = `<p>${selectedFile.name}</p>`;
+        }
+    }
+});
+
+async function compressImage(file, maxSizeMB = 25, quality = 0.8) { 
+    if (file.size / 1024 / 1024 <= maxSizeMB) {
+        return file;
+    }
+
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                const maxWidth = 1920;
+                const maxHeight = 1080;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxWidth || height > maxHeight) {
+                    if (width > height) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    } else {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob(async (blob) => {
+                    if (blob.size / 1024 / 1024 > maxSizeMB && quality > 0.1) {
+                        resolve(await compressImage(file, maxSizeMB, quality - 0.1));
+                    } else {
+                        resolve(new File([blob], file.name, { type: "image/jpeg" }));
+                    }
+                }, "image/jpeg", quality);
+            };
+        };
+        reader.onerror = (error) => reject(error);
+    });
+}
+
+// window.openImage = openImage
+
+document.getElementById('sendButton').addEventListener('click', async () => {
+    const messageInput = document.getElementById('chatInput');
+    console.log('sendButton clicked');
+    const content = messageInput.value.trim();
+
+    if (!content && !selectedFile) return;
+    if (!currentFriendId) return;
+
+    let fileToSend = selectedFile;
+    let previewUrl = null;
+    let filePreviewHtml = '';
+
+    // Nếu có file ảnh thì nén
+    if (fileToSend && fileToSend.type.startsWith('image/')) {
+        try {
+            fileToSend = await compressImage(fileToSend);
+        } catch (error) {
+            console.error('Lỗi khi nén ảnh:', error);
+            return;
+        }
+    }
+
+    if (fileToSend) {
+        const fileType = fileToSend.type;
+        const tempUrl = URL.createObjectURL(fileToSend);
+        previewUrl = tempUrl;
+
+        if (fileType.startsWith('image/')) {
+            filePreviewHtml = `<img src="${tempUrl}" class="imgContent" onclick="openImage('${tempUrl}')"/>`;
+        } else if (fileType.startsWith('video/')) {
+            filePreviewHtml = `<video controls class="videoContent"><source src="${tempUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
+        } else if (fileType === 'application/pdf') {
+            filePreviewHtml = `<a href="${tempUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
+        } else {
+            filePreviewHtml = `<a href="${tempUrl}" download class="fileLink">📎 ${fileToSend.name}</a>`;
+        }
+    }
+
+    const messageData = new FormData();
+    messageData.append('receiverId', currentFriendId);
+    messageData.append('content', content);
+    if (fileToSend) messageData.append('file', fileToSend);
+
+    // Hiển thị tin nhắn tạm thời
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', 'sent');
+
+    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
+        chatArea.innerHTML = '';
+    }
+
+    messageDiv.innerHTML = `
+        <div class="msgContent">
+            ${content ? `<div class="messageContent"><p>${content.replace(/\n/g, '<br>')}</p></div>` : ''}
+            ${filePreviewHtml}
+        </div>
+    `;
+    document.getElementById('chatArea').appendChild(messageDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    fetch(`${API_URL}/api/messages`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        },
+        body: messageData
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageInput.value = '';
+        document.getElementById('inputPreview').innerHTML = '';
+
+        const messagePayload = {
+            chatType: 'private',
+            receiverId: currentFriendId,
+            sender: localStorage.getItem('userId'),
+            content: content,
+            fileUrl: data.messageData.fileUrl || null,
+            fileType: data.messageData.fileType || null,
+            date: data.messageData.date
+        };
+
+        // Gửi socket
+        socket.emit('sendMessage', messagePayload);
+
+        // Cập nhật file URL chính xác từ GCS
+        if (data.messageData.fileUrl) {
+            setTimeout(() => {
+                const img = messageDiv.querySelector(".imgContent");
+                const video = messageDiv.querySelector("video source");
+                const fileLink = messageDiv.querySelector(".fileLink");
+
+                if (img) {
+                    img.src = data.messageData.fileUrl;
+                } else if (video) {
+                    video.src = data.messageData.fileUrl;
+                    video.parentElement.load();
+                } else if (fileLink) {
+                    fileLink.href = data.messageData.fileUrl;
+                }
+            }, 0);
+        }
+
+        selectedFile = null;
+    })
+    .catch(error => {
+        console.error('Lỗi khi gửi tin nhắn:', error);
+    });
+});
+
+// Nhận tin nhắn
+socket.on('receiveMessage', (messageData) => {
+    const chatArea = document.getElementById('chatArea');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', messageData.sender === currentFriendId ? 'received' : 'sent');
+
+    const fileUrl = messageData.fileUrl; 
+    const fileType = messageData.fileType;
+    const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
+
+    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
+        chatArea.innerHTML = '';
+    }
+
+    let fileElement = '';
+
+    if (fileUrl) {
+        if (fileType.startsWith('image/')) {
+            fileElement = `<img src="${fileUrl}" class="imgContent" onclick="openImage(this.src)" />`;
+        } else if (fileType === 'application/pdf') {
+            fileElement = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
+        } else if (fileType.startsWith('video/')) {
+            fileElement = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
+        } else {
+            const fileName = fileUrl.split('/').pop();
+            fileElement = `<a href="${fileUrl}" download class="fileLink">📎 Tải xuống: ${fileName}</a>`;
+        }
+    }
+
+    messageDiv.innerHTML = `
+        <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
+        <div class="msgContent" id="msgContent">
+            ${messageData.content ? `<div class="messageContent"><p>${messageData.content.replace(/\n/g, '<br>')}</p></div>` : ''}
+            ${fileElement}
+        </div>
+    `;
+
+    chatArea.appendChild(messageDiv);
+    chatArea.scrollTop = chatArea.scrollHeight;
+});
+
+document.getElementById('chatInput').addEventListener('keydown', (event) => {
+    
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault(); 
+        document.getElementById('sendButton').click(); 
+    }
+});
+
+
+getFriends();
