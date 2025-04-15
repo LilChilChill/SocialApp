@@ -38,7 +38,7 @@ const getUserInfo = async () => {
 };
 const displayUserInfo = (user) => {
     localStorage.setItem('userId', user._id);
-    const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
+    const avatarUrl = user.avatar ? user.avatar : '../img/profile-default.png';
 
     userAvatar.innerHTML = `
         <img class="user-avatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
@@ -97,7 +97,7 @@ const searchUsers = async () => {
                 const userItem = document.createElement('div');
                 userItem.classList.add('user-item');
                 
-                const avatarUrl = user.avatar ? user.avatar : '../assets/profile-default.png';
+                const avatarUrl = user.avatar ? user.avatar : '../img/profile-default.png';
                 
                 userItem.innerHTML = `
                     <div class='userName'> 
@@ -225,7 +225,7 @@ function getFriends() {
             friendList.innerHTML = '<p>Không có bạn bè nào.</p>';
         } else {
             friends.forEach(friend => {
-                const friendAvatar = friend.avatar ? friend.avatar : '../assets/profile-default.png';
+                const friendAvatar = friend.avatar ? friend.avatar : '../img/profile-default.png';
 
                 const friendItem = document.createElement('div');
                 friendItem.classList.add('friend-item');

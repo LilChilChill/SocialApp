@@ -713,4 +713,15 @@
   .msgDate{
     font-size: 10px;
   }
-  
+  .fileLink {
+    display: inline-block;
+    margin-top: 5px;
+    color: #007bff;
+    text-decoration: underline;
+    word-break: break-all;
+}
+.videoContent {
+    max-width: 300px;
+    border-radius: 8px;
+    margin-top: 5px;
+}
