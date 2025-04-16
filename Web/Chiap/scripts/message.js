@@ -251,6 +251,7 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     }
 });
 
+
 async function compressImage(file, maxSizeMB = 25, quality = 0.8) { 
     if (file.size / 1024 / 1024 <= maxSizeMB) {
         return file;
@@ -333,7 +334,15 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         } else if (fileType === 'application/pdf') {
             filePreviewHtml = `<a href="${tempUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
         } else {
-            filePreviewHtml = `<a href="${tempUrl}" download class="fileLink">📎 ${fileToSend.name}</a>`;
+            // filePreviewHtml = `<a href="${tempUrl}" download class="fileLink">📎 ${fileToSend.name}</a>`;
+            filePreviewHtml = `
+                <div class="fileAttachment">
+                    <div class="fileIcon">📎</div>
+                    <div class="fileInfo">
+                        <span class="fileName">${fileToSend.name || 'Tệp đính kèm'}</span>
+                        <a href="${tempUrl}" download class="downloadBtn">Tải xuống</a>
+                    </div>
+                </div>`;
         }
     }
 
@@ -383,7 +392,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 
         // Gửi socket
         socket.emit('sendMessage', messagePayload);
-
         // Cập nhật file URL chính xác từ GCS
         if (data.messageData.fileUrl) {
             setTimeout(() => {

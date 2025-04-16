@@ -11,22 +11,15 @@ const allowedTypes = [
     'image/gif',
     'image/webp',
     'application/pdf',
-    'application/msword', // .doc
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-    'application/vnd.ms-excel', // .xls
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
-    'text/plain', // .txt
+    'application/msword', 
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+    'application/vnd.ms-excel', 
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+    'text/plain', 
     'video/mp4',
-    'video/quicktime', // .mov
-    'video/x-msvideo' // .avi
+    'video/quicktime', 
+    'video/x-msvideo' 
 ];
-
-// const fileFilter = (req, file, cb) => {
-//     if (!allowedTypes.includes(file.mimetype)) {
-//         return cb(new Error('Loại file không được chấp nhận'), false);
-//     }
-//     cb(null, true);
-// };
 
 const fileFilter = (req, file, cb) => {
     cb(null, true);
@@ -42,7 +35,7 @@ const upload = multer({
 const router = express.Router();
 
 const messageRoute = (io) => {
-    router.post('/', authMiddleware, upload.single('file'), (req, res) => sendMessage(io)(req, res));
+    router.post('/', authMiddleware, upload.array('file'), (req, res) => sendMessage(io)(req, res));
     router.get('/:friendId', authMiddleware, getMessages);
     router.get('/images/:friendId', authMiddleware, getChatImages);
     router.delete('/delete/:friendId', authMiddleware, deleteChatHistory);

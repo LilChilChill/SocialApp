@@ -397,13 +397,12 @@ body, ul, li, a{
   }
   .lightbox-download {
     position: absolute;
-    top: 15px;
-    right: 60px;
+    top: 20px;
+    right: 80px;
     font-size: 22px;
     cursor: pointer;
     color: white;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 5px 10px;
+    /* padding: 5px 10px; */
     border-radius: 5px;
   }  
   
@@ -424,16 +423,19 @@ body, ul, li, a{
     top: 20px;
     right: 40px;
     font-size: 30px;
-    color: var(--white-color);
+    color: var(--black-color);
     cursor: pointer;
   }
   
   .lightbox-arrow {
+    width: 30px;
+    height: 55px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     font-size: 40px;
-    color: var(--white-color);
+    color: var(--black-color);
+    background-color: var(--white-color);
     cursor: pointer;
     user-select: none;
   }
