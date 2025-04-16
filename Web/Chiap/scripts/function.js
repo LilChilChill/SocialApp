@@ -326,11 +326,13 @@ socket.on('receiveMessage', (message) => {
     // console.log('Nhận tin nhắn:', message);
 });
 const chatArea = document.getElementById('chatArea');
+
 function openChat(friendId, friendName, friendAvatar, page = 1) {
     const chatPopup = document.getElementById("chatPopup")
     document.getElementById("username").textContent = friendName;
     document.getElementById("avatar").src = friendAvatar
     const chatArea = document.getElementById('chatArea');
+    currentFriendId = friendId;
 
     fetch(`${API_URL}/api/messages/${friendId}?page=${page}`, {
         method: 'GET',
@@ -555,7 +557,6 @@ async function compressImage(file, maxSizeMB = 25, quality = 0.8) {
 
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
-    console.log('sendButton clicked');
     const content = messageInput.value.trim();
 
     if (!content && !selectedFile) return;
@@ -637,7 +638,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 
         // Gửi socket
         socket.emit('sendMessage', messagePayload);
-
         // Cập nhật file URL chính xác từ GCS
         if (data.messageData.fileUrl) {
             setTimeout(() => {
@@ -709,6 +709,10 @@ document.getElementById('chatInput').addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault(); 
         document.getElementById('sendButton').click(); 
+        const messageInput = document.getElementById('chatInput');
+        messageInput.value = '';
+        const fileInput = document.getElementById('inputPreview');
+        fileInput.innerHTML = '';
     }
 });
 
