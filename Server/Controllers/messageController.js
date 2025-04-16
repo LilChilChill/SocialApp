@@ -1,5 +1,5 @@
 const Message = require('../Models/messageModel');
-const { uploadImageToGCS, deleteFileFromGCS  } = require('../services/gcsService');
+const { uploadImageToGCS, deleteFileFromGCS } = require('../services/gcsService');
 
 const sendMessage = (io) => async (req, res) => {
     const { receiverId, content } = req.body;
@@ -15,10 +15,17 @@ const sendMessage = (io) => async (req, res) => {
     try {
         let fileUrl = null;
         let fileType = null;
+        let fileName = null;
 
         if (req.file) {
-            fileUrl = await uploadImageToGCS(req.file, 'messages');
-            fileType = req.file.mimetype;
+            // fileUrl = await uploadImageToGCS(req.file, 'messages');
+            const uploaded = await uploadImageToGCS(req.file, 'messages');
+                fileUrl = uploaded.url;
+                fileType = uploaded.mimeType;
+                fileName = uploaded.originalName;
+
+                // fileType = req.file.mimetype;
+                // fileName = req.file.originalname; // ✅ Lưu tên file gốc
         }
 
         const messageData = new Message({
@@ -27,6 +34,7 @@ const sendMessage = (io) => async (req, res) => {
             content: content || '',
             fileUrl,
             fileType,
+            fileName, // ✅ Thêm vào schema
             date
         });
 
@@ -38,6 +46,7 @@ const sendMessage = (io) => async (req, res) => {
             content: messageData.content,
             fileUrl: messageData.fileUrl,
             fileType: messageData.fileType,
+            fileName: messageData.fileName, // ✅ Truyền về cho frontend
             date
         });
 
@@ -62,10 +71,10 @@ const getMessages = async (req, res) => {
                 { sender: friendId, receiver: userId }
             ]
         })
-        .sort('-timestamp')
-        .skip(skip)
-        .limit(limit)
-        .select('sender receiver content fileUrl fileType date timestamp isRead');
+            .sort('-timestamp')
+            .skip(skip)
+            .limit(limit)
+            .select('sender receiver content fileUrl fileType fileName date timestamp isRead'); // ✅ Thêm fileName
 
         res.status(200).json(messages.reverse());
     } catch (error) {
@@ -85,8 +94,8 @@ const getChatImages = async (req, res) => {
             ],
             fileUrl: { $ne: null }
         })
-        .sort('-timestamp')
-        .select('fileUrl fileType date');
+            .sort('-timestamp')
+            .select('fileUrl fileType fileName date'); // ✅ Có thể thêm fileName nếu muốn hiển thị
 
         res.status(200).json({ images });
     } catch (error) {
@@ -99,7 +108,6 @@ const deleteChatHistory = async (req, res) => {
         const { friendId } = req.params;
         const userId = req.user._id;
 
-        // Tìm tất cả tin nhắn có chứa fileUrl
         const messagesWithFiles = await Message.find({
             $or: [
                 { sender: userId, receiver: friendId },
@@ -108,12 +116,10 @@ const deleteChatHistory = async (req, res) => {
             fileUrl: { $ne: null }
         }).select('fileUrl');
 
-        // Xóa từng file trên GCS
         for (const message of messagesWithFiles) {
             await deleteFileFromGCS(message.fileUrl);
         }
 
-        // Xóa tất cả tin nhắn trong MongoDB
         const result = await Message.deleteMany({
             $or: [
                 { sender: userId, receiver: friendId },

@@ -928,3 +928,35 @@ body, ul, li, a{
   margin-left: 10px;
   cursor: pointer;
 }
+.fileAttachment {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--background-color);
+  border-radius: 8px;
+  background-color: var(--form-color);
+  max-width: 300px;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.fileIcon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.fileInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.fileName {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.downloadBtn {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 14px;
+}
