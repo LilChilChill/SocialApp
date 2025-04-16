@@ -501,6 +501,7 @@ const prevImage = () => {
     document.getElementById("lightboxImage").src = currentImages[currentIndex];
   }
 };
+window.prevImage = prevImage;
 
 const nextImage = () => {
   if (currentIndex < currentImages.length - 1) {
@@ -508,6 +509,7 @@ const nextImage = () => {
     document.getElementById("lightboxImage").src = currentImages[currentIndex];
   }
 };
+window.nextImage = nextImage;
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("post-image")) {
@@ -523,6 +525,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowRight") nextImage();
   if (e.key === "Escape") closeLightbox();
 });
+
 
 //-------------------------------MESSAGE FUNCTION
 document.getElementById('fileInput').addEventListener('change', function(event) {

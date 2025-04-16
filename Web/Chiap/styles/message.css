@@ -479,13 +479,13 @@
     background-color: var(--text-area-color); 
     border-radius: 5px;
     border: 1px solid var(--text-area-color); 
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    
     color: var(--text-color);
 }
 
 #inputPreview img,
 #inputPreview video {
-    max-width: 120px;
+    /* max-width: 120px; */
     max-height: 120px;
     border-radius: 8px;
     object-fit: cover;

@@ -23,9 +23,6 @@ const sendMessage = (io) => async (req, res) => {
                 fileUrl = uploaded.url;
                 fileType = uploaded.mimeType;
                 fileName = uploaded.originalName;
-
-                // fileType = req.file.mimetype;
-                // fileName = req.file.originalname; // ✅ Lưu tên file gốc
         }
 
         const messageData = new Message({
@@ -34,7 +31,7 @@ const sendMessage = (io) => async (req, res) => {
             content: content || '',
             fileUrl,
             fileType,
-            fileName, // ✅ Thêm vào schema
+            fileName, 
             date
         });
 
@@ -46,7 +43,7 @@ const sendMessage = (io) => async (req, res) => {
             content: messageData.content,
             fileUrl: messageData.fileUrl,
             fileType: messageData.fileType,
-            fileName: messageData.fileName, // ✅ Truyền về cho frontend
+            fileName: messageData.fileName, 
             date
         });
 
