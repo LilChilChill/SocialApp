@@ -44,7 +44,8 @@ const getFriendRequests = async () => {
                 requestItem.innerHTML = `
                     <div style="display: flex; align-items: center;">
                         <img src="${request.sender.avatar || '../img/profile-default.png'}" alt="Avatar" class="avatar">
-                        <span>${request.sender.name}</span>
+                        <span>${request.sender.name} <p>gửi lời mời kết bạn</p></span>
+                        
                     </div>
                     </div>
                     <div class="friend-request-actions">
@@ -55,6 +56,7 @@ const getFriendRequests = async () => {
                 friendRequestList.appendChild(requestItem);
             });
         }
+        
     } catch (err) {
         console.error(err);
         console.log(err);
