@@ -115,6 +115,7 @@ function openChat(friendId, name, avatar, page = 1) {
     currentFriendId = friendId;
     currentPage = 1;
     hasMoreMessages = true;
+    console.log(`Current friend ID: ${currentFriendId}`)
 
     const deleteBtn = document.getElementById('deleteChatButton');
     const friendInfo = document.getElementById('headerSide');
