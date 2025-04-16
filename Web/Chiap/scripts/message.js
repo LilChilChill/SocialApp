@@ -159,7 +159,15 @@ function openChat(friendId, name, avatar, page = 1) {
                     } else if (fileType === 'application/pdf') {
                         filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
                     } else {
-                        filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tải xuống file'}</a>`;
+                        const fileName = fileUrl.split('/').pop();
+                        filePreviewHtml = `
+                        <div class="fileAttachment">
+                            <div class="fileIcon">📎</div>
+                            <div class="fileInfo">
+                                <span class="fileName">${message.fileName || 'Tệp đính kèm'}</span>
+                                <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
+                            </div>
+                        </div>`;
                     }
                 }
 
@@ -428,7 +436,14 @@ socket.on('receiveMessage', (messageData) => {
             fileElement = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
         } else {
             const fileName = fileUrl.split('/').pop();
-            fileElement = `<a href="${fileUrl}" download class="fileLink">📎 Tải xuống: ${fileName}</a>`;
+            filePreviewHtml = `
+            <div class="fileAttachment">
+                <div class="fileIcon">📎</div>
+                <div class="fileInfo">
+                    <span class="fileName">${message.fileName || 'Tệp đính kèm'}</span>
+                    <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
+                </div>
+            </div>`;
         }
     }
 
@@ -551,7 +566,15 @@ function loadOlderMessages() {
                 } else if (fileType === 'application/pdf') {
                     filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
                 } else {
-                    filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tải xuống file'}</a>`;
+                    const fileName = fileUrl.split('/').pop();
+                    filePreviewHtml = `
+                    <div class="fileAttachment">
+                        <div class="fileIcon">📎</div>
+                        <div class="fileInfo">
+                            <span class="fileName">${fileName || 'Tệp đính kèm'}</span>
+                            <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
+                        </div>
+                    </div>`;
                 }
             }
 
