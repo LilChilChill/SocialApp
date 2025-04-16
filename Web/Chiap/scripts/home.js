@@ -136,7 +136,7 @@ const displayPosts = async (posts) => {
 
             if (toggleBtn) {
                 const lines = post.title.split(/\r?\n/);
-                const truncatedText = lines.slice(0, 5).join('<br>') + '...';
+                const truncatedText = lines.slice(0, 2).join('<br>') + '...';
                 postTitle.innerHTML = truncatedText;
             
                 let previousPosition = 0; // Biến lưu vị trí trước khi mở rộng

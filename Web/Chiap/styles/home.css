@@ -274,10 +274,11 @@ body, ul, li, a{
     display: flex;
     height: 50px;
     align-items: center;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     padding: 5px;
     cursor: pointer;
-    
+    /* border: 1px solid var(--form-color);
+    border-radius: 20px; */
   }
   
   .chatUser:hover{
@@ -511,10 +512,11 @@ body, ul, li, a{
     margin: 10px 0;
     background-color: var(--background-color);
     z-index: 4;
-    top: 6%;
-    right: 1%;
-    width: 250px;
-    height: 85vh;
+    top: 5%;
+    right: 0;
+    width: 280px;
+    height: 88vh;
+    border: 1px solid var(--form-color);
   }
   .post-info{
     display: flex;
@@ -549,6 +551,9 @@ body, ul, li, a{
     .List{
       width: 170px;
     } 
+    .chatMessage{
+      width: 200px;
+    }
     .container {
       padding: 10px;
     }
@@ -571,6 +576,16 @@ body, ul, li, a{
     }
     .List{
       display: none;
+    }
+    .chatMessage{
+      width: 150px;
+    }
+    .chatMessage span{
+      font-size: 14px;
+    }
+    .chatMessage img {
+      width: 30px;
+      height: 30px;
     }
     .feed {
       display: flex;
@@ -790,6 +805,7 @@ body, ul, li, a{
   color: #007bff;
   text-decoration: underline;
   word-break: break-all;
+  font-size: 12px;
 }
 .videoContent {
   max-width: 250px;
@@ -903,4 +919,12 @@ body, ul, li, a{
 #inputPreview img:hover,
 #inputPreview video:hover {
     transform: scale(1.05);
+}
+
+.chatMsgHeader a{
+  color: var(--white-color);
+  font-size: 15px;
+  font-weight: bold;
+  margin-left: 10px;
+  cursor: pointer;
 }

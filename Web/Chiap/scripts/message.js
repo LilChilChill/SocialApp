@@ -411,6 +411,8 @@ socket.on('receiveMessage', (messageData) => {
     const fileType = messageData.fileType;
     const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
 
+    console.log('FriendAvatar', friendAvatar);
+
     if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
         chatArea.innerHTML = '';
     }
@@ -538,6 +540,21 @@ function loadOlderMessages() {
 
             const fileUrl = message.fileUrl;
 
+            const fileType = message.fileType;
+            let filePreviewHtml = '';
+
+            if (fileUrl) {
+                if (fileType.startsWith('image/')) {
+                    filePreviewHtml = `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>`;
+                } else if (fileType.startsWith('video/')) {
+                    filePreviewHtml = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
+                } else if (fileType === 'application/pdf') {
+                    filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
+                } else {
+                    filePreviewHtml = `<a href="${fileUrl}" download class="fileLink">📎 ${message.fileName || 'Tải xuống file'}</a>`;
+                }
+            }
+
             messageDiv.innerHTML = `
                 ${message.sender === currentFriendId ? 
                     `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
@@ -546,7 +563,7 @@ function loadOlderMessages() {
                     <div class="messageContent">
                         <p>${message.content.replace(/\n/g, '<br>')}</p>
                     </div>
-                    ${fileUrl ? `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')" />` : ''}
+                    ${filePreviewHtml}
                 </div>
             `;
 
