@@ -42,10 +42,14 @@ const getFriendRequests = async () => {
                 const requestItem = document.createElement('div');
                 requestItem.classList.add('friend-request-item');
                 requestItem.innerHTML = `
-                    <span>${request.sender.name}</span>
-                    <div>
-                        <button class="accept-button" onclick="acceptFriendRequest('${request._id}')">Chấp nhận</button>
-                        <button class="decline-button" onclick="rejectFriendRequest('${request._id}')">Từ chối</button>
+                    <div style="display: flex; align-items: center;">
+                        <img src="${request.sender.avatar || '../img/profile-default.png'}" alt="Avatar" class="avatar">
+                        <span>${request.sender.name}</span>
+                    </div>
+                    </div>
+                    <div class="friend-request-actions">
+                        <a class="accept-button" onclick="acceptFriendRequest('${request._id}')"><i class="fa-solid fa-circle-check"></i></a>
+                        <a class="decline-button" onclick="rejectFriendRequest('${request._id}')"><i class="fa-solid fa-circle-xmark"></i></a>
                     </div>
                 `;
                 friendRequestList.appendChild(requestItem);

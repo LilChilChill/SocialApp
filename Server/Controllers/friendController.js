@@ -89,7 +89,7 @@ const getFriendRequests = async (req, res) => {
     const userId = req.user._id
 
     try {
-        const friendRequests = await FriendRequest.find({ receiver: userId, status: 'pending' }).populate('sender', 'name')
+        const friendRequests = await FriendRequest.find({ receiver: userId, status: 'pending' }).populate('sender', 'name avatar')
         res.status(200).json(friendRequests)
     } catch (error) {
         console.error(error)

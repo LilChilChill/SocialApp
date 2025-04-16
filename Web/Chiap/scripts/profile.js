@@ -269,15 +269,15 @@ const displayPosts = (posts) => {
 
             if (toggleBtn) {
                 const lines = post.title.split(/\r?\n/);
-                const truncatedText = lines.slice(0, 5).join('<br>') + '...';
+                const truncatedText = lines.slice(0, 2).join('<br>') + '...';
                 postTitle.innerHTML = truncatedText;
             
-                let previousPosition = 0; // Biến lưu vị trí trước khi mở rộng
+                let previousPosition = 0; 
                 const offset = 100;
             
                 toggleBtn.addEventListener('click', () => {
                     if (toggleBtn.textContent === 'Xem thêm') {
-                        // Lưu vị trí của bài viết trước khi mở rộng
+                        
                         previousPosition = postElement.getBoundingClientRect().top + window.scrollY;
             
                         postTitle.innerHTML = post.title.replace(/\n/g, '<br>');
@@ -286,7 +286,7 @@ const displayPosts = (posts) => {
                         postTitle.innerHTML = truncatedText;
                         toggleBtn.textContent = 'Xem thêm';
             
-                        // Cuộn về đúng vị trí của bài viết ban đầu
+                        
                         window.scrollTo({ top: previousPosition - offset, behavior: 'smooth' });
                     }
                 });
@@ -330,7 +330,7 @@ const displayPosts = (posts) => {
         const commentBtn = postElement.querySelector('.comment-btn');
         commentBtn.addEventListener('click', () => {
             const commentSection = postElement.querySelector('.post-comments');
-            commentSection.classList.toggle('active'); // Hiện/ẩn bình luận
+            commentSection.classList.toggle('active'); 
         });
 
         const commentSubmitBtn = postElement.querySelector('.comment-submit');
