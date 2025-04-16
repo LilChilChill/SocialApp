@@ -85,7 +85,6 @@ body, ul, li, a{
   }
 
   .sidebar ul li:hover {
-    
     background-color: var(--sidebar-hover-background-color);
   }
   
@@ -195,6 +194,7 @@ body, ul, li, a{
 .chat-popup .messageContent p{
     font-size: 14px;
     margin: 10px 0;
+    color: var(--pure-white);
 }
 .message {
   display: flex;
@@ -505,6 +505,20 @@ body, ul, li, a{
     flex-direction: column;
   }
   .chatMessage{
+    position: fixed;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    background-color: var(--background-color);
+    z-index: 4;
+    top: 5%;
+    right: 0;
+    width: 280px;
+    height: 88vh;
+    border: 1px solid var(--form-color);
+  }
+  .notify{
     position: fixed;
     flex-direction: column;
     padding: 10px;
@@ -937,12 +951,12 @@ body, ul, li, a{
   background-color: var(--form-color);
   max-width: 300px;
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .fileIcon {
   font-size: 24px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .fileInfo {

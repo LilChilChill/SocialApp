@@ -125,7 +125,7 @@ const displayPosts = async (posts) => {
                         `).join('')}
                     </div>
                     <div class="comment-input-box">
-                        <input type="text" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
+                        <input type="text" id="comment-input" class="comment-input" placeholder="Viết bình luận..." data-post-id="${post._id}" />
                         <button class="comment-submit" data-post-id="${post._id}">Gửi</button>
                     </div>
                 </div>
@@ -185,6 +185,7 @@ const displayPosts = async (posts) => {
         }
     });
 };
+
 
 // Hàm lấy danh sách bạn bè trả về danh sách ID bạn bè
 async function getFriendsList() {
@@ -264,6 +265,7 @@ const commentPost = async (postId, text, postElement) => {
         console.error('Lỗi khi bình luận:', error);
     }
 };
+
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".like-btn").forEach(button => {

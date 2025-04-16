@@ -427,12 +427,21 @@ function closeChat() {
 }
 window.closeChat = closeChat;
 
+const chatMessage = document.getElementById("chatMessage");
+const notify = document.getElementById("notify");
 function toggleMessage() {
     event.preventDefault();
-    const chatMessage = document.getElementById("chatMessage");
     chatMessage.style.display = chatMessage.style.display === 'none' ? 'flex' : 'none';
+    notify.style.display = 'none';
 }
 window.toggleMessage = toggleMessage;
+
+function toggleNotification() {
+    event.preventDefault();
+    notify.style.display = notify.style.display === 'none' ? 'flex' : 'none';
+    chatMessage.style.display = 'none'
+}
+window.toggleNotification = toggleNotification;
 
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
@@ -711,7 +720,7 @@ socket.on('receiveMessage', (messageData) => {
         chatArea.innerHTML = '';
     }
     let fileElement = '';
-    const originalFileName = messageDat.fileName || 'Tệp đính kèm';    
+    const originalFileName = messageData.fileName || 'Tệp đính kèm';    
 
     if (fileUrl) {
         if (fileType.startsWith('image/')) {
@@ -751,6 +760,7 @@ document.getElementById('chatInput').addEventListener('keydown', (event) => {
         event.preventDefault(); 
         document.getElementById('sendButton').click(); 
         document.getElementById('chatInput').value = ''; 
+        document.getElementById('inputPreview').innerHTML = '';
     }
 });
 
