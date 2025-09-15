@@ -18,6 +18,12 @@ let hasMoreImages = true;
 let localStream;
 let peerConnection;
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+}
 
 function listDisplay() {
     document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
@@ -27,8 +33,10 @@ const getUserInfo = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        alert('Vui lòng đăng nhập trước khi truy cập thông tin.');
-        window.location.href = window.location.origin;
+        showToast('Vui lòng đăng nhập trước khi truy cập thông tin.');
+        setTimeout(() => {
+            window.location.href = window.location.origin;
+        }, 2000);
         return;
     }
 
@@ -45,8 +53,10 @@ const getUserInfo = async () => {
             displayUserInfo(currentUser);
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');
-            window.location.href = window.location.origin;
+            showToast(errorMsg.message || 'Không thể lấy thông tin người dùng.');
+            setTimeout(() => {
+                window.location.href = window.location.origin;
+            }, 2000);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -211,8 +221,10 @@ function getFriends() {
     const token = localStorage.getItem('token'); 
     connectSocket()
     if (!token) {
-        alert('Vui lòng đăng nhập.');
-        window.location.href = window.location.origin; 
+        showToast('Vui lòng đăng nhập.');
+        setTimeout(() => {
+            window.location.href = window.location.origin;
+        }, 2000);
         return;
     }
 
@@ -225,9 +237,11 @@ function getFriends() {
     .then(response => {
         if (!response.ok) {
             if (response.status === 401) {
-                alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+                showToast("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
                 localStorage.removeItem("token");
-                window.location.href = window.location.origin;
+                setTimeout(() => {
+                    window.location.href = window.location.origin;
+                }, 2000);
             }
             throw new Error("Lỗi khi tải danh sách bạn bè.");
         }

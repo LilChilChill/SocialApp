@@ -8,12 +8,21 @@ const updateForm = document.getElementById('updateForm');
 const saveButton = document.getElementById('saveButton');
 let currentUser = {};
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+}
+
 const getUserInfo = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        alert('Vui lòng đăng nhập trước khi truy cập thông tin.');
-        window.location.href = window.location.origin;
+        showToast('Vui lòng đăng nhập trước khi truy cập thông tin.');
+        setTimeout(() => {
+            window.location.href = window.location.origin;
+        }, 2000);
         return;
     }
 
@@ -30,8 +39,10 @@ const getUserInfo = async () => {
             displayUserInfo(currentUser);
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');
-            window.location.href = window.location.origin;
+            showToast(errorMsg.message || 'Không thể lấy thông tin người dùng.');
+            setTimeout(() => {
+                window.location.href = window.location.origin;
+            }, 2000);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -71,7 +82,7 @@ saveButton.addEventListener('click', async () => {
 
     const phoneRegex = /^[0-9]{10,11}$/;
     if (phoneNumber && !phoneRegex.test(phoneNumber)) {
-        alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số.');
+        showToast('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số.');
         return;
     }
 
@@ -85,7 +96,7 @@ saveButton.addEventListener('click', async () => {
     if (avatar) formData.append('avatar', avatar);
 
     if (Array.from(formData.keys()).length === 0) {
-        alert('Không có thông tin nào để cập nhật.');
+        showToast('Không có thông tin nào để cập nhật.');
         return;
     }
 
@@ -103,14 +114,14 @@ saveButton.addEventListener('click', async () => {
             currentUser = updatedUser;
             displayUserInfo(updatedUser);
             updateForm.style.display = 'none';
-            alert('Cập nhật thông tin thành công!');
+            showToast('Cập nhật thông tin thành công!');
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Cập nhật thông tin không thành công.');
+            showToast(errorMsg.message || 'Cập nhật thông tin không thành công.');
         }
     } catch (error) {
         console.error('lỗi:', error);
-        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+        showToast('Có lỗi xảy ra. Vui lòng thử lại.');
 
     }
 });
@@ -129,15 +140,15 @@ changePasswordButton.addEventListener('click', async () => {
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (!oldPassword || !newPassword || !confirmPassword) {
-        alert('Vui lòng nhập đầy đủ thông tin.');
+        showToast('Vui lòng nhập đầy đủ thông tin.');
         return;
     }
     if (newPassword !== confirmPassword) {
-        alert('Mật khẩu mới không trùng khớp.');
+        showToast('Mật khẩu mới không trùng khớp.');
         return;
     }
     if (newPassword == oldPassword) {
-        alert('Mật khẩu mới không được trùng với mật khẩu cũ.');
+        showToast('Mật khẩu mới không được trùng với mật khẩu cũ.');
         return;
     }
 
@@ -151,15 +162,15 @@ changePasswordButton.addEventListener('click', async () => {
         });
 
         if (res.ok) {
-            alert('Đổi mật khẩu thành công!');
+            showToast('Đổi mật khẩu thành công!');
             updatePasswordForm.style.display = 'none';
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Đổi mật khẩu thất bại.');
+            showToast(errorMsg.message || 'Đổi mật khẩu thất bại.');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+        showToast('Có lỗi xảy ra. Vui lòng thử lại.');
     }
 });
 
@@ -190,12 +201,12 @@ document.addEventListener("DOMContentLoaded", function () {
     sendForgotPasswordButton.addEventListener("click", async function () {
         const email = document.getElementById("forgotEmail").value;
         if (!email) {
-            alert("Vui lòng nhập email!");
+            showToast("Vui lòng nhập email!");
             return;
         }
 
         if (!loggedInUserEmail || email !== loggedInUserEmail) {
-            alert("Email không khớp với tài khoản đang đăng nhập!");
+            showToast("Email không khớp với tài khoản đang đăng nhập!");
             return;
         }
         
@@ -207,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             const data = await response.json();
-            alert(data.message)
+            showToast(data.message)
             {
                 forgotPasswordForm.style.display = "none";
                 changePasswordForm.style.display = "block";
@@ -215,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
             console.error("Lỗi:", error);
-            alert("Đã có lỗi xảy ra. Vui lòng thử lại.");
+            showToast("Đã có lỗi xảy ra. Vui lòng thử lại.");
         }
     });
 });
