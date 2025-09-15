@@ -95,16 +95,14 @@ const updateUser = async (req, res) => {
         }
 
         if (req.file) {
-            console.log(req.file); // Kiểm tra xem file có tồn tại không
-            // 📌 Xóa ảnh cũ trên GCS nếu có
             if (user.avatar) {
                 await updateAvatar(user.avatar);
             }
 
-            // 📌 Upload ảnh mới
-            const imageUrl = await uploadImageToGCS(req.file, 'avatars');
-            updateFields.avatar = imageUrl;
+            const { url } = await uploadImageToGCS(req.file, 'avatars'); // chỉ lấy url
+            updateFields.avatar = url;
         }
+
 
         const updatedUser = await userModel.findByIdAndUpdate(
             userId,
