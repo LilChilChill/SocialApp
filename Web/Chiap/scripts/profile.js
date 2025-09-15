@@ -9,6 +9,13 @@ const updateForm = document.getElementById('updateForm');
 const saveButton = document.getElementById('saveButton');
 let currentUser = {};
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+}
+
 function listDisplay() {
     document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
 }
@@ -17,8 +24,10 @@ const getUserInfo = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        alert('Vui lòng đăng nhập trước khi truy cập thông tin.');
-        window.location.href = window.location.origin;
+        showToast('Vui lòng đăng nhập trước khi truy cập thông tin.');
+        setTimeout(() => {
+            window.location.href = window.location.origin;
+        }, 2000);
         return;
     }
 
@@ -35,8 +44,10 @@ const getUserInfo = async () => {
             displayUserInfo(currentUser);
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Không thể lấy thông tin người dùng.');
-            window.location.href = window.location.origin;
+            showToast(errorMsg.message || 'Không thể lấy thông tin người dùng.');
+            setTimeout(() => {
+                window.location.href = window.location.origin;
+            }, 2000);
         }
     } catch (error) {
         console.error('Error:', error);
@@ -64,70 +75,6 @@ const displayUserInfo = (user) => {
     `
 
 };
-
-updateButton.addEventListener('click', () => {
-    updateForm.style.display = updateForm.style.display === 'none' ? 'block' : 'none';
-    if (updateForm.style.display === 'block') {
-        document.getElementById('name').value = currentUser.name || '';
-        document.getElementById('birthDate').value = currentUser.birthDate ? new Date(currentUser.birthDate).toISOString().split('T')[0] : '';
-        document.getElementById('gender').value = currentUser.gender === 'Nam' ? 'male' : currentUser.gender === 'Nữ' ? 'female' : 'other';
-        document.getElementById('phoneNumber').value = currentUser.phoneNumber || ''; // Hiển thị số điện thoại hiện có
-    }
-});
-
-saveButton.addEventListener('click', async () => {
-    const token = localStorage.getItem('token');
-    const name = document.getElementById('name').value || currentUser.name;
-    const birthDate = document.getElementById('birthDate').value || currentUser.birthDate;
-    let gender = document.getElementById('gender').value || currentUser.gender;
-    gender = gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác';
-    const phoneNumber = document.getElementById('phoneNumber').value || currentUser.phoneNumber; // Lấy số điện thoại
-
-    // Kiểm tra hợp lệ số điện thoại (chỉ nhận số, 10-11 ký tự)
-    const phoneRegex = /^[0-9]{10,11}$/;
-    if (phoneNumber && !phoneRegex.test(phoneNumber)) {
-        alert('Số điện thoại không hợp lệ. Vui lòng nhập 10-11 chữ số.');
-        return;
-    }
-
-    const avatar = document.getElementById('avatar') ? document.getElementById('avatar').files[0] : null;
-    const formData = new FormData();
-
-    if (name !== currentUser.name) formData.append('name', name);
-    if (birthDate !== currentUser.birthDate) formData.append('birthDate', birthDate);
-    if (gender !== currentUser.gender) formData.append('gender', gender);
-    if (phoneNumber !== currentUser.phoneNumber) formData.append('phoneNumber', phoneNumber); // Gửi số điện thoại
-    if (avatar) formData.append('avatar', avatar);
-
-    if (Array.from(formData.keys()).length === 0) {
-        alert('Không có thông tin nào để cập nhật.');
-        return;
-    }
-
-    try {
-        const res = await fetch(`${API_URL}/api/users/update`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            body: formData,
-        });
-
-        if (res.ok) {
-            const updatedUser = await res.json();
-            currentUser = updatedUser;
-            displayUserInfo(updatedUser);
-            updateForm.style.display = 'none';
-            alert('Cập nhật thông tin thành công!');
-        } else {
-            const errorMsg = await res.json();
-            alert(errorMsg.message || 'Cập nhật thông tin không thành công.');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Có lỗi xảy ra. Vui lòng thử lại.');
-    }
-});
 
 getUserInfo();
 
@@ -160,10 +107,10 @@ const displayPosts = (posts) => {
     posts.forEach((post) => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
-        const currentUserId = localStorage.getItem('userId'); // Lấy ID người dùng từ localStorage
-        const isLiked = post.likes.includes(currentUserId); // Kiểm tra người dùng đã like chưa
-        const likeClass = isLiked ? 'fa-solid' : 'fa-regular'; // Định dạng icon
-        const likedClass = isLiked ? 'liked' : ''; // Thêm class "liked" nếu đã like
+        const currentUserId = localStorage.getItem('userId'); 
+        const isLiked = post.likes.includes(currentUserId); 
+        const likeClass = isLiked ? 'fa-solid' : 'fa-regular'; 
+        const likedClass = isLiked ? 'liked' : ''; 
 
         let documents = post.files.filter(file => file.fileType === 'document');
             let images = post.files.filter(file => file.fileType === 'image');
@@ -309,17 +256,47 @@ const displayPosts = (posts) => {
             }
 
         postsContainer.appendChild(postElement);
+        // const deleteBtn = postElement.querySelector('.delete-post-btn');
+
+        // if (deleteBtn) {
+        //     deleteBtn.addEventListener('click', async (e) => {
+        //         e.stopPropagation(); 
+        //         const postId = deleteBtn.dataset.postId;
+        //         const confirmDelete = confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
+        //         if (confirmDelete) {
+        //             deletePost(postId)
+        //         }
+        //     });
+        // }
         const deleteBtn = postElement.querySelector('.delete-post-btn');
 
         if (deleteBtn) {
-            deleteBtn.addEventListener('click', async (e) => {
-                e.stopPropagation(); 
-                const postId = deleteBtn.dataset.postId;
-                const confirmDelete = confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
-                if (confirmDelete) {
-                    deletePost(postId)
-                }
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const postId = deleteBtn.dataset.postId;
+
+            Swal.fire({
+            title: 'Bạn có chắc chắn?',
+            text: 'Bài viết sẽ bị xóa vĩnh viễn!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                deletePost(postId);
+                Swal.fire({
+                icon: 'success',
+                title: 'Đã xóa!',
+                text: 'Bài viết đã được xóa thành công.',
+                timer: 2000,
+                showConfirmButton: false
+                });
+            }
             });
+        });
         }
 
         const likeBtn = postElement.querySelector('.like-btn');
@@ -429,7 +406,7 @@ postButton.addEventListener('click', async () => {
     const status = postStatus.value;
 
     if (!title && files.length === 0) {
-        alert('Vui lòng nhập nội dung hoặc chọn tệp.');
+        showToast('Vui lòng nhập nội dung hoặc chọn tệp.');
         return;
     }
 
@@ -452,11 +429,11 @@ postButton.addEventListener('click', async () => {
             postContent.value = '';
             postFiles.value = '';
             postStatus.value = 'public';
-            alert('Đăng bài thành công!');
+            showToast('Đăng bài thành công!');
             loadProfilePosts();
         } else {
             const errorMsg = await res.json();
-            alert(errorMsg.message || 'Đăng bài thất bại.');
+            showToast(errorMsg.message || 'Đăng bài thất bại.');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -484,15 +461,15 @@ const updatePost = async (postId, title, status) => {
         });
 
         if (response.ok) {
-            alert('Cập nhật bài viết thành công');
+            showToast('Cập nhật bài viết thành công');
             loadProfilePosts();
         } else {
             const data = await response.json();
-            alert(data.message);
+            showToast(data.message);
         }
     } catch (error) {
         console.error('Lỗi:', error);
-        alert('Có lỗi xảy ra.');
+        showToast('Có lỗi xảy ra.');
     }
 };
 
@@ -515,7 +492,7 @@ saveEditBtn.onclick = async () => {
         await updatePost(currentPostId, newTitle, newStatus);
         popup.classList.add('hidden');
     } else {
-        alert('Nội dung bài viết không được để trống');
+        showToast('Nội dung bài viết không được để trống');
     }
 };
 
@@ -538,10 +515,10 @@ const deletePost = async (postId) => {
 
         const result = await res.json();
         if (res.ok) {
-            alert(result.message);
+            showToast(result.message);
             loadProfilePosts();
         } else {
-            alert(result.message);
+            showToast(result.message);
         }
     } catch (error) {
         console.error('Lỗi:', error);

@@ -1,5 +1,12 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+}
+
 const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const container = document.getElementById('container');
@@ -30,15 +37,17 @@ const signUpButton = document.getElementById('signUp');
         const data = await res.json();
 
         if (res.ok) {
-          alert("Đăng ký thành công. Vui lòng đăng nhập.");
+          showToast("Đăng ký thành công. Vui lòng đăng nhập.");
           console.log(data);
-          window.location.href = window.location.origin; 
-          
+          // window.location.href = window.location.origin; 
+          setTimeout(() => {
+            window.location.href = window.location.origin;
+          }, 2000);
         } else {
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (error) {
-        alert("Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
+        showToast("Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại.");
         console.error(data.message);
       }
     });
@@ -69,7 +78,7 @@ const signUpButton = document.getElementById('signUp');
 
           console.log("Chuyển hướng sang home.html");
         } else {
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (error) {
         console.error('Error:', error);

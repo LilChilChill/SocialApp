@@ -10,6 +10,12 @@ function logout() {
     window.location.href = window.location.origin; 
     
 }
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+}
 
 window.logout = logout
 
@@ -200,7 +206,7 @@ async function getFriendsList() {
 
         if (!response.ok) {
             if (response.status === 401) {
-                alert("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+                showToast("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
                 localStorage.removeItem("token");
                 window.location.href = window.location.origin;
             }
