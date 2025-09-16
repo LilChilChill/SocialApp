@@ -291,9 +291,14 @@ document.addEventListener("DOMContentLoaded", function () {
 const goToProfile = (userId) => {
     const currentUserId = localStorage.getItem('userId');
     if (userId === currentUserId) {
-        window.location.href = window.location.origin + '/components/profile.html';
+        // window.location.href = window.location.origin + '/components/profile.html';
+        window.location.href = import.meta.env.DEV
+            ? '/components/profile.html'
+            : '/profile';
     } else {
-        window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
+        window.location.href = import.meta.env.DEV
+            ? `/components/user.html?userId=${userId}`
+            : `/user/${userId}`;
     }
 };
 window.goToProfile = goToProfile;
