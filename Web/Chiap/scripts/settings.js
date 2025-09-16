@@ -1,13 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById("openSettings");
+    const openBtnSide = document.getElementById("openSettingsSide");
     const modal = document.getElementById("settingsModal");
     const closeBtn = document.querySelector(".close");
 
     
     openBtn.addEventListener("click", function () {
         modal.style.display = "block";
+        console.log("Modal opened");
     });
 
+    openBtnSide.addEventListener("click", function () {
+        modal.style.display = "block";
+        console.log("Modal opened from sidebar");
+    });
     
     closeBtn.addEventListener("click", function () {
         modal.style.display = "none";
@@ -32,6 +38,7 @@ import { LightTheme, DarkTheme, applyTheme } from './theme.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById("openSettings");
+    const openBtnSide = document.getElementById("openSettingsSide");
     const modal = document.getElementById("settingsModal");
     const closeBtn = document.querySelector(".close");
     const darkModeToggle = document.getElementById("darkModeToggle");
@@ -49,6 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "block";
     });
 
+    openBtnSide.addEventListener("click", function () {
+        modal.style.display = "block";
+    });
     
     closeBtn.addEventListener("click", function () {
         modal.style.display = "none";
