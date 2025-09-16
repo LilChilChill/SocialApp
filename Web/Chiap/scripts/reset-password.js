@@ -28,7 +28,10 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async fu
         if (response.ok) 
         {
             if (userToken) {
-                window.location.href =  window.location.origin + "/components/home";
+                // window.location.href =  window.location.origin + "/components/home";
+                window.location.href = import.meta.env.DEV
+                    ? '/components/home.html'
+                    : '/home';
             } else {
                 window.location.href = window.location.origin; 
             }
