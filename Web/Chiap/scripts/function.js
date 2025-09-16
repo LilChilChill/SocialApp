@@ -22,7 +22,7 @@ function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+  setTimeout(() => toast.classList.remove("show"), 3000); 
 }
 
 function listDisplay() {
@@ -625,7 +625,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     let previewUrl = null;
     let filePreviewHtml = '';
 
-    // Nếu có file ảnh thì nén
     if (fileToSend && fileToSend.type.startsWith('image/')) {
         try {
             fileToSend = await compressImage(fileToSend);
@@ -705,7 +704,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 
         // Gửi socket
         socket.emit('sendMessage', messagePayload);
-        // Cập nhật file URL chính xác từ GCS
         if (data.messageData.fileUrl) {
             setTimeout(() => {
                 const img = messageDiv.querySelector(".imgContent");

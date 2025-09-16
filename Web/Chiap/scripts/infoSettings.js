@@ -12,7 +12,7 @@ function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000); // 3 giây
+  setTimeout(() => toast.classList.remove("show"), 3000); 
 }
 
 const getUserInfo = async () => {
@@ -67,7 +67,7 @@ updateButton.addEventListener('click', () => {
         document.getElementById('name').value = currentUser.name || '';
         document.getElementById('birthDate').value = currentUser.birthDate ? new Date(currentUser.birthDate).toISOString().split('T')[0] : '';
         document.getElementById('gender').value = currentUser.gender === 'Nam' ? 'male' : currentUser.gender === 'Nữ' ? 'female' : 'other';
-        document.getElementById('phoneNumber').value = currentUser.phoneNumber || ''; // Hiển thị số điện thoại hiện có
+        document.getElementById('phoneNumber').value = currentUser.phoneNumber || ''; 
     }
 });
 
@@ -78,7 +78,7 @@ saveButton.addEventListener('click', async () => {
     const birthDate = document.getElementById('birthDate').value || currentUser.birthDate;
     let gender = document.getElementById('gender').value || currentUser.gender;
     gender = gender === 'male' ? 'Nam' : gender === 'female' ? 'Nữ' : 'Khác';
-    const phoneNumber = document.getElementById('phoneNumber').value || currentUser.phoneNumber; // Lấy số điện thoại
+    const phoneNumber = document.getElementById('phoneNumber').value || currentUser.phoneNumber; 
 
     const phoneRegex = /^[0-9]{10,11}$/;
     if (phoneNumber && !phoneRegex.test(phoneNumber)) {
@@ -92,7 +92,7 @@ saveButton.addEventListener('click', async () => {
     if (name !== currentUser.name) formData.append('name', name);
     if (birthDate !== currentUser.birthDate) formData.append('birthDate', birthDate);
     if (gender !== currentUser.gender) formData.append('gender', gender);
-    if (phoneNumber !== currentUser.phoneNumber) formData.append('phoneNumber', phoneNumber); // Gửi số điện thoại
+    if (phoneNumber !== currentUser.phoneNumber) formData.append('phoneNumber', phoneNumber); 
     if (avatar) formData.append('avatar', avatar);
 
     if (Array.from(formData.keys()).length === 0) {

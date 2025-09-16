@@ -312,7 +312,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     let previewUrl = null;
     let filePreviewHtml = '';
 
-    // Nếu có file ảnh thì nén
     if (fileToSend && fileToSend.type.startsWith('image/')) {
         try {
             fileToSend = await compressImage(fileToSend);
@@ -351,7 +350,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
     messageData.append('content', content);
     if (fileToSend) messageData.append('file', fileToSend);
 
-    // Hiển thị tin nhắn tạm thời
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', 'sent');
 
@@ -392,7 +390,6 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 
         // Gửi socket
         socket.emit('sendMessage', messagePayload);
-        // Cập nhật file URL chính xác từ GCS
         if (data.messageData.fileUrl) {
             setTimeout(() => {
                 const img = messageDiv.querySelector(".imgContent");
