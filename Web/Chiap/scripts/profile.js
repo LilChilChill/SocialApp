@@ -397,9 +397,10 @@ const goToProfile = (userId) => {
             ? '/components/profile.html'
             : '/profile';
     } else {
+        // window.location.href = window.location.origin + `/components/user.html?userId=${userId}`;
         window.location.href = import.meta.env.DEV
             ? `/components/user.html?userId=${userId}`
-            : `/user/${userId}`;
+            : `/user?userId=${userId}`;
     }
 };
 window.goToProfile = goToProfile;
