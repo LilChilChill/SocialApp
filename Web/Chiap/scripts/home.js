@@ -354,3 +354,11 @@ window.addEventListener('scroll', () => {
         loadMorePosts();
     }
 });
+
+const sidebar2 = document.querySelector('.sidebar-2');
+
+function toggleSidebar() {
+   sidebar2.style.display = sidebar2.style.display === 'none' ? 'block' : 'none';
+}
+window.toggleSidebar = toggleSidebar;
+

@@ -28,9 +28,9 @@
       <span><a href="#" onclick="toggleMessage()"><i class="fa-solid fa-message"></i></a></span>
       <!-- <span><a href="profile.html"><i class="fa-solid fa-user"></i></a></i></span> -->
       <!-- <a href="profile.html" id="userAvatar"></a> -->
-       <a href="profile.html">
-        <div id="userAvatar" class="user-avatar"></div>
-       </a>
+       <!-- <a href="profile.html"> -->
+        <div id="userAvatar" class="user-avatar" onclick="toggleSidebar()"></div>
+       <!-- </a> -->
     </div>
   </div>
 
@@ -180,6 +180,28 @@
     </svg>
   </div>
   <div id="toast" class="toast"></div>
+
+  <div class="sidebar-2" id="sidebar2" style="display: none;">
+      <ul>
+        <a href="profile.html"><li>Trang cá nhân</li></a>
+        <a href="message.html"><li>Tin nhắn</li></a>
+        <a href="friendNoti.html"><li>Thông báo</li></a>
+        <a href=""><li>Nhóm</li></a>
+        <a href="" ><li>Sự kiện</li></a>
+      </ul>
+      <ul>
+        <a href=""><li><i class="fa-solid fa-globe" style="padding-right: 10px;"></i>Ngôn ngữ</li></a>
+        <a href=""><li><i class="fa-solid fa-question" style="padding-right: 10px;" ></i>Hỗ trợ</li></a>
+        <a href=""><li><i class="fa-solid fa-phone" style="padding-right: 10px;"></i>Liên hệ</li></a>
+        <a href="javascript:void(0);" id="openSettings"><li><i class="fa-solid fa-gear" style="padding-right: 10px;"></i>Cài đặt</li></a>
+      </ul>
+      <ul>
+        <a href="#" class="logout" onclick="logout()">
+          <li>Đăng xuất</li>
+          <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px;"></i>
+        </a>
+      </ul>
+    </div>
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/home.js"></script>
