@@ -145,12 +145,11 @@ const displayPosts = async (posts) => {
                 const truncatedText = lines.slice(0, 2).join('<br>') + '...';
                 postTitle.innerHTML = truncatedText;
             
-                let previousPosition = 0; // Biến lưu vị trí trước khi mở rộng
+                let previousPosition = 0; 
                 const offset = 100;
             
                 toggleBtn.addEventListener('click', () => {
                     if (toggleBtn.textContent === 'Xem thêm') {
-                        // Lưu vị trí của bài viết trước khi mở rộng
                         previousPosition = postElement.getBoundingClientRect().top + window.scrollY;
             
                         postTitle.innerHTML = post.title.replace(/\n/g, '<br>');
@@ -158,8 +157,6 @@ const displayPosts = async (posts) => {
                     } else {
                         postTitle.innerHTML = truncatedText;
                         toggleBtn.textContent = 'Xem thêm';
-            
-                        // Cuộn về đúng vị trí của bài viết ban đầu
                         window.scrollTo({ top: previousPosition - offset, behavior: 'smooth' });
                     }
                 });
