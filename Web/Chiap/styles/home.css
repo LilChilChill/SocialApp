@@ -57,6 +57,34 @@ body, ul, li, a{
     margin-top: 20px;
   }
   
+.sidebar-2{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    width: 150px;
+    background-color: var(--background-color);
+    padding: 10px;
+    /* height: 91.5vh; */
+    position: fixed;
+    right: 0%;
+    top: 55px;
+    z-index: 2;
+  }
+  .sidebar-2 ul li {
+    padding: 10px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+  }
+  
+  .sidebar-2 ul a{
+    
+    color: var(--sidebar-text-color);
+  }
+
+  .sidebar-2 ul li:hover {
+    background-color: var(--sidebar-hover-background-color);
+  }
   
   .sidebar {
     display: flex;
