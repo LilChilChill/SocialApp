@@ -624,6 +624,12 @@ body, ul, li, a{
      }
   }
   @media (max-width: 600px) {
+    .notify{
+      width: 180px;
+    }
+    .friend-request-item{
+      width: 150px;
+    }
     .navbar i {
       font-size: 15px;
     }
