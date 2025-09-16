@@ -74,7 +74,11 @@ const signUpButton = document.getElementById('signUp');
           localStorage.setItem('username', data.name)
           localStorage.setItem('userEmail', data.email)
           localStorage.setItem('userId', data._id)
-          window.location.href = window.location.origin + '/components/home.html';
+          // window.location.href = window.location.origin + '/components/home.html';
+          window.location.href = import.meta.env.DEV
+            ? '/components/home.html'
+            : '/home';
+
 
           console.log("Chuyển hướng sang home.html");
         } else {
