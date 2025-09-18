@@ -165,7 +165,7 @@ const displayPosts = (posts) => {
                         <div class="post-info">
                             <h4 onclick="goToProfile('${post.author._id}')">${authorName}</h4>
                             <p onclick="goToProfile('${post.author._id}')"><small>${post.status}</small></p>
-                            <a href="#"><small>${new Date(post.createdAt).toLocaleString()}</small></a>
+                            <a><small>${new Date(post.createdAt).toLocaleString()}</small></a>
                         </div>
                     </div>
                     <div class="post-setting">

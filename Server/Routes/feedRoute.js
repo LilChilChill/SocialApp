@@ -7,7 +7,8 @@ const {
     updatePost, 
     likePost, 
     commentPost, 
-    deleteComment 
+    deleteComment, 
+    sharePost 
 } = require('../Controllers/feedController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
@@ -21,5 +22,6 @@ router.delete('/posts/:postId', authMiddleware, deletePost);
 router.post('/posts/:postId/like', authMiddleware, likePost);
 router.post('/posts/:postId/comment', authMiddleware, commentPost);
 router.delete('/posts/:postId/comment/:commentId', authMiddleware, deleteComment);
+router.post('/posts/:postId/share', authMiddleware, sharePost);
 
 module.exports = router;

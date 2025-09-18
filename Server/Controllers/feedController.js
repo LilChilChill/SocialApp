@@ -46,6 +46,10 @@ const getPosts = async (req, res) => {
         const posts = await Post.find(filter)
             .populate('author', 'name avatar')
             .populate('comments.user', 'name avatar')
+            .populate({
+                path: 'sharedFrom',
+                populate: { path: 'author', select: 'name avatar' }
+            })
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));
@@ -134,7 +138,7 @@ const commentPost = async (req, res) => {
         await post.save();
 
         const updatedPost = await Post.findById(postId)
-            .populate('comments.user', 'name avatar'); // Lấy thêm tên và avatar
+            .populate('comments.user', 'name avatar'); 
 
         res.status(201).json({ message: 'Bình luận thành công.', comments: updatedPost.comments });
     } catch (error) {
@@ -142,6 +146,37 @@ const commentPost = async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ.', error: error.message });
     }
 };
+
+const sharePost = async (req, res) => {
+  try {
+    const { postId } = req.params;            
+    const { status, caption } = req.body;     
+    const user = req.user;
+
+    const original = await Post.findById(postId);
+    if (!original) {
+      return res.status(404).json({ message: 'Không tìm thấy bài viết gốc.' });
+    }
+
+    const sharedPost = await Post.create({
+      author: user._id,          
+      title: caption || '',      
+      sharedFrom: original._id,  
+      status: status || 'public' 
+    });
+
+    return res.status(201).json({
+      message: 'Chia sẻ bài viết thành công.',
+      post: sharedPost
+    });
+  } catch (err) {
+    console.error('Share error:', err);
+    res.status(500).json({ message: 'Lỗi máy chủ.', error: err.message });
+  }
+};
+
+module.exports = { sharePost };
+
 
 const deleteComment = async (req, res) => {
     try {
@@ -194,4 +229,4 @@ const deletePost = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPosts, deletePost, updatePost, likePost, commentPost, deleteComment };
+module.exports = { createPost, getPosts, deletePost, updatePost, likePost, commentPost, deleteComment, sharePost };
