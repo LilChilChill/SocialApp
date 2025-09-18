@@ -167,9 +167,9 @@ body, ul, li, a{
     border-radius: 50%;
   }
   
-  .post-user {
+  /* .post-user {
     font-weight: bold;
-  }
+  } */
   
   .post-content {
     font-size: 14px;

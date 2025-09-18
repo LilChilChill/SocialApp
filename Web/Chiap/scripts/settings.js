@@ -7,12 +7,10 @@ document.addEventListener("DOMContentLoaded", function () {
     
     openBtn.addEventListener("click", function () {
         modal.style.display = "block";
-        console.log("Modal opened");
     });
 
     openBtnSide.addEventListener("click", function () {
         modal.style.display = "block";
-        console.log("Modal opened from sidebar");
     });
     
     closeBtn.addEventListener("click", function () {

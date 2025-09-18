@@ -223,6 +223,41 @@ const resetPassword = async (req, res) => {
     }
 };
 
+const searchUsers = async (req, res) => {
+  const { query } = req.query;
+  try {
+    if (!query) {
+      return res.status(400).json({ message: 'Query không được để trống' });
+    }
+
+    // Lấy user hiện tại cùng danh sách bạn bè
+    const currentUser = await userModel.findById(req.user._id).select('friends');
+    const myFriends = currentUser.friends.map(f => f.toString());
+
+    // Lấy toàn bộ user (trừ mật khẩu)
+    const users = await userModel.find().select('-password');
+
+    const normalizedQuery = removeAccents(query.toLowerCase());
+
+    // Lọc theo tên
+    const filteredUsers = users
+      .filter(u => {
+        const normalizedName = removeAccents(u.name.toLowerCase());
+        return normalizedName.includes(normalizedQuery) && u._id.toString() !== req.user._id.toString();
+      })
+      .map(u => ({
+        _id: u._id,
+        name: u.name,
+        avatar: u.avatar,
+        isFriend: myFriends.includes(u._id.toString())
+      }));
+
+    res.status(200).json(filteredUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 const getUsers = async (req, res) => {
     try{
@@ -236,28 +271,28 @@ const getUsers = async (req, res) => {
 
 const removeAccents = require('remove-accents');
 
-const searchUsers = async (req, res) => {
-    const { query } = req.query;
-    try {
-        if (!query) {
-            return res.status(400).json({ message: 'Query không được để trống' });
-        }
+// const searchUsers = async (req, res) => {
+//     const { query } = req.query;
+//     try {
+//         if (!query) {
+//             return res.status(400).json({ message: 'Query không được để trống' });
+//         }
 
-        const users = await userModel.find().select('-password -friends'); // Lấy toàn bộ user
+//         const users = await userModel.find().select('-password -friends') // Lấy toàn bộ user
         
-        const normalizedQuery = removeAccents(query.toLowerCase());
+//         const normalizedQuery = removeAccents(query.toLowerCase());
 
-        const filteredUsers = users.filter(user => {
-            const normalizedName = removeAccents(user.name.toLowerCase());
-            return normalizedName.includes(normalizedQuery);
-        });
+//         const filteredUsers = users.filter(user => {
+//             const normalizedName = removeAccents(user.name.toLowerCase());
+//             return normalizedName.includes(normalizedQuery);
+//         });
 
-        res.status(200).json(filteredUsers);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
+//         res.status(200).json(filteredUsers);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ message: 'Server error' });
+//     }
+// };
 
 
 
