@@ -7,9 +7,6 @@ import "../styles/alert.css";
 // User functions
 const userInfoContainer = document.getElementById('userInfo');
 const postUser = document.getElementById('post-user');
-const updateButton = document.getElementById('updateButton');
-const updateForm = document.getElementById('updateForm');
-const saveButton = document.getElementById('saveButton');
 let currentUser = {};
 
 function showToast(message) {
@@ -19,9 +16,6 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-function listDisplay() {
-    document.getElementById('list').style.display = document.getElementById('list').style.display === 'none' ? 'flex' : 'none';
-}
 
 const getUserInfo = async () => {
     const token = localStorage.getItem('token');
