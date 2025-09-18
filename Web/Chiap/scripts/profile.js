@@ -1,5 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL;
 document.title = "Chiap";
+import "../styles/profile.css";
+import "../styles/addFriend.css";
+import "../styles/alert.css";
 
 // User functions
 const userInfoContainer = document.getElementById('userInfo');

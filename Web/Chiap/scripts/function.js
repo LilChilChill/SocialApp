@@ -130,7 +130,7 @@ const searchUsers = async () => {
                         <img onclick="goToProfile('${user._id}')" src="${avatarUrl}" alt="${user.name}" id="avatar">
                         <span onclick="goToProfile('${user._id}')">${user.name}</span>    
                     </div>
-                    <button onclick="addFriend('${user._id}')">Thêm bạn</button>
+                    ${!user.isFriend ? `<button onclick="addFriend('${user._id}')">Thêm bạn</button>` : ''}
                 `;
                 userList.appendChild(userItem);
             });
