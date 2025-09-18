@@ -690,7 +690,7 @@ body, ul, li, a{
     margin-bottom: 10px;
   }
   
-  .like-btn, .comment-btn {
+  .like-btn, .comment-btn, .share-btn {
     background: none;
     border: none;
     font-size: 20px;

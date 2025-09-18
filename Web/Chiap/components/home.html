@@ -12,6 +12,39 @@
   <link rel="stylesheet" href="../styles/loading.css">
   <link rel="stylesheet" href="../styles/friendNoti.css">
   <link rel="stylesheet" href="../styles/alert.css">
+  <style>
+    /* Ẩn hiện */
+    .share-modal.hidden {
+      display: none;
+    }
+
+    .share-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000; /* cao hơn settings nếu cần */
+    }
+
+    .share-modal-content {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 8px;
+      width: 300px;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .close-share {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
   <div class="navbar">
@@ -159,10 +192,6 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Cài đặt</h2>
-        <!-- <label class="switch">
-            <input type="checkbox" id="darkModeToggle">
-            <span class="slider round"></span>
-        </label> -->
         <div style="justify-content: center; align-items: center; display: flex; margin: 20px;">
           <label class="switch">
             <input type="checkbox" id="darkModeToggle"/>
@@ -183,27 +212,41 @@
   
   <!-- siderMenu -->
   <div class="sidebar-2" id="sidebar2" style="display: none;">
-      <ul>
-        <a href="profile.html"><li>Trang cá nhân</li></a>
-        <a href="message.html"><li>Tin nhắn</li></a>
-        <a href="friendNoti.html"><li>Thông báo</li></a>
-        <a href=""><li>Nhóm</li></a>
-        <a href="" ><li>Sự kiện</li></a>
-      </ul>
-      <ul>
-        <a href=""><li><i class="fa-solid fa-globe" style="padding-right: 10px;"></i>Ngôn ngữ</li></a>
-        <a href=""><li><i class="fa-solid fa-question" style="padding-right: 10px;" ></i>Hỗ trợ</li></a>
-        <a href=""><li><i class="fa-solid fa-phone" style="padding-right: 10px;"></i>Liên hệ</li></a>
-        <a href="javascript:void(0);" id="openSettingsSide"><li><i class="fa-solid fa-gear" style="padding-right: 10px;"></i>Cài đặt</li></a>
-      </ul>
-      <ul>
-        <a href="#" class="logout" onclick="logout()">
-          <li>Đăng xuất</li>
-          <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px;"></i>
-        </a>
-      </ul>
+    <ul>
+      <a href="profile.html"><li>Trang cá nhân</li></a>
+      <a href="message.html"><li>Tin nhắn</li></a>
+      <a href="friendNoti.html"><li>Thông báo</li></a>
+      <a href=""><li>Nhóm</li></a>
+      <a href="" ><li>Sự kiện</li></a>
+    </ul>
+    <ul>
+      <a href=""><li><i class="fa-solid fa-globe" style="padding-right: 10px;"></i>Ngôn ngữ</li></a>
+      <a href=""><li><i class="fa-solid fa-question" style="padding-right: 10px;" ></i>Hỗ trợ</li></a>
+      <a href=""><li><i class="fa-solid fa-phone" style="padding-right: 10px;"></i>Liên hệ</li></a>
+      <a href="javascript:void(0);" id="openSettingsSide"><li><i class="fa-solid fa-gear" style="padding-right: 10px;"></i>Cài đặt</li></a>
+    </ul>
+    <ul>
+      <a href="#" class="logout" onclick="logout()">
+        <li>Đăng xuất</li>
+        <i class="fa-solid fa-arrow-right-from-bracket" style="margin-right: 10px;"></i>
+      </a>
+    </ul>
+  </div>
+    
+    <div id="shareModal" class="share-modal hidden">
+      <div class="share-modal-content">
+        <span class="close-share">&times;</span>
+        <h3>Chia sẻ bài viết</h3>
+        <label>Chế độ hiển thị:</label>
+        <select id="shareStatus">
+          <option value="public">Công khai</option>
+          <option value="friends">Bạn bè</option>
+          <option value="private">Riêng tư</option>
+        </select>
+        <button id="confirmShare">Chia sẻ</button>
+      </div>
     </div>
-    <!-- siderMenu -->
+
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script type="module" src="../scripts/home.js"></script>

@@ -117,6 +117,9 @@ const displayPosts = async (posts) => {
                     <button class="comment-btn">
                         <i class="fa-regular fa-comment"></i> <span class="like-count">${post.comments.length}</span>
                     </button>
+                    <button class="share-btn" data-post-id="${post._id}">
+                        <i class="fa-solid fa-share"></i> <span class="share-count">${post.shares?.length || 0}</span>
+                    </button>
                 </div>
                 <div class="post-comments">
                     <div class="comment-list">
@@ -185,10 +188,51 @@ const displayPosts = async (posts) => {
                     input.value = '';
                 }
             });
+            
+            const shareBtn = postElement.querySelector('.share-btn');
+            shareBtn.addEventListener('click', () => openShareModal(post._id, postElement));
         }
     });
 };
 
+let currentSharePostId = null;
+
+function openShareModal(postId, postElement) {
+    currentSharePostId = postId;
+    document.getElementById('shareModal').classList.remove('hidden');
+}
+
+document.querySelector('.close-share').addEventListener('click', () => {
+    document.getElementById('shareModal').classList.add('hidden');
+});
+
+document.getElementById('confirmShare').addEventListener('click', async () => {
+    const status = document.getElementById('shareStatus').value;
+    if (!currentSharePostId) return;
+    try {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/api/feeds/posts/${currentSharePostId}/share`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Share thất bại');
+        showToast('Đã chia sẻ bài viết!');
+        // Cập nhật count shares trên nút (tăng thêm 1)
+        const btn = document.querySelector(`.share-btn[data-post-id="${currentSharePostId}"] .share-count`);
+        if (btn) btn.textContent = Number(btn.textContent) + 1;
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || 'Lỗi chia sẻ');
+    } finally {
+        document.getElementById('shareModal').classList.add('hidden');
+        currentSharePostId = null;
+    }
+});
 
 // Hàm lấy danh sách bạn bè trả về danh sách ID bạn bè
 async function getFriendsList() {
