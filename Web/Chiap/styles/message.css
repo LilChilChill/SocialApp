@@ -806,3 +806,38 @@
   color: #007bff;
   font-size: 14px;
 }
+/* --- Side menu file/ảnh --- */
+.file-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.file-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-attachment {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 5px 8px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.file-icon {
+    margin-right: 5px;
+}
+
+.download-btn {
+    margin-left: auto;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}

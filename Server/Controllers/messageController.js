@@ -13,25 +13,26 @@ const sendMessage = (io) => async (req, res) => {
     date = `${hours}:${minutes}`;
 
     try {
-        let fileUrl = null;
-        let fileType = null;
-        let fileName = null;
+        let files = [];
 
-        if (req.file) {
-            // fileUrl = await uploadImageToGCS(req.file, 'messages');
-            const uploaded = await uploadImageToGCS(req.file, 'messages');
-                fileUrl = uploaded.url;
-                fileType = uploaded.mimeType;
-                fileName = uploaded.originalName;
+        // Nếu gửi 1 hoặc nhiều file
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const uploaded = await uploadImageToGCS(file, 'messages');
+
+                files.push({
+                    url: uploaded.url,
+                    mimeType: uploaded.mimeType,
+                    fileName: uploaded.originalName
+                });
+            }
         }
 
         const messageData = new Message({
             sender: senderId,
             receiver: receiverId,
             content: content || '',
-            fileUrl,
-            fileType,
-            fileName, 
+            files,
             date
         });
 
@@ -41,9 +42,7 @@ const sendMessage = (io) => async (req, res) => {
             senderId,
             receiverId,
             content: messageData.content,
-            fileUrl: messageData.fileUrl,
-            fileType: messageData.fileType,
-            fileName: messageData.fileName, 
+            files: messageData.files,
             date
         });
 
@@ -71,13 +70,14 @@ const getMessages = async (req, res) => {
             .sort('-timestamp')
             .skip(skip)
             .limit(limit)
-            .select('sender receiver content fileUrl fileType fileName date timestamp isRead'); // ✅ Thêm fileName
+            .select('sender receiver content files date timestamp isRead');
 
         res.status(200).json(messages.reverse());
     } catch (error) {
         res.status(500).json({ message: 'Có lỗi xảy ra khi lấy tin nhắn', error: error.message });
     }
 };
+
 
 const getChatImages = async (req, res) => {
     const userId = req.user._id;
@@ -89,10 +89,10 @@ const getChatImages = async (req, res) => {
                 { sender: userId, receiver: friendId },
                 { sender: friendId, receiver: userId }
             ],
-            fileUrl: { $ne: null }
+            "files.mimeType": { $regex: /^image\// }
         })
-            .sort('-timestamp')
-            .select('fileUrl fileType fileName date'); // ✅ Có thể thêm fileName nếu muốn hiển thị
+        .sort('-timestamp')
+        .select('files date');
 
         res.status(200).json({ images });
     } catch (error) {
@@ -100,21 +100,24 @@ const getChatImages = async (req, res) => {
     }
 };
 
+
 const deleteChatHistory = async (req, res) => {
     try {
         const { friendId } = req.params;
         const userId = req.user._id;
 
-        const messagesWithFiles = await Message.find({
+        const messages = await Message.find({
             $or: [
                 { sender: userId, receiver: friendId },
                 { sender: friendId, receiver: userId }
-            ],
-            fileUrl: { $ne: null }
-        }).select('fileUrl');
+            ]
+        });
 
-        for (const message of messagesWithFiles) {
-            await deleteFileFromGCS(message.fileUrl);
+        // Xóa tất cả file trong các message
+        for (const msg of messages) {
+            for (const f of msg.files) {
+                await deleteFileFromGCS(f.url);
+            }
         }
 
         const result = await Message.deleteMany({
@@ -124,15 +127,14 @@ const deleteChatHistory = async (req, res) => {
             ]
         });
 
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: 'Không có tin nhắn nào để xóa' });
-        }
-
-        res.status(200).json({ message: 'Lịch sử chat và tệp đính kèm đã được xóa', deletedCount: result.deletedCount });
+        res.status(200).json({ 
+            message: 'Đã xóa lịch sử chat và file',
+            deletedCount: result.deletedCount 
+        });
     } catch (error) {
-        console.error('Lỗi khi xóa lịch sử chat:', error);
         res.status(500).json({ message: 'Lỗi khi xóa lịch sử chat', error: error.message });
     }
 };
+
 
 module.exports = { sendMessage, getMessages, getChatImages, deleteChatHistory };

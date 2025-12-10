@@ -147,28 +147,28 @@ function openChat(friendId, name, avatar, page = 1) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message', message.sender === friendId ? 'received' : 'sent');
 
-                const fileUrl = message.fileUrl;
-                const fileType = message.fileType;
+                // Xử lý mảng files
                 let filePreviewHtml = '';
-
-                if (fileUrl) {
-                    if (fileType.startsWith('image/')) {
-                        filePreviewHtml = `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>`;
-                    } else if (fileType.startsWith('video/')) {
-                        filePreviewHtml = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
-                    } else if (fileType === 'application/pdf') {
-                        filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
-                    } else {
-                        const fileName = fileUrl.split('/').pop();
-                        filePreviewHtml = `
-                        <div class="fileAttachment">
-                            <div class="fileIcon">📎</div>
-                            <div class="fileInfo">
-                                <span class="fileName">${message.fileName || 'Tệp đính kèm'}</span>
-                                <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
-                            </div>
-                        </div>`;
-                    }
+                if (message.files && message.files.length > 0) {
+                    message.files.forEach(file => {
+                        if (file.mimeType.startsWith('image/')) {
+                            filePreviewHtml += `<img src="${file.url}" class="imgContent" onclick="openImage('${file.url}')"/>`;
+                        } else if (file.mimeType.startsWith('video/')) {
+                            filePreviewHtml += `<video controls class="videoContent"><source src="${file.url}" type="${file.mimeType}">Trình duyệt không hỗ trợ video.</video>`;
+                        } else if (file.mimeType === 'application/pdf') {
+                            filePreviewHtml += `<a href="${file.url}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
+                        } else {
+                            const fileName = file.fileName || 'Tệp đính kèm';
+                            filePreviewHtml += `
+                                <div class="fileAttachment">
+                                    <div class="fileIcon">📎</div>
+                                    <div class="fileInfo">
+                                        <span class="fileName">${fileName}</span>
+                                        <a href="${file.url}" download class="downloadBtn">Tải xuống</a>
+                                    </div>
+                                </div>`;
+                        }
+                    });
                 }
 
                 messageDiv.innerHTML = `
@@ -301,17 +301,16 @@ async function compressImage(file, maxSizeMB = 25, quality = 0.8) {
 
 window.openImage = openImage
 
+// ---------- Gửi tin nhắn ----------
 document.getElementById('sendButton').addEventListener('click', async () => {
     const messageInput = document.getElementById('chatInput');
     const content = messageInput.value.trim();
-
-    if (!content && !selectedFile) return;
+    if (!content && !selectedFile) return; 
     if (!currentFriendId) return;
 
     let fileToSend = selectedFile;
-    let previewUrl = null;
-    let filePreviewHtml = '';
 
+    // Nén ảnh nếu quá lớn
     if (fileToSend && fileToSend.type.startsWith('image/')) {
         try {
             fileToSend = await compressImage(fileToSend);
@@ -321,40 +320,36 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         }
     }
 
-    if (fileToSend) {
-        const fileType = fileToSend.type;
-        const tempUrl = URL.createObjectURL(fileToSend);
-        previewUrl = tempUrl;
-
-        if (fileType.startsWith('image/')) {
-            filePreviewHtml = `<img src="${tempUrl}" class="imgContent" onclick="openImage('${tempUrl}')"/>`;
-        } else if (fileType.startsWith('video/')) {
-            filePreviewHtml = `<video controls class="videoContent"><source src="${tempUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
-        } else if (fileType === 'application/pdf') {
-            filePreviewHtml = `<a href="${tempUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
-        } else {
-            // filePreviewHtml = `<a href="${tempUrl}" download class="fileLink">📎 ${fileToSend.name}</a>`;
-            filePreviewHtml = `
-                <div class="fileAttachment">
-                    <div class="fileIcon">📎</div>
-                    <div class="fileInfo">
-                        <span class="fileName">${fileToSend.name || 'Tệp đính kèm'}</span>
-                        <a href="${tempUrl}" download class="downloadBtn">Tải xuống</a>
-                    </div>
-                </div>`;
-        }
-    }
-
+    // Tạo FormData gửi lên server
     const messageData = new FormData();
     messageData.append('receiverId', currentFriendId);
     messageData.append('content', content);
     if (fileToSend) messageData.append('file', fileToSend);
 
+    // Append tin nhắn tạm thời vào DOM
+    const chatArea = document.getElementById('chatArea');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', 'sent');
 
-    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
-        chatArea.innerHTML = '';
+    let filePreviewHtml = '';
+    if (fileToSend) {
+        const tempUrl = URL.createObjectURL(fileToSend);
+        if (fileToSend.type.startsWith('image/')) {
+            filePreviewHtml = `<img src="${tempUrl}" class="imgContent"/>`;
+        } else if (fileToSend.type.startsWith('video/')) {
+            filePreviewHtml = `<video controls class="videoContent"><source src="${tempUrl}" type="${fileToSend.type}"></video>`;
+        } else if (fileToSend.type === 'application/pdf') {
+            filePreviewHtml = `<a href="${tempUrl}" target="_blank" class="fileLink">📄 ${fileToSend.name}</a>`;
+        } else {
+            filePreviewHtml = `
+                <div class="fileAttachment">
+                    <div class="fileIcon">📎</div>
+                    <div class="fileInfo">
+                        <span class="fileName">${fileToSend.name}</span>
+                        <a href="${tempUrl}" download class="downloadBtn">Tải xuống</a>
+                    </div>
+                </div>`;
+        }
     }
 
     messageDiv.innerHTML = `
@@ -363,20 +358,20 @@ document.getElementById('sendButton').addEventListener('click', async () => {
             ${filePreviewHtml}
         </div>
     `;
-    document.getElementById('chatArea').appendChild(messageDiv);
+    chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
 
+    // Gửi lên server
     fetch(`${API_URL}/api/messages`, {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}` 
-        },
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         body: messageData
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         messageInput.value = '';
         document.getElementById('inputPreview').innerHTML = '';
+        selectedFile = null;
 
         const messagePayload = {
             chatType: 'private',
@@ -385,68 +380,53 @@ document.getElementById('sendButton').addEventListener('click', async () => {
             content: content,
             fileUrl: data.messageData.fileUrl || null,
             fileType: data.messageData.fileType || null,
+            fileName: data.messageData.fileName || null,
             date: data.messageData.date
         };
 
-        // Gửi socket
-        socket.emit('sendMessage', messagePayload);
-        if (data.messageData.fileUrl) {
-            setTimeout(() => {
-                const img = messageDiv.querySelector(".imgContent");
-                const video = messageDiv.querySelector("video source");
-                const fileLink = messageDiv.querySelector(".fileLink");
-
-                if (img) {
-                    img.src = data.messageData.fileUrl;
-                } else if (video) {
-                    video.src = data.messageData.fileUrl;
-                    video.parentElement.load();
-                } else if (fileLink) {
-                    fileLink.href = data.messageData.fileUrl;
-                }
-            }, 0);
+        // Cập nhật DOM với URL thực sự từ server
+        const fileElement = messageDiv.querySelector(".imgContent, video source, .fileLink, .downloadBtn");
+        if (fileElement && messagePayload.fileUrl) {
+            if (fileElement.tagName === 'IMG') fileElement.src = messagePayload.fileUrl;
+            if (fileElement.tagName === 'SOURCE') {
+                fileElement.src = messagePayload.fileUrl;
+                fileElement.parentElement.load();
+            }
+            if (fileElement.classList.contains('fileLink') || fileElement.classList.contains('downloadBtn')) {
+                fileElement.href = messagePayload.fileUrl;
+            }
         }
 
-        selectedFile = null;
+        // Gửi socket
+        socket.emit('sendMessage', messagePayload);
     })
-    .catch(error => {
-        console.error('Lỗi khi gửi tin nhắn:', error);
-    });
+    .catch(err => console.error('Lỗi khi gửi tin nhắn:', err));
 });
 
-// Nhận tin nhắn
+// ---------- Nhận tin nhắn từ socket ----------
 socket.on('receiveMessage', (messageData) => {
+    if (!currentFriendId) return;
     const chatArea = document.getElementById('chatArea');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', messageData.sender === currentFriendId ? 'received' : 'sent');
 
-    const fileUrl = messageData.fileUrl; 
-    const fileType = messageData.fileType;
     const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
-
-    console.log('FriendAvatar', friendAvatar);
-
-    if (chatArea.innerHTML === '<p>Không có tin nhắn nào.</p>') {
-        chatArea.innerHTML = '';
-    }
-
     let fileElement = '';
 
-    if (fileUrl) {
-        if (fileType.startsWith('image/')) {
-            fileElement = `<img src="${fileUrl}" class="imgContent" onclick="openImage(this.src)" />`;
-        } else if (fileType === 'application/pdf') {
-            fileElement = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
-        } else if (fileType.startsWith('video/')) {
-            fileElement = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
+    if (messageData.fileUrl) {
+        if (messageData.fileType.startsWith('image/')) {
+            fileElement = `<img src="${messageData.fileUrl}" class="imgContent" onclick="openImage('${messageData.fileUrl}')"/>`;
+        } else if (messageData.fileType.startsWith('video/')) {
+            fileElement = `<video controls class="videoContent"><source src="${messageData.fileUrl}" type="${messageData.fileType}"></video>`;
+        } else if (messageData.fileType === 'application/pdf') {
+            fileElement = `<a href="${messageData.fileUrl}" target="_blank" class="fileLink">📄 ${messageData.fileName || 'PDF'}</a>`;
         } else {
-            const fileName = fileUrl.split('/').pop();
-            filePreviewHtml = `
+            fileElement = `
             <div class="fileAttachment">
                 <div class="fileIcon">📎</div>
                 <div class="fileInfo">
-                    <span class="fileName">${message.fileName || 'Tệp đính kèm'}</span>
-                    <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
+                    <span class="fileName">${messageData.fileName || 'Tệp đính kèm'}</span>
+                    <a href="${messageData.fileUrl}" download class="downloadBtn">Tải xuống</a>
                 </div>
             </div>`;
         }
@@ -454,7 +434,7 @@ socket.on('receiveMessage', (messageData) => {
 
     messageDiv.innerHTML = `
         <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
-        <div class="msgContent" id="msgContent">
+        <div class="msgContent">
             ${messageData.content ? `<div class="messageContent"><p>${messageData.content.replace(/\n/g, '<br>')}</p></div>` : ''}
             ${fileElement}
         </div>
@@ -463,6 +443,7 @@ socket.on('receiveMessage', (messageData) => {
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
 });
+
 
 
 
@@ -626,11 +607,82 @@ function imgFileToggle(){
 }
 
 
-function sideMenu(){
-    document.getElementById('sideMenu').style.display = document.getElementById('sideMenu').style.display === 'none'? 'flex' : 'none';
-    document.getElementById('icon').style.left = document.getElementById('icon').style.left === '65%' ? '86%' : '65%';
+
+// --- Side menu toggle và render file/ảnh ---
+function sideMenu() {
+    const side = document.getElementById('sideMenu');
+    const icon = document.getElementById('icon');
+
+    // Toggle side menu
+    side.style.display = side.style.display === 'none' ? 'flex' : 'none';
+    icon.style.left = icon.style.left === '65%' ? '86%' : '65%';
+
+    if (side.style.display === 'flex') {
+        // Render sau khi menu mở
+        if (!imagesFetched) {
+            fetchAllImages().then(() => renderFilesInSideMenu());
+        } else {
+            renderFilesInSideMenu();
+        }
+    }
 }
-window.sideMenu = sideMenu
+
+// Hàm render files trong side menu
+function renderFilesInSideMenu() {
+    const fileContainer = document.getElementById('file');
+    fileContainer.innerHTML = '';
+
+    // Tạo tiêu đề
+    const mediaTitle = document.createElement('p');
+    mediaTitle.textContent = 'Hình ảnh / Video';
+    fileContainer.appendChild(mediaTitle);
+
+    const mediaDiv = document.createElement('div');
+    mediaDiv.classList.add('file-section');
+    fileContainer.appendChild(mediaDiv);
+
+    const otherTitle = document.createElement('p');
+    otherTitle.textContent = 'Tệp khác';
+    fileContainer.appendChild(otherTitle);
+
+    const otherDiv = document.createElement('div');
+    otherDiv.classList.add('file-section');
+    fileContainer.appendChild(otherDiv);
+
+    cachedImages.forEach(file => {
+        if (!file.url) return;
+
+        let el;
+        if (file.type.startsWith('image/')) {
+            el = document.createElement('img');
+            el.src = file.url;
+            el.classList.add('file-thumb');
+            el.onclick = () => openImage(file.url);
+            mediaDiv.appendChild(el);
+        } else if (file.type.startsWith('video/')) {
+            el = document.createElement('video');
+            el.src = file.url;
+            el.controls = true;
+            el.classList.add('file-thumb');
+            mediaDiv.appendChild(el);
+        } else {
+            // Các file khác: pdf, doc, zip...
+            el = document.createElement('div');
+            el.classList.add('file-attachment');
+            el.innerHTML = `
+                <div class="file-icon">📎</div>
+                <div class="file-info">
+                    <span class="file-name">${file.fileName || 'Tệp đính kèm'}</span>
+                    <a href="${file.url}" download class="download-btn">Tải xuống</a>
+                </div>
+            `;
+            otherDiv.appendChild(el);
+        }
+    });
+}
+
+window.sideMenu = sideMenu;
+
 
 function emojiToggle(){
     document.getElementById('emoji').style.display = document.getElementById('emoji').style.display === 'none'? 'flex' : 'none';
