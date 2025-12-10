@@ -253,18 +253,6 @@ const displayPosts = (posts) => {
             }
 
         postsContainer.appendChild(postElement);
-        // const deleteBtn = postElement.querySelector('.delete-post-btn');
-
-        // if (deleteBtn) {
-        //     deleteBtn.addEventListener('click', async (e) => {
-        //         e.stopPropagation(); 
-        //         const postId = deleteBtn.dataset.postId;
-        //         const confirmDelete = confirm('Bạn có chắc chắn muốn xóa bài viết này không?');
-        //         if (confirmDelete) {
-        //             deletePost(postId)
-        //         }
-        //     });
-        // }
         const deleteBtn = postElement.querySelector('.delete-post-btn');
 
         if (deleteBtn) {
