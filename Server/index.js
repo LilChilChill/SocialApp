@@ -19,6 +19,8 @@ const allowedOrigins = [
     "https://chi404.id.vn",
     "https://www.chi404.id.vn",
     "https://chixap.netlify.app",
+    "http://chi404.id.vn",
+    "http://www.chi404.id.vn",
     "http://localhost:5173"
 ];
 
