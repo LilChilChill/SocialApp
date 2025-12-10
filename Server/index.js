@@ -14,7 +14,13 @@ const socketHandler = require('./socket.js');
 const app = express();
 module.exports = app;
 
-const allowedOrigins = ["https://chixap.netlify.app", "http://localhost:5173"];
+// const allowedOrigins = ["https://chixap.netlify.app", "http://localhost:5173"];
+const allowedOrigins = [
+    "https://chi404.id.vn",
+    "https://www.chi404.id.vn",
+    "https://chixap.netlify.app",
+    "http://localhost:5173"
+];
 
 // Middleware CORS
 app.use(cors({
