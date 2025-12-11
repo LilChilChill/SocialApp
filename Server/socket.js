@@ -39,7 +39,9 @@ module.exports = (io) => {
             minutes = minutes < 10 ? `0${minutes}` : minutes;
             messageData.date = `${hours}:${minutes}`;
 
-            const { chatType, receiverId, groupId, sender, content, fileUrl, fileType } = messageData;
+            // const { chatType, receiverId, groupId, sender, content, fileUrl, fileType } = messageData;
+            const { chatType, receiverId, groupId, sender, content, files } = messageData;
+
 
             if (!['group', 'private'].includes(chatType)) {
                 console.log(`Loại tin nhắn không hợp lệ: ${chatType}`);

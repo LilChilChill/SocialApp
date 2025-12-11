@@ -374,28 +374,53 @@ document.getElementById('sendButton').addEventListener('click', async () => {
         selectedFile = null;
 
         const messagePayload = {
-            chatType: 'private',
+            chatType: "private",
             receiverId: currentFriendId,
-            sender: localStorage.getItem('userId'),
+            sender: localStorage.getItem("userId"),
             content: content,
-            fileUrl: data.messageData.fileUrl || null,
-            fileType: data.messageData.fileType || null,
-            fileName: data.messageData.fileName || null,
-            date: data.messageData.date
+            date: data.messageData.date,
+        
+            files: data.messageData.files.map(f => ({
+                fileUrl: f.url,
+                fileType: f.mimeType,
+                fileName: f.fileName
+            }))
         };
+        
 
-        // Cập nhật DOM với URL thực sự từ server
-        const fileElement = messageDiv.querySelector(".imgContent, video source, .fileLink, .downloadBtn");
-        if (fileElement && messagePayload.fileUrl) {
-            if (fileElement.tagName === 'IMG') fileElement.src = messagePayload.fileUrl;
-            if (fileElement.tagName === 'SOURCE') {
-                fileElement.src = messagePayload.fileUrl;
-                fileElement.parentElement.load();
-            }
-            if (fileElement.classList.contains('fileLink') || fileElement.classList.contains('downloadBtn')) {
-                fileElement.href = messagePayload.fileUrl;
+        // // Cập nhật DOM với URL thực sự từ server
+        // const fileElement = messageDiv.querySelector(".imgContent, video source, .fileLink, .downloadBtn");
+        // if (fileElement && messagePayload.fileUrl) {
+        //     if (fileElement.tagName === 'IMG') fileElement.src = messagePayload.fileUrl;
+        //     if (fileElement.tagName === 'SOURCE') {
+        //         fileElement.src = messagePayload.fileUrl;
+        //         fileElement.parentElement.load();
+        //     }
+        //     if (fileElement.classList.contains('fileLink') || fileElement.classList.contains('downloadBtn')) {
+        //         fileElement.href = messagePayload.fileUrl;
+        //     }
+        // }
+
+        if (messagePayload.files.length > 0) {
+            const firstFile = messagePayload.files[0];
+            const fileElement = messageDiv.querySelector(".imgContent, video source, .fileLink, .downloadBtn");
+        
+            if (fileElement) {
+                if (fileElement.tagName === "IMG") fileElement.src = firstFile.fileUrl;
+        
+                if (fileElement.tagName === "SOURCE") {
+                    fileElement.src = firstFile.fileUrl;
+                    fileElement.parentElement.load();
+                }
+        
+                if (fileElement.classList.contains("fileLink") || 
+                    fileElement.classList.contains("downloadBtn")) 
+                {
+                    fileElement.href = firstFile.fileUrl;
+                }
             }
         }
+        
 
         // Gửi socket
         socket.emit('sendMessage', messagePayload);
@@ -702,35 +727,35 @@ function renderFilesInSideMenu() {
     fileContainer.appendChild(otherDiv);
 
     cachedImages.forEach(file => {
-        if (!file.url) return;
-
+        if (!file.fileUrl) return;
+    
         let el;
-        if (file.type.startsWith('image/')) {
+        if (file.fileType.startsWith('image/')) {
             el = document.createElement('img');
-            el.src = file.url;
+            el.src = file.fileUrl;
             el.classList.add('file-thumb');
-            el.onclick = () => openImage(file.url);
+            el.onclick = () => openImage(file.fileUrl);
             mediaDiv.appendChild(el);
-        } else if (file.type.startsWith('video/')) {
+        } else if (file.fileType.startsWith('video/')) {
             el = document.createElement('video');
-            el.src = file.url;
+            el.src = file.fileUrl;
             el.controls = true;
             el.classList.add('file-thumb');
             mediaDiv.appendChild(el);
         } else {
-            // Các file khác: pdf, doc, zip...
             el = document.createElement('div');
             el.classList.add('file-attachment');
             el.innerHTML = `
                 <div class="file-icon">📎</div>
                 <div class="file-info">
                     <span class="file-name">${file.fileName || 'Tệp đính kèm'}</span>
-                    <a href="${file.url}" download class="download-btn">Tải xuống</a>
+                    <a href="${file.fileUrl}" download class="download-btn">Tải xuống</a>
                 </div>
             `;
             otherDiv.appendChild(el);
         }
     });
+    
 }
 
 window.sideMenu = sideMenu;
@@ -807,6 +832,7 @@ function renderImages() {
         imgElement.onclick = () => openImage(image.fileUrl);
         imageContainer.appendChild(imgElement);
     });
+    
     
     fileImageDisplay.appendChild(imageContainer);
 }
