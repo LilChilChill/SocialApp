@@ -74,7 +74,7 @@ const signUpButton = document.getElementById('signUp');
           localStorage.setItem('userId', data._id)
           // window.location.href = window.location.origin + '/components/home.html';
           window.location.href = import.meta.env.DEV
-            ? '/components/home.html'
+            ? '/src/components/home.html'
             : '/home';
         } else {
           showToast(data.message);
