@@ -25,22 +25,22 @@ const allowedOrigins = [
     "http://localhost:5173"
 ];
 
-// ⭐ CORS CHUẨN KHÔNG LỖI
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin) {
-            // Cho phép request từ Postman, mobile app
+        // Cho phép request không có origin (OPTIONS, mobile, Postman)
+        if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        return callback(new Error("Not allowed by CORS: " + origin));
+        console.log("⛔ Blocked by CORS:", origin);
+        return callback(new Error("Not allowed by CORS"), false);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// ĐẢM BẢO OPTIONS luôn trả về 200
+app.options("*", cors());
 
 app.use(express.json());
 
@@ -54,12 +54,8 @@ app.get("/", (req, res) => {
     res.send("Hello, World!");
 });
 
-// ⚠️ XOÁ HOÀN TOÀN phần app.options("*") vì gây lỗi CORS
-// Không cần nữa — cors middleware đã xử lý hoàn chỉnh
-
 const server = http.createServer(app);
 
-// ⭐ SOCKET.IO CORS CHUẨN KHÔNG LỖI
 const io = new Server(server, {
     cors: {
         origin: allowedOrigins,
@@ -68,7 +64,6 @@ const io = new Server(server, {
     }
 });
 
-// MongoDB connect
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI;
 
