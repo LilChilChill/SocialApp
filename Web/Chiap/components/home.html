@@ -6,12 +6,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- <title>Home</title> -->
-  <link rel="stylesheet" href="../styles/home.css">
-  <link rel="stylesheet" href="../styles/addFriend.css">
-  <link rel="stylesheet" href="../styles/settings.css">
-  <link rel="stylesheet" href="../styles/loading.css">
-  <link rel="stylesheet" href="../styles/friendNoti.css">
-  <link rel="stylesheet" href="../styles/alert.css">
+  <link rel="stylesheet" href="/src/styles/home.css">
+  <link rel="stylesheet" href="/src/styles/addFriend.css">
+  <link rel="stylesheet" href="/src/styles/settings.css">
+  <link rel="stylesheet" href="/styles/loading.css">
+  <link rel="stylesheet" href="/src/styles/friendNoti.css">
+  <link rel="stylesheet" href="/src/styles/alert.css">
   <style>
     /* Ẩn hiện */
     .share-modal.hidden {
@@ -108,11 +108,11 @@
           <hr>
           <p>Danh sách bạn bè</p>
           <div class="leftContent" id="friendList">
-            <div id="loading" style="position: relative; top: 30%"> 
+            <!-- <div id="loading" style="position: relative; top: 30%"> 
               <svg viewBox="25 25 50 50">
                 <circle r="20" cy="50" cx="50"></circle>
               </svg>
-            </div>
+            </div> -->
           </div>
         </div>
     </div>
@@ -204,11 +204,11 @@
     </div>
   </div>
 
-  <div id="loading" style="position: relative; top: 50%"> 
+  <!-- <div id="loading" style="position: relative; top: 50%"> 
     <svg viewBox="25 25 50 50">
       <circle r="20" cy="50" cx="50"></circle>
     </svg>
-  </div>
+  </div> -->
   <div id="toast" class="toast"></div>
   
   <!-- siderMenu -->
@@ -250,10 +250,10 @@
 
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <script type="module" src="../scripts/home.js"></script>
-  <script type="module" src="../scripts/function.js"></script>
-  <script type="module" src="../scripts/settings.js"></script>
-  <script type="module" src="../scripts/index.js"></script>
-  <script type="module" src="../scripts/friendNoti.js"></script>
+  <script type="module" src="/src/scripts/home.js"></script>
+  <script type="module" src="/src/scripts/function.js"></script>
+  <script type="module" src="/src/scripts/settings.js"></script>
+  <script type="module" src="/src/scripts/index.js"></script>
+  <script type="module" src="/src/scripts/friendNoti.js"></script>
 </body>
 </html>
