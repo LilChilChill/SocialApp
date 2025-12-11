@@ -88,25 +88,23 @@
 // const link = process.env.API;
 // console.log("API URL:", link);
 
-require('dotenv').config();
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const http = require("http");
+const { Server } = require("socket.io");
 
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const http = require('http');
-const { Server } = require('socket.io');
-
-const userRoute = require('./Routes/userRoute');
-const friendsRoute = require('./Routes/friendRoute');
-const feedRoute = require('./Routes/feedRoute');
-const messageRoute = require('./Routes/messageRoute');
-const socketHandler = require('./socket.js');
+const userRoute = require("./Routes/userRoute");
+const friendsRoute = require("./Routes/friendRoute");
+const feedRoute = require("./Routes/feedRoute");
+const messageRoute = require("./Routes/messageRoute");
+const socketHandler = require("./socket.js");
 
 const app = express();
-module.exports = app;
 
-// ==== FIXED CORS (CHỈ DÙNG 1 HỆ THỐNG) ====
-
+// ----------------------
+// GLOBAL CORS FIX
+// ----------------------
 const allowedOrigins = [
   "https://chi404.id.vn",
   "https://www.chi404.id.vn",
@@ -114,70 +112,39 @@ const allowedOrigins = [
   "http://localhost:5173"
 ];
 
-// 1️⃣ Xử lý preflight OPTIONS
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  
+  if (!origin || allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin || "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   }
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
+    return res.sendStatus(204);
   }
 
   next();
 });
-
-// 2️⃣ CORS cho các request bình thường
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
-
-// ==========================
+// ----------------------
 
 app.use(express.json());
 
-// API routes
 app.use("/api/users", userRoute);
 app.use("/api/friends", friendsRoute);
 app.use("/api/feeds", feedRoute);
-
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
-
-const server = http.createServer(app);
-
-// SOCKET.IO CORS
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigins,
-    credentials: true
-  }
-});
-
-// MongoDB
-const port = process.env.PORT || 5001;
-const uri = process.env.ATLAS_URI;
-
-mongoose.connect(uri)
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch(err => console.error("MongoDB connection error:", err.message));
-
-// Socket message route
 app.use("/api/messages", messageRoute(io));
 
-// Start socket
-socketHandler(io);
+app.get("/", (req, res) => res.send("Hello world"));
 
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: allowedOrigins, credentials: true }
 });
 
-console.log("API URL:", process.env.API);
+socketHandler(io);
+
+server.listen(process.env.PORT || 5001);
 
