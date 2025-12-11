@@ -511,7 +511,7 @@ function switchChat(newFriendId, newFriendAvatar, newFriendName) {
 let hasMoreMessages = true;
 function loadOlderMessages() {
     if (!hasMoreMessages || isLoadingMessages) return;
-    
+
     isLoadingMessages = true;
 
     fetch(`${API_URL}/api/messages/${currentFriendId}?page=${currentPage + 1}`, {
@@ -528,50 +528,70 @@ function loadOlderMessages() {
     })
     .then(messages => {
         if (messages.length === 0) {
-            hasMoreMessages = false; 
+            hasMoreMessages = false;
             return;
         }
 
         const chatArea = document.getElementById('chatArea');
-        const fragment = document.createDocumentFragment(); 
+        const fragment = document.createDocumentFragment();
 
         messages.forEach(message => {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', message.sender === currentFriendId ? 'received' : 'sent');
+            messageDiv.classList.add(
+                'message',
+                message.sender === currentFriendId ? 'received' : 'sent'
+            );
 
-            const fileUrl = message.fileUrl;
+            // ------ Xử lý FILE ĐÚNG FORMAT MỚI ------
+            let filePreviewHtml = "";
 
-            const fileType = message.fileType;
-            let filePreviewHtml = '';
-
-            if (fileUrl) {
-                if (fileType.startsWith('image/')) {
-                    filePreviewHtml = `<img src="${fileUrl}" class="imgContent" onclick="openImage('${fileUrl}')"/>`;
-                } else if (fileType.startsWith('video/')) {
-                    filePreviewHtml = `<video controls class="videoContent"><source src="${fileUrl}" type="${fileType}">Trình duyệt không hỗ trợ video.</video>`;
-                } else if (fileType === 'application/pdf') {
-                    filePreviewHtml = `<a href="${fileUrl}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
-                } else {
-                    const fileName = fileUrl.split('/').pop();
-                    filePreviewHtml = `
-                    <div class="fileAttachment">
-                        <div class="fileIcon">📎</div>
-                        <div class="fileInfo">
-                            <span class="fileName">${fileName || 'Tệp đính kèm'}</span>
-                            <a href="${fileUrl}" download class="downloadBtn">Tải xuống</a>
-                        </div>
-                    </div>`;
-                }
+            if (message.files && message.files.length > 0) {
+                message.files.forEach(file => {
+                    if (file.mimeType.startsWith("image/")) {
+                        filePreviewHtml += `
+                            <img src="${file.url}" 
+                                 class="imgContent" 
+                                 onclick="openImage('${file.url}')"/>`;
+                    }
+                    else if (file.mimeType.startsWith("video/")) {
+                        filePreviewHtml += `
+                            <video controls class="videoContent">
+                                <source src="${file.url}" type="${file.mimeType}">
+                            </video>`;
+                    }
+                    else if (file.mimeType === "application/pdf") {
+                        filePreviewHtml += `
+                            <a href="${file.url}" target="_blank" class="fileLink">
+                                📄 Xem PDF
+                            </a>`;
+                    }
+                    else {
+                        const fileName = file.fileName || file.url.split("/").pop();
+                        filePreviewHtml += `
+                            <div class="fileAttachment">
+                                <div class="fileIcon">📎</div>
+                                <div class="fileInfo">
+                                    <span class="fileName">${fileName}</span>
+                                    <a href="${file.url}" download class="downloadBtn">Tải xuống</a>
+                                </div>
+                            </div>`;
+                    }
+                });
             }
 
+            // ------ Render full message ------
             messageDiv.innerHTML = `
-                ${message.sender === currentFriendId ? 
-                    `<img src="${friendAvatar}" alt="${friendName}" class="avatar">` : 
-                    `<img src="" alt="Bạn" style="display: none;">`}
+                ${
+                    message.sender === currentFriendId
+                        ? `<img src="${friendAvatar}" alt="${friendName}" class="avatar">`
+                        : `<img src="" style="display:none;">`
+                }
                 <div class="msgContent">
-                    <div class="messageContent">
-                        <p>${message.content.replace(/\n/g, '<br>')}</p>
-                    </div>
+                    ${
+                        message.content
+                            ? `<div class="messageContent"><p>${message.content.replace(/\n/g, "<br>")}</p></div>`
+                            : ""
+                    }
                     ${filePreviewHtml}
                 </div>
             `;
@@ -580,12 +600,11 @@ function loadOlderMessages() {
         });
 
         chatArea.insertBefore(fragment, chatArea.firstChild);
+        currentPage++;
 
-        currentPage++; 
-        
     })
     .catch(error => {
-        console.error('Lỗi khi lấy tin nhắn cũ:', error);
+        console.error("Lỗi khi lấy tin nhắn cũ:", error);
     })
     .finally(() => {
         isLoadingMessages = false;
