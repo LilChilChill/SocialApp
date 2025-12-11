@@ -1,10 +1,11 @@
-require('dotenv').config(); 
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const http = require('http');
 const { Server } = require('socket.io');
+
 const userRoute = require('./Routes/userRoute');
 const friendsRoute = require('./Routes/friendRoute');
 const feedRoute = require('./Routes/feedRoute');
@@ -14,7 +15,7 @@ const socketHandler = require('./socket.js');
 const app = express();
 module.exports = app;
 
-// const allowedOrigins = ["https://chixap.netlify.app", "http://localhost:5173"];
+// Các domain FE được phép gọi API
 const allowedOrigins = [
     "https://chi404.id.vn",
     "https://www.chi404.id.vn",
@@ -24,66 +25,69 @@ const allowedOrigins = [
     "http://localhost:5173"
 ];
 
-// Middleware CORS
+// ⭐ CORS CHUẨN KHÔNG LỖI
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        if (!origin) {
+            // Cho phép request từ Postman, mobile app
+            return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS: " + origin));
+    },
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
 
-// Routes
+// API routes
 app.use("/api/users", userRoute);
 app.use("/api/friends", friendsRoute);
 app.use("/api/feeds", feedRoute);
 
-// Kiểm tra API hoạt động
+// Test server
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });
 
-// Xử lý preflight request OPTIONS (nếu cần)
-app.options("*", (req, res) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.header("Access-Control-Allow-Origin", origin);
-        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    }
-    res.sendStatus(200);
-});
+// ⚠️ XOÁ HOÀN TOÀN phần app.options("*") vì gây lỗi CORS
+// Không cần nữa — cors middleware đã xử lý hoàn chỉnh
 
 const server = http.createServer(app);
 
-// Cấu hình CORS cho Socket.IO
+// ⭐ SOCKET.IO CORS CHUẨN KHÔNG LỖI
 const io = new Server(server, {
     cors: {
         origin: allowedOrigins,
+        credentials: true,
         methods: ["GET", "POST"]
     }
 });
 
+// MongoDB connect
 const port = process.env.PORT || 5001;
 const uri = process.env.ATLAS_URI;
 
 if (uri) {
     mongoose.connect(uri)
-        .then(() => console.log('MongoDB connected successfully'))
-        .catch((error) => console.error("MongoDB connection error:", error.message));
+        .then(() => console.log("MongoDB connected successfully"))
+        .catch(err => console.error("MongoDB connection error:", err.message));
 } else {
-    console.warn("Warning: ATLAS_URI is not set. Database connection skipped.");
+    console.warn("Warning: ATLAS_URI is not set");
 }
 
-// Truyền Socket.IO vào route tin nhắn
+// Message routes cần Socket.IO
 app.use("/api/messages", messageRoute(io));
 
-// Khởi chạy socket handler
+// Khởi chạy socket
 socketHandler(io);
 
 server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
-const link = process.env.API;
-console.log("API URL:", link);
+console.log("API URL:", process.env.API);
