@@ -88,23 +88,25 @@
 // const link = process.env.API;
 // console.log("API URL:", link);
 
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const http = require("http");
-const { Server } = require("socket.io");
+require('dotenv').config();
 
-const userRoute = require("./Routes/userRoute");
-const friendsRoute = require("./Routes/friendRoute");
-const feedRoute = require("./Routes/feedRoute");
-const messageRoute = require("./Routes/messageRoute");
-const socketHandler = require("./socket.js");
+const express = require('express');
+const mongoose = require('mongoose');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const userRoute = require('./Routes/userRoute');
+const friendsRoute = require('./Routes/friendRoute');
+const feedRoute = require('./Routes/feedRoute');
+const messageRoute = require('./Routes/messageRoute');
+const socketHandler = require('./socket.js');
 
 const app = express();
+module.exports = app;
 
-// ----------------------
-// GLOBAL CORS FIX
-// ----------------------
+// ================================
+// 🔥 GLOBAL CORS FIX – MUST BE TOP
+// ================================
 const allowedOrigins = [
   "https://chi404.id.vn",
   "https://www.chi404.id.vn",
@@ -114,7 +116,7 @@ const allowedOrigins = [
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  
+
   if (!origin || allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin || "*");
     res.header("Access-Control-Allow-Credentials", "true");
@@ -122,29 +124,57 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   }
 
+  // Trả lời OPTIONS ngay lập tức (preflight)
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
 
   next();
 });
-// ----------------------
+// =================================
 
+
+// JSON Middleware
 app.use(express.json());
 
+// API routes
 app.use("/api/users", userRoute);
 app.use("/api/friends", friendsRoute);
 app.use("/api/feeds", feedRoute);
-app.use("/api/messages", messageRoute(io));
 
-app.get("/", (req, res) => res.send("Hello world"));
-
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: allowedOrigins, credentials: true }
+// Test route
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
 });
 
+// HTTP Server
+const server = http.createServer(app);
+
+// Socket.IO setup (CORS included)
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    credentials: true
+  }
+});
+
+// MongoDB connect
+const port = process.env.PORT || 5001;
+const uri = process.env.ATLAS_URI;
+
+mongoose.connect(uri)
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch(err => console.error("MongoDB connection error:", err.message));
+
+// Message routes cần io
+app.use("/api/messages", messageRoute(io));
+
+// Start WebSocket
 socketHandler(io);
 
-server.listen(process.env.PORT || 5001);
+// Start server
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
+console.log("API URL:", process.env.API);
