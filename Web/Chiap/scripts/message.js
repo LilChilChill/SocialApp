@@ -404,46 +404,79 @@ document.getElementById('sendButton').addEventListener('click', async () => {
 });
 
 // ---------- Nhận tin nhắn từ socket ----------
-socket.on('receiveMessage', (messageData) => {
+socket.on("receiveMessage", (messageData) => {
     if (!currentFriendId) return;
-    const chatArea = document.getElementById('chatArea');
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', messageData.sender === currentFriendId ? 'received' : 'sent');
 
-    const avatarUrl = messageData.sender === currentFriendId ? friendAvatar : '../img/default-avatar.png';
-    let fileElement = '';
+    const chatArea = document.getElementById("chatArea");
+    const messageDiv = document.createElement("div");
 
-    if (messageData.fileUrl) {
-        if (messageData.fileType.startsWith('image/')) {
-            fileElement = `<img src="${messageData.fileUrl}" class="imgContent" onclick="openImage('${messageData.fileUrl}')"/>`;
-        } else if (messageData.fileType.startsWith('video/')) {
-            fileElement = `<video controls class="videoContent"><source src="${messageData.fileUrl}" type="${messageData.fileType}"></video>`;
-        } else if (messageData.fileType === 'application/pdf') {
-            fileElement = `<a href="${messageData.fileUrl}" target="_blank" class="fileLink">📄 ${messageData.fileName || 'PDF'}</a>`;
-        } else {
-            fileElement = `
-            <div class="fileAttachment">
-                <div class="fileIcon">📎</div>
-                <div class="fileInfo">
-                    <span class="fileName">${messageData.fileName || 'Tệp đính kèm'}</span>
-                    <a href="${messageData.fileUrl}" download class="downloadBtn">Tải xuống</a>
-                </div>
-            </div>`;
-        }
+    messageDiv.classList.add(
+        "message",
+        messageData.sender === currentFriendId ? "received" : "sent"
+    );
+
+    const avatarUrl =
+        messageData.sender === currentFriendId
+            ? friendAvatar
+            : "../img/default-avatar.png";
+
+    let fileHtml = "";
+
+    // ---------- XỬ LÝ MẢNG FILES ----------
+    if (messageData.files && messageData.files.length > 0) {
+        messageData.files.forEach((file) => {
+            const url = file.fileUrl;
+            const type = file.fileType;
+
+            if (type.startsWith("image/")) {
+                fileHtml += `
+                    <img src="${url}" 
+                         class="imgContent" 
+                         onclick="openImage('${url}')"/>`;
+            }
+            else if (type.startsWith("video/")) {
+                fileHtml += `
+                    <video controls class="videoContent">
+                        <source src="${url}" type="${type}">
+                    </video>`;
+            }
+            else if (type === "application/pdf") {
+                fileHtml += `
+                    <a href="${url}" target="_blank" class="fileLink">
+                        📄 ${file.fileName || "PDF"}
+                    </a>`;
+            }
+            else {
+                fileHtml += `
+                    <div class="fileAttachment">
+                        <div class="fileIcon">📎</div>
+                        <div class="fileInfo">
+                            <span class="fileName">${file.fileName || "Tệp"}</span>
+                            <a href="${url}" download class="downloadBtn">Tải xuống</a>
+                        </div>
+                    </div>`;
+            }
+        });
     }
 
     messageDiv.innerHTML = `
-        <img src="${avatarUrl}" alt="${messageData.sender === currentFriendId ? friendName : 'Bạn'}" class="avatar">
+        <img src="${avatarUrl}" class="avatar">
         <div class="msgContent">
-            ${messageData.content ? `<div class="messageContent"><p>${messageData.content.replace(/\n/g, '<br>')}</p></div>` : ''}
-            ${fileElement}
+            ${
+                messageData.content
+                    ? `<div class="messageContent"><p>${messageData.content.replace(
+                          /\n/g,
+                          "<br>"
+                      )}</p></div>`
+                    : ""
+            }
+            ${fileHtml}
         </div>
     `;
 
     chatArea.appendChild(messageDiv);
     chatArea.scrollTop = chatArea.scrollHeight;
 });
-
 
 
 

@@ -38,14 +38,6 @@ const sendMessage = (io) => async (req, res) => {
 
         await messageData.save();
 
-        // io.to(receiverId).emit('receiveMessage', {
-        //     senderId,
-        //     receiverId,
-        //     content: messageData.content,
-        //     files: messageData.files,
-        //     date
-        // });
-
         io.to(receiverId).emit("receiveMessage", {
             sender: senderId,
             receiver: receiverId,
@@ -56,8 +48,7 @@ const sendMessage = (io) => async (req, res) => {
                 fileType: f.mimeType,
                 fileName: f.fileName
             }))
-        });
-        
+        });        
 
         res.status(200).json({ message: 'Tin nhắn đã được gửi thành công', messageData });
     } catch (error) {
