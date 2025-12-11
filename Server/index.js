@@ -25,6 +25,10 @@ const allowedOrigins = [
     "http://localhost:5173"
 ];
 
+
+// ĐẢM BẢO OPTIONS luôn trả về 200
+app.options("*", cors());
+
 app.use(cors({
     origin: function (origin, callback) {
         // Cho phép request không có origin (OPTIONS, mobile, Postman)
@@ -39,8 +43,6 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// ĐẢM BẢO OPTIONS luôn trả về 200
-app.options("*", cors());
 
 app.use(express.json());
 
