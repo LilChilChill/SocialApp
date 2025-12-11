@@ -16,33 +16,56 @@ const app = express();
 module.exports = app;
 
 // Các domain FE được phép gọi API
+// --- CORS robust handler (place this BEFORE routes) ---
 const allowedOrigins = [
-    "https://chi404.id.vn",
-    "https://www.chi404.id.vn",
-    "https://chixap.netlify.app",
-    "http://chi404.id.vn",
-    "http://www.chi404.id.vn",
-    "http://localhost:5173"
+  "https://chi404.id.vn",
+  "https://www.chi404.id.vn",
+  "https://chixap.netlify.app",
+  "https://chixap.netlify.app/",   // sometimes with trailing slash
+  "http://localhost:5173"
 ];
 
+const corsOptions = {
+  origin: function(origin, callback) {
+    // allow requests with no origin (tools, mobile apps, curl, or same-origin)
+    if (!origin) return callback(null, true);
 
-// ĐẢM BẢO OPTIONS luôn trả về 200
-app.options("*", cors());
+    // if origin exactly matches allowed list -> allow
+    if (allowedOrigins.includes(origin)) return callback(null, true);
 
-app.use(cors({
-    origin: function (origin, callback) {
-        // Cho phép request không có origin (OPTIONS, mobile, Postman)
-        if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        console.log("⛔ Blocked by CORS:", origin);
-        return callback(new Error("Not allowed by CORS"), false);
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+    // otherwise block
+    console.log("⛔ Blocked by CORS origin:", origin);
+    return callback(new Error("Not allowed by CORS"), false);
+  },
+  credentials: true,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
+};
 
+// ensure preflight OPTIONS for all routes ALWAYS returns proper headers
+app.options('*', (req, res) => {
+  const origin = req.headers.origin || '*';
+  // if the request's origin is allowed, echo it back; otherwise use wildcard
+  const allowOrigin = (!origin || allowedOrigins.includes(origin)) ? origin || '*' : '*';
+  res.header('Access-Control-Allow-Origin', allowOrigin);
+  res.header('Access-Control-Allow-Methods', corsOptions.methods.join(','));
+  res.header('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(','));
+  res.header('Access-Control-Allow-Credentials', 'true');
+  return res.sendStatus(204);
+});
+
+// apply CORS middleware for normal requests
+app.use((req, res, next) => {
+  cors(corsOptions)(req, res, (err) => {
+    // if CORS rejected, we still want to send a 403 instead of hanging
+    if (err) {
+      console.warn('CORS error:', err.message);
+      return res.status(403).send('CORS Forbidden');
+    }
+    next();
+  });
+});
+// --- end CORS handler ---
 
 app.use(express.json());
 
