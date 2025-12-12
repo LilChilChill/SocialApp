@@ -1,6 +1,12 @@
 import "../styles/profile.css";
 import "../styles/addFriend.css";
 import "../styles/alert.css";
+import "../styles/home.css";
+import "../styles/infoSettings.css";
+import "../styles/loading.css";
+import "../styles/message.css";
+import "../styles/settings.css";
+import "../styles/user.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 document.title = "Chiap";
