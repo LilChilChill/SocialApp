@@ -8,10 +8,18 @@
 // import "../styles/settings.css";
 // import "../styles/user.css";
 
+// Log ngay lập tức - trước mọi thứ khác
+console.log('=== PROFILE.JS STARTING ===');
+console.log('Timestamp:', new Date().toISOString());
+console.log('Window location:', window.location.href);
+
+// Wrap toàn bộ code trong try-catch để đảm bảo không bị dừng bởi lỗi từ các file khác
+try {
 const API_URL = import.meta.env.VITE_API_URL || '';
 document.title = "Chiap";
 
-// Debug logging
+// Debug logging - chạy ngay lập tức để đảm bảo log được hiển thị
+console.log('=== PROFILE.JS LOADED ===');
 console.log('Profile page loaded');
 console.log('API_URL:', API_URL);
 console.log('Environment:', import.meta.env.MODE);
@@ -651,3 +659,18 @@ const deletePost = async (postId) => {
         console.error('Lỗi:', error);
     }
 };
+
+} catch (error) {
+    // Catch mọi lỗi trong profile.js để đảm bảo code không bị dừng
+    console.error('=== CRITICAL ERROR IN PROFILE.JS ===');
+    console.error('Error:', error);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    
+    // Hiển thị lỗi cho user nếu có toast element
+    const toast = document.getElementById("toast");
+    if (toast) {
+        toast.textContent = 'Có lỗi xảy ra. Vui lòng kiểm tra console.';
+        toast.classList.add("show");
+    }
+}

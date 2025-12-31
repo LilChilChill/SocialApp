@@ -105,9 +105,22 @@
   </div> -->
   <div id="toast" class="toast"></div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <!-- Load profile.js đầu tiên để đảm bảo nó chạy được -->
   <script type="module" src="/src/scripts/profile.js"></script>
-  <script type="module" src="/src/scripts/function.js"></script>
-  <script type="module" src="/src/scripts/settings.js"></script>
+  <!-- Load các file khác sau, nếu có lỗi sẽ không ảnh hưởng profile.js -->
+  <script type="module">
+    // Wrap các file khác trong try-catch để không ảnh hưởng profile.js
+    try {
+      import('/src/scripts/function.js').catch(err => console.warn('function.js load error:', err));
+    } catch (e) {
+      console.warn('Error loading function.js:', e);
+    }
+    try {
+      import('/src/scripts/settings.js').catch(err => console.warn('settings.js load error:', err));
+    } catch (e) {
+      console.warn('Error loading settings.js:', e);
+    }
+  </script>
 
 </body>
 </html>

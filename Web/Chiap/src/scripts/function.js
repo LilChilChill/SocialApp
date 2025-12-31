@@ -549,21 +549,26 @@ document.addEventListener("keydown", (e) => {
 
 
 //-------------------------------MESSAGE FUNCTION
-document.getElementById('fileInput').addEventListener('change', function(event) {
-    const fileInput = event.target;
-    selectedFile = fileInput.files[0]; 
+const fileInputElement = document.getElementById('fileInput');
+if (fileInputElement) {
+    fileInputElement.addEventListener('change', function(event) {
+        const fileInput = event.target;
+        selectedFile = fileInput.files[0]; 
 
-    const chatInput = document.getElementById('inputPreview');
-    chatInput.innerHTML = ''; 
+        const chatInput = document.getElementById('inputPreview');
+        if (chatInput) {
+            chatInput.innerHTML = ''; 
 
-    if (selectedFile) {
-        if (selectedFile.type.startsWith('image/')) {
-            chatInput.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" alt="Selected File" class="imgPreview"/>`;
-        } else {
-            chatInput.innerHTML = `<p>${selectedFile.name}</p>`;
+            if (selectedFile) {
+                if (selectedFile.type.startsWith('image/')) {
+                    chatInput.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" alt="Selected File" class="imgPreview"/>`;
+                } else {
+                    chatInput.innerHTML = `<p>${selectedFile.name}</p>`;
+                }
+            }
         }
-    }
-});
+    });
+}
 
 async function compressImage(file, maxSizeMB = 25, quality = 0.8) { 
     if (file.size / 1024 / 1024 <= maxSizeMB) {
