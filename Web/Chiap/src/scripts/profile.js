@@ -1,3 +1,4 @@
+const IS_PROFILE_PAGE = true;
 
 // Log ngay lập tức - trước mọi thứ khác
 console.log('=== PROFILE.JS STARTING ===');
@@ -150,6 +151,11 @@ const displayUserInfo = (user) => {
 // Đợi DOM sẵn sàng trước khi chạy
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        const shareModal = document.getElementById('shareModal');
+            if (shareModal) {
+                shareModal.classList.add('hidden');
+            }
+            currentSharePostId = null;
         console.log('DOMContentLoaded fired');
         getUserInfo();
     });
@@ -225,6 +231,60 @@ const loadProfilePosts = async () => {
     }
 };
 
+// Hàm helper để render bài viết gốc được share
+function renderSharedPost(originalPost) {
+    if (!originalPost || !originalPost._id) return '';
+    
+    const originalAuthor = originalPost.author || {};
+    const originalAvatarUrl = originalAuthor.avatar ? originalAuthor.avatar : '/img/profile-default.png';
+    const originalAuthorName = originalAuthor.name || 'Người dùng ẩn danh';
+    const originalAuthorId = originalAuthor._id || '';
+    
+    let originalDocuments = originalPost.files ? originalPost.files.filter(file => file.fileType === 'document') : [];
+    let originalImages = originalPost.files ? originalPost.files.filter(file => file.fileType === 'image') : [];
+    let originalVideos = originalPost.files ? originalPost.files.filter(file => file.fileType === 'video') : [];
+    
+    let originalFilesHtml = '';
+    if (originalDocuments.length > 0) {
+        originalFilesHtml += originalDocuments.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
+    }
+    if (originalImages.length > 0) {
+        let gridClass = originalImages.length === 2 ? 'two-images' : originalImages.length >= 3 ? 'three-four-images' : '';
+        originalFilesHtml += `<div class="post-images-grid ${gridClass}">`;
+        originalImages.slice(0, 4).forEach((file, index) => {
+            if (index === 3 && originalImages.length > 4) {
+                originalFilesHtml += `<div class="post-image-overlay"><img src="${file.data}" alt="Hình ảnh" class="post-image"><span>+${originalImages.length - 4}</span></div>`;
+            } else {
+                originalFilesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+            }
+        });
+        originalFilesHtml += `</div>`;
+    }
+    if (originalVideos.length > 0) {
+        originalFilesHtml += originalVideos.length === 1
+            ? `<video controls class="post-video"><source src="${originalVideos[0].data}" type="${originalVideos[0].contentType || 'video/mp4'}"></video>`
+            : '<div class="post-videos-grid">' + originalVideos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType || 'video/mp4'}"></video>`).join('') + '</div>';
+    }
+    
+    const originalPostTime = originalPost.createdAt ? new Date(originalPost.createdAt).toLocaleString() : '';
+    
+    return `
+        <div class="shared-post-container">
+            <div class="shared-post-header">
+                <img src="${originalAvatarUrl}" alt="Avatar" class="shared-post-avatar" ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')"` : ''}>
+                <div class="shared-post-info">
+                    <h5 ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')" style="cursor: pointer;"` : ''}>${originalAuthorName}</h5>
+                    ${originalPostTime ? `<span class="shared-post-time">${originalPostTime}</span>` : ''}
+                </div>
+            </div>
+            <div class="shared-post-content">
+                ${originalPost.title ? `<p class="shared-post-title">${originalPost.title.replace(/\n/g, '<br>')}</p>` : ''}
+                ${originalFilesHtml ? `<div class="shared-post-files">${originalFilesHtml}</div>` : ''}
+            </div>
+        </div>
+    `;
+}
+
 //Hiển thị bài đăng
 const displayPosts = (posts) => {
     console.log('displayPosts called with', posts.length, 'posts');
@@ -251,11 +311,17 @@ const displayPosts = (posts) => {
         const likeClass = isLiked ? 'fa-solid' : 'fa-regular'; 
         const likedClass = isLiked ? 'liked' : ''; 
 
-        let documents = post.files.filter(file => file.fileType === 'document');
-            let images = post.files.filter(file => file.fileType === 'image');
-            let videos = post.files.filter(file => file.fileType === 'video');
+        // Kiểm tra nếu đây là bài viết share
+        const isSharedPost = post.sharedFrom && post.sharedFrom._id;
+        
+        // Nếu là bài viết share, không hiển thị files của bài viết share (chỉ hiển thị bài viết gốc)
+        let filesHtml = '';
+        if (!isSharedPost) {
+            let documents = post.files ? post.files.filter(file => file.fileType === 'document') : [];
+            let images = post.files ? post.files.filter(file => file.fileType === 'image') : [];
+            let videos = post.files ? post.files.filter(file => file.fileType === 'video') : [];
 
-            let filesHtml = '<div class="post-files">';
+            filesHtml = '<div class="post-files">';
             if (documents.length > 0) {
                 filesHtml += documents.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
             }
@@ -296,11 +362,15 @@ const displayPosts = (posts) => {
                 }
             }
             filesHtml += '</div>';
-        
+        }
 
             const defaultAvatar = '/img/profile-default.png';
             const avatarUrl = post.author.avatar ? post.author.avatar : defaultAvatar;
             const authorName = post.author.name || 'Người dùng ẩn danh';
+            // Kiểm tra nếu user là chủ bài viết thì không hiển thị nút share
+            const isPostOwner = post.author._id === currentUserId;
+            const shareButtonHtml = '';
+            
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-header-info">
@@ -323,7 +393,7 @@ const displayPosts = (posts) => {
                     <p class="post-title">${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
                     ${post.title && post.title.split(/\r?\n/).length > 5 ? '<button class="toggle-content">Xem thêm</button>' : ''}
                 </div>
-                ${filesHtml}
+                ${isSharedPost ? renderSharedPost(post.sharedFrom) : filesHtml}
                 <div class="post-actions">
                     <button class="like-btn ${likedClass}" data-post-id="${post._id}">
                         <i class="${likeClass} fa-heart"></i> <span class="like-count">${post.likes.length}</span>
@@ -331,6 +401,7 @@ const displayPosts = (posts) => {
                     <button class="comment-btn">
                         <i class="fa-regular fa-comment"></i> <span class="like-count">${post.comments.length}</span>
                     </button>
+                    ${shareButtonHtml}
                 </div>
                 <div class="post-comments">
                     <div class="comment-list">
@@ -396,6 +467,13 @@ const displayPosts = (posts) => {
             }
 
         postsContainer.appendChild(postElement);
+        
+        // Thêm event listener cho share button nếu có
+        // const shareBtn = postElement.querySelector('.share-btn');
+        // if (shareBtn) {
+        //     shareBtn.addEventListener('click', () => openShareModal(post._id, postElement));
+        // }
+        
         const deleteBtn = postElement.querySelector('.delete-post-btn');
 
         if (deleteBtn) {

@@ -213,6 +213,79 @@ body, ul, li, a{
     color: var(--post-content-color);
   }
 
+  /* Shared Post Container - Hiển thị bài viết gốc được share */
+  .shared-post-container {
+    margin: 10px 0;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    background-color: var(--background-color);
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .shared-post-container:hover {
+    background-color: var(--post-comments-color);
+  }
+
+  .shared-post-header {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .shared-post-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .shared-post-info {
+    flex: 1;
+  }
+
+  .shared-post-info h5 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .shared-post-time {
+    font-size: 12px;
+    color: #65676b;
+  }
+
+  .shared-post-content {
+    padding: 0 12px 12px 12px;
+  }
+
+  .shared-post-title {
+    margin: 8px 0;
+    font-size: 15px;
+    color: var(--text-color);
+    line-height: 1.4;
+    word-wrap: break-word;
+  }
+
+  .shared-post-files {
+    margin-top: 8px;
+  }
+
+  .shared-post-files .post-images-grid,
+  .shared-post-files .post-videos-grid,
+  .shared-post-files .post-video {
+    border-radius: 0;
+  }
+
+  .shared-post-files img,
+  .shared-post-files video {
+    max-width: 100%;
+    height: auto;
+  }
+
   
   .List{
     display: flex;

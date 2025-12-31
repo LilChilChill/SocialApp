@@ -66,6 +66,7 @@ const postSchema = new mongoose.Schema({
         }
     ],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    shares: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     sharedFrom: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Post', 
