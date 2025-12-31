@@ -11,10 +11,24 @@
 const API_URL = import.meta.env.VITE_API_URL || '';
 document.title = "Chiap";
 
+// Debug logging
+console.log('Profile page loaded');
+console.log('API_URL:', API_URL);
+console.log('Environment:', import.meta.env.MODE);
+console.log('All env vars:', import.meta.env);
+
 // User functions
 const userInfoContainer = document.getElementById('userInfo');
 const postUser = document.getElementById('post-user');
 let currentUser = {};
+
+// Kiểm tra các element có tồn tại không
+if (!userInfoContainer) {
+    console.error('userInfoContainer không tìm thấy!');
+}
+if (!postUser) {
+    console.error('postUser không tìm thấy!');
+}
 
 function showToast(message) {
   const toast = document.getElementById("toast");
@@ -22,20 +36,26 @@ function showToast(message) {
     toast.textContent = message;
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
+  } else {
+    console.warn('Toast element không tìm thấy, message:', message);
   }
 }
 
 // Kiểm tra API_URL
 if (!API_URL) {
     console.error('VITE_API_URL is not defined!');
+    console.error('Available env vars:', Object.keys(import.meta.env));
     showToast('Lỗi cấu hình: API URL không được thiết lập.');
 }
 
 
 const getUserInfo = async () => {
+    console.log('getUserInfo called');
     const token = localStorage.getItem('token');
+    console.log('Token exists:', !!token);
 
     if (!token) {
+        console.warn('No token found');
         showToast('Vui lòng đăng nhập trước khi truy cập thông tin.');
         setTimeout(() => {
             window.location.href = window.location.origin;
@@ -45,39 +65,72 @@ const getUserInfo = async () => {
 
     if (!API_URL) {
         console.error('API_URL không được thiết lập');
-        showToast('Lỗi: Không thể kết nối đến server.');
+        console.error('Current API_URL value:', API_URL);
+        showToast('Lỗi: Không thể kết nối đến server. Vui lòng kiểm tra cấu hình.');
         return;
     }
 
+    const profileUrl = `${API_URL}/api/users/profile`;
+    console.log('Fetching profile from:', profileUrl);
+
     try {
-        const res = await fetch(`${API_URL}/api/users/profile`, {
+        const res = await fetch(profileUrl, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
+        console.log('Profile response status:', res.status);
+        console.log('Profile response ok:', res.ok);
+
         if (res.ok) {
             currentUser = await res.json();
+            console.log('User data received:', currentUser);
             displayUserInfo(currentUser);
         } else {
             const errorMsg = await res.json().catch(() => ({ message: 'Lỗi không xác định' }));
+            console.error('Profile fetch failed:', errorMsg);
             showToast(errorMsg.message || 'Không thể lấy thông tin người dùng.');
             setTimeout(() => {
                 window.location.href = window.location.origin;
             }, 2000);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching profile:', error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
         showToast('Lỗi kết nối. Vui lòng kiểm tra lại.');
     }
 };
 
 const displayUserInfo = (user) => {
+    console.log('displayUserInfo called with:', user);
+    
+    if (!user || !user._id) {
+        console.error('Invalid user data:', user);
+        return;
+    }
+    
     localStorage.setItem('userId', user._id);
+    console.log('userId saved to localStorage:', user._id);
+    
     // Sử dụng đường dẫn tuyệt đối hoặc đường dẫn từ public folder
     const defaultAvatar = '/img/profile-default.png';
     const avatarUrl = user.avatar ? user.avatar : defaultAvatar;
+
+    if (!userInfoContainer) {
+        console.error('userInfoContainer is null!');
+        return;
+    }
+    
+    if (!postUser) {
+        console.error('postUser is null!');
+        return;
+    }
 
     userInfoContainer.innerHTML = `
         <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000" onerror="this.src='${defaultAvatar}'">
@@ -90,11 +143,21 @@ const displayUserInfo = (user) => {
         </div>
     `;
     
+    console.log('User info displayed, loading posts...');
     // Load posts sau khi đã có userId
     loadProfilePosts();
 };
 
-getUserInfo();
+// Đợi DOM sẵn sàng trước khi chạy
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOMContentLoaded fired');
+        getUserInfo();
+    });
+} else {
+    console.log('DOM already ready');
+    getUserInfo();
+}
 
 const postsContainer = document.getElementById('posts');
 const postButton = document.getElementById('postButton');
@@ -102,10 +165,21 @@ const postContent = document.getElementById('postContent');
 const postStatus = document.getElementById('postStatus');
 const postFiles = document.getElementById('postImage');
 
+// Kiểm tra các element
+console.log('Elements check:', {
+    postsContainer: !!postsContainer,
+    postButton: !!postButton,
+    postContent: !!postContent,
+    postStatus: !!postStatus,
+    postFiles: !!postFiles
+});
+
 const API_BASE_URL = `${API_URL}/api/feeds/posts`;
 //Tải post
 const loadProfilePosts = async () => {
+    console.log('loadProfilePosts called');
     const userId = localStorage.getItem('userId');
+    console.log('Current userId:', userId);
     
     if (!userId) {
         console.warn('userId chưa có, đợi getUserInfo hoàn thành...');
@@ -118,28 +192,59 @@ const loadProfilePosts = async () => {
         return;
     }
 
+    if (!postsContainer) {
+        console.error('postsContainer không tìm thấy!');
+        return;
+    }
+
+    const postsUrl = `${API_BASE_URL}?userId=${userId}`;
+    console.log('Fetching posts from:', postsUrl);
+
     try {
-        const res = await fetch(`${API_BASE_URL}?userId=${userId}`);
+        const res = await fetch(postsUrl);
+        console.log('Posts response status:', res.status);
+        console.log('Posts response ok:', res.ok);
 
         if (res.ok) {
             const posts = await res.json();
+            console.log('Posts received:', posts.length, 'posts');
             displayPosts(posts);
         } else {
             const errorData = await res.json().catch(() => ({}));
             console.error('Không thể tải bài viết:', errorData.message || res.statusText);
+            console.error('Response status:', res.status);
             showToast('Không thể tải bài viết. Vui lòng thử lại.');
         }
     } catch (error) {
         console.error('Lỗi khi tải bài viết:', error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
         showToast('Lỗi kết nối. Vui lòng kiểm tra lại.');
     }
 };
 
 //Hiển thị bài đăng
 const displayPosts = (posts) => {
+    console.log('displayPosts called with', posts.length, 'posts');
+    
+    if (!postsContainer) {
+        console.error('postsContainer is null in displayPosts!');
+        return;
+    }
+    
+    if (!Array.isArray(posts)) {
+        console.error('Posts is not an array:', posts);
+        return;
+    }
     
     postsContainer.innerHTML = '';
-    posts.forEach((post) => {
+    console.log('Cleared postsContainer, rendering', posts.length, 'posts');
+    
+    posts.forEach((post, index) => {
+        console.log(`Rendering post ${index + 1}/${posts.length}:`, post._id);
         const postElement = document.createElement('div');
         postElement.className = 'post';
         const currentUserId = localStorage.getItem('userId'); 
