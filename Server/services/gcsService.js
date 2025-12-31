@@ -161,17 +161,16 @@ const { v4: uuidv4 } = require('uuid');
 
 let storage;
 
-// Nếu biến môi trường GOOGLE_APPLICATION_CREDENTIALS_JSON tồn tại → dùng trên Render
-if (process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON) {
+if (process.env.GOOGLE_SERVICE_ACCOUNT) {
   storage = new Storage({
-    credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON)
+    credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT)
   });
 } else {
-  // Chạy local → dùng file JSON
   storage = new Storage({
     keyFilename: path.join(__dirname, '../service-account.json')
   });
 }
+
 
 const bucketName = process.env.GOOGLE_CLOUD_BUCKET;
 const bucket = storage.bucket(bucketName);
