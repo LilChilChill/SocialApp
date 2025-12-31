@@ -1,12 +1,3 @@
-// import "../styles/profile.css";
-// import "../styles/addFriend.css";
-// import "../styles/alert.css";
-// import "../styles/home.css";
-// import "../styles/infoSettings.css";
-// import "../styles/loading.css";
-// import "../styles/message.css";
-// import "../styles/settings.css";
-// import "../styles/user.css";
 
 // Log ngay lập tức - trước mọi thứ khác
 console.log('=== PROFILE.JS STARTING ===');

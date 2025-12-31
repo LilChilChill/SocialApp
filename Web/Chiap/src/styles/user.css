@@ -102,6 +102,7 @@ body, ul, li, a{
     position: relative;
     left: 10%;
     top: 70px;
+    z-index: 1;
   }
   
   .sidebar ul li {

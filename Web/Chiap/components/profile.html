@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="/src/styles/profile.css">
-  <!-- <link rel="stylesheet" href="/src/styles/addFriend.css"> -->
+  <link rel="stylesheet" href="/src/styles/addFriend.css">
+  <link rel="stylesheet" href="/src/styles/user.css">
   
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -105,20 +106,17 @@
   </div> -->
   <div id="toast" class="toast"></div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <!-- Load profile.js đầu tiên để đảm bảo nó chạy được -->
+  <!-- Load settings.js đầu tiên để apply theme ngay lập tức -->
+  <script type="module" src="/src/scripts/settings.js"></script>
+  <!-- Load profile.js sau -->
   <script type="module" src="/src/scripts/profile.js"></script>
-  <!-- Load các file khác sau, nếu có lỗi sẽ không ảnh hưởng profile.js -->
+  <!-- Load các file khác sau, nếu có lỗi sẽ không ảnh hưởng -->
   <script type="module">
-    // Wrap các file khác trong try-catch để không ảnh hưởng profile.js
+    // Wrap các file khác trong try-catch để không ảnh hưởng
     try {
       import('/src/scripts/function.js').catch(err => console.warn('function.js load error:', err));
     } catch (e) {
       console.warn('Error loading function.js:', e);
-    }
-    try {
-      import('/src/scripts/settings.js').catch(err => console.warn('settings.js load error:', err));
-    } catch (e) {
-      console.warn('Error loading settings.js:', e);
     }
   </script>
 

@@ -1,5 +1,22 @@
 import { LightTheme, DarkTheme, applyTheme } from './theme.js';
 
+// Apply theme ngay khi script load - không cần đợi DOMContentLoaded
+(function initTheme() {
+    try {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            applyTheme(DarkTheme);
+        } else {
+            applyTheme(LightTheme);
+        }
+        console.log('Theme applied:', savedTheme || 'light (default)');
+    } catch (error) {
+        console.error('Error applying initial theme:', error);
+        // Fallback to light theme
+        applyTheme(LightTheme);
+    }
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
     try {
         const openBtn = document.getElementById("openSettings");
@@ -28,21 +45,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (darkModeToggle) {
-            // Apply theme
-            if (localStorage.getItem("theme") === "dark") {
-                applyTheme(DarkTheme);
-                darkModeToggle.checked = true;
-            } else {
-                applyTheme(LightTheme);
-            }
+            // Set initial state based on current theme
+            const savedTheme = localStorage.getItem("theme");
+            darkModeToggle.checked = savedTheme === "dark";
 
             darkModeToggle.addEventListener("change", function () {
                 if (this.checked) {
                     applyTheme(DarkTheme);
                     localStorage.setItem("theme", "dark");
+                    console.log('Theme changed to: dark');
                 } else {
                     applyTheme(LightTheme);
                     localStorage.setItem("theme", "light");
+                    console.log('Theme changed to: light');
                 }
             });
         }
