@@ -1,16 +1,15 @@
-import "../styles/profile.css";
-import "../styles/addFriend.css";
-import "../styles/alert.css";
-import "../styles/home.css";
-import "../styles/infoSettings.css";
-import "../styles/loading.css";
-import "../styles/message.css";
-import "../styles/settings.css";
-import "../styles/user.css";
+// import "../styles/profile.css";
+// import "../styles/addFriend.css";
+// import "../styles/alert.css";
+// import "../styles/home.css";
+// import "../styles/infoSettings.css";
+// import "../styles/loading.css";
+// import "../styles/message.css";
+// import "../styles/settings.css";
+// import "../styles/user.css";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || '';
 document.title = "Chiap";
-
 
 // User functions
 const userInfoContainer = document.getElementById('userInfo');
@@ -19,9 +18,17 @@ let currentUser = {};
 
 function showToast(message) {
   const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
+  if (toast) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+  }
+}
+
+// Kiểm tra API_URL
+if (!API_URL) {
+    console.error('VITE_API_URL is not defined!');
+    showToast('Lỗi cấu hình: API URL không được thiết lập.');
 }
 
 
@@ -33,6 +40,12 @@ const getUserInfo = async () => {
         setTimeout(() => {
             window.location.href = window.location.origin;
         }, 2000);
+        return;
+    }
+
+    if (!API_URL) {
+        console.error('API_URL không được thiết lập');
+        showToast('Lỗi: Không thể kết nối đến server.');
         return;
     }
 
@@ -48,7 +61,7 @@ const getUserInfo = async () => {
             currentUser = await res.json();
             displayUserInfo(currentUser);
         } else {
-            const errorMsg = await res.json();
+            const errorMsg = await res.json().catch(() => ({ message: 'Lỗi không xác định' }));
             showToast(errorMsg.message || 'Không thể lấy thông tin người dùng.');
             setTimeout(() => {
                 window.location.href = window.location.origin;
@@ -56,29 +69,29 @@ const getUserInfo = async () => {
         }
     } catch (error) {
         console.error('Error:', error);
+        showToast('Lỗi kết nối. Vui lòng kiểm tra lại.');
     }
 };
 
 const displayUserInfo = (user) => {
     localStorage.setItem('userId', user._id);
-    const avatarUrl = user.avatar ? user.avatar : '../img/profile-default.png';
+    // Sử dụng đường dẫn tuyệt đối hoặc đường dẫn từ public folder
+    const defaultAvatar = '/img/profile-default.png';
+    const avatarUrl = user.avatar ? user.avatar : defaultAvatar;
 
     userInfoContainer.innerHTML = `
-        <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000">
+        <img id="userAvatar" src="${avatarUrl}" alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%; border-color: #000" onerror="this.src='${defaultAvatar}'">
         <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
     `;
     postUser.innerHTML = `
-        <img id="postUser" src="${avatarUrl}" alt="Avatar" >
+        <img id="postUser" src="${avatarUrl}" alt="Avatar" onerror="this.src='${defaultAvatar}'">
         <div class="post-user-info">
             <p><strong>${user.name || 'Chưa có thông tin'}</strong></p>
-            <select id="postStatus" style="margin-bottom: 10px" hidden>
-                <option value="public">Công khai</option>
-                <option value="private">Riêng tư</option>
-                <option value="friends">Bạn bè</option>
-            </select>
         </div>
-    `
-
+    `;
+    
+    // Load posts sau khi đã có userId
+    loadProfilePosts();
 };
 
 getUserInfo();
@@ -93,17 +106,34 @@ const API_BASE_URL = `${API_URL}/api/feeds/posts`;
 //Tải post
 const loadProfilePosts = async () => {
     const userId = localStorage.getItem('userId');
-    const res = await fetch(`${API_BASE_URL}?userId=${userId}`);
+    
+    if (!userId) {
+        console.warn('userId chưa có, đợi getUserInfo hoàn thành...');
+        return;
+    }
+    
+    if (!API_URL) {
+        console.error('API_URL không được thiết lập');
+        showToast('Lỗi: Không thể kết nối đến server.');
+        return;
+    }
 
-    if (res.ok) {
-        const posts = await res.json();
-        displayPosts(posts);
-    } else {
-        console.error('Không thể tải bài viết.');
+    try {
+        const res = await fetch(`${API_BASE_URL}?userId=${userId}`);
+
+        if (res.ok) {
+            const posts = await res.json();
+            displayPosts(posts);
+        } else {
+            const errorData = await res.json().catch(() => ({}));
+            console.error('Không thể tải bài viết:', errorData.message || res.statusText);
+            showToast('Không thể tải bài viết. Vui lòng thử lại.');
+        }
+    } catch (error) {
+        console.error('Lỗi khi tải bài viết:', error);
+        showToast('Lỗi kết nối. Vui lòng kiểm tra lại.');
     }
 };
-
-document.addEventListener('DOMContentLoaded', loadProfilePosts);
 
 //Hiển thị bài đăng
 const displayPosts = (posts) => {
@@ -164,12 +194,13 @@ const displayPosts = (posts) => {
             filesHtml += '</div>';
         
 
-            const avatarUrl = post.author.avatar ? post.author.avatar : '../img/profile-default.png';
+            const defaultAvatar = '/img/profile-default.png';
+            const avatarUrl = post.author.avatar ? post.author.avatar : defaultAvatar;
             const authorName = post.author.name || 'Người dùng ẩn danh';
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="post-header-info">
-                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar">
+                        <img src="${avatarUrl}" alt="Avatar" class="post-avatar" onerror="this.src='${defaultAvatar}'">
                         <div class="post-info">
                             <h4 onclick="goToProfile('${post.author._id}')">${authorName}</h4>
                             <p onclick="goToProfile('${post.author._id}')"><small>${post.status}</small></p>
@@ -186,7 +217,7 @@ const displayPosts = (posts) => {
                 </div>
                 <div class="post-content">
                     <p class="post-title">${post.title ? post.title.replace(/\n/g, '<br>') : ''}</p>
-                    ${post.title.split(/\r?\n/).length > 5 ? '<button class="toggle-content">Xem thêm</button>' : ''}
+                    ${post.title && post.title.split(/\r?\n/).length > 5 ? '<button class="toggle-content">Xem thêm</button>' : ''}
                 </div>
                 ${filesHtml}
                 <div class="post-actions">
@@ -201,7 +232,7 @@ const displayPosts = (posts) => {
                     <div class="comment-list">
                         ${post.comments.map(comment => `
                             <div class="comment">
-                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '../img/profile-default.png'}" alt="Avatar" class="comment-avatar">
+                                <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '/img/profile-default.png'}" alt="Avatar" class="comment-avatar" onerror="this.src='/img/profile-default.png'">
                                 <div class="comment-content">
                                     <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
                                     <div class="comment-text">${comment.text}</div>
@@ -219,7 +250,7 @@ const displayPosts = (posts) => {
             const postTitle = postElement.querySelector('.post-title');
             const toggleBtn = postElement.querySelector('.toggle-content');
 
-            if (toggleBtn) {
+            if (toggleBtn && post.title) {
                 const lines = post.title.split(/\r?\n/);
                 const truncatedText = lines.slice(0, 2).join('<br>') + '...';
                 postTitle.innerHTML = truncatedText;
@@ -358,7 +389,11 @@ const commentPost = async (postId, text, postElement) => {
             const commentList = postElement.querySelector('.comment-list');
             commentList.innerHTML = data.comments.map(comment => `
                 <div class="comment">
-                    <strong>${comment.user?.name || 'Ẩn danh'}:</strong> ${comment.text}
+                    <img onclick="goToProfile('${comment.user._id}')" src="${comment.user?.avatar || '/img/profile-default.png'}" alt="Avatar" class="comment-avatar" onerror="this.src='/img/profile-default.png'">
+                    <div class="comment-content">
+                        <div class="comment-user" onclick="goToProfile('${comment.user._id}')">${comment.user?.name || 'Ẩn danh'}</div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -367,20 +402,6 @@ const commentPost = async (postId, text, postElement) => {
     }
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".like-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            this.classList.toggle("liked");
-        });
-    });
-
-    document.querySelectorAll(".comment-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const postElement = this.closest(".post-actions").nextElementSibling;
-            postElement.classList.toggle("active");
-        });
-    });
-});
 
 const goToProfile = (userId) => {
     const currentUserId = localStorage.getItem('userId');
@@ -438,6 +459,15 @@ postButton.addEventListener('click', async () => {
         console.error('Error:', error);
     }
 });
+
+// Khai báo biến cho popup edit
+const popup = document.querySelector('.popup');
+const closePopup = document.querySelector('.close-popup');
+const editTitle = document.querySelector('#edit-title');
+const editStatus = document.querySelector('#edit-status');
+const saveEditBtn = document.querySelector('#save-edit-btn');
+let currentPostId = '';
+
 //Cập nhật bài đăng
 postsContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('edit-post-btn')) {
@@ -471,13 +501,6 @@ const updatePost = async (postId, title, status) => {
         showToast('Có lỗi xảy ra.');
     }
 };
-
-const popup = document.querySelector('.popup');
-const closePopup = document.querySelector('.close-popup');
-const editTitle = document.querySelector('#edit-title');
-const editStatus = document.querySelector('#edit-status');
-const saveEditBtn = document.querySelector('#save-edit-btn');
-let currentPostId = '';
 
 closePopup.onclick = () => {
     popup.classList.add('hidden');
@@ -523,12 +546,3 @@ const deletePost = async (postId) => {
         console.error('Lỗi:', error);
     }
 };
-
-postsContainer.addEventListener('click', (e) => {
-    if (e.target.classList.contains('fa-ellipsis-vertical')) {
-        const menu = e.target.nextElementSibling;
-        menu.classList.toggle('hidden');
-    }
-});
-
-document.addEventListener('DOMContentLoaded', loadProfilePosts);
