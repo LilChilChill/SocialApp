@@ -49,54 +49,131 @@ document.addEventListener('DOMContentLoaded', loadPosts);
 // Hàm helper để render bài viết gốc được share
 function renderSharedPost(originalPost) {
     if (!originalPost || !originalPost._id) return '';
-    
+
     const originalAuthor = originalPost.author || {};
-    const originalAvatarUrl = originalAuthor.avatar ? originalAuthor.avatar : '../img/profile-default.png';
+    const originalAvatarUrl = originalAuthor.avatar || '../img/profile-default.png';
     const originalAuthorName = originalAuthor.name || 'Người dùng ẩn danh';
     const originalAuthorId = originalAuthor._id || '';
-    
-    let originalDocuments = originalPost.files ? originalPost.files.filter(file => file.fileType === 'document') : [];
-    let originalImages = originalPost.files ? originalPost.files.filter(file => file.fileType === 'image') : [];
-    let originalVideos = originalPost.files ? originalPost.files.filter(file => file.fileType === 'video') : [];
-    
+
+    const originalFiles = originalPost.files || [];
+    const originalDocuments = originalFiles.filter(f => f.fileType === 'document');
+    const originalImages = originalFiles.filter(f => f.fileType === 'image');
+    const originalVideos = originalFiles.filter(f => f.fileType === 'video');
+
     let originalFilesHtml = '';
+
+    /* ===== DOCUMENTS ===== */
     if (originalDocuments.length > 0) {
-        originalFilesHtml += originalDocuments.map(file => `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`).join('');
+        originalFilesHtml += originalDocuments
+            .map(file =>
+                `<a href="${file.data}" target="_blank" class="post-document">📄 Xem tài liệu</a>`
+            )
+            .join('');
     }
+
+    /* ===== IMAGES ===== */
     if (originalImages.length > 0) {
-        let gridClass = originalImages.length === 2 ? 'two-images' : originalImages.length >= 3 ? 'three-four-images' : '';
-        originalFilesHtml += `<div class="post-images-grid ${gridClass}">`;
+        const gridClass =
+            originalImages.length === 2
+                ? 'two-images'
+                : originalImages.length >= 3
+                ? 'three-four-images'
+                : '';
+
+        originalFilesHtml += `
+        <div class="post-images-grid ${gridClass}"
+             data-images='${JSON.stringify(originalImages.map(f => f.data))}'>
+        `;
+
         originalImages.slice(0, 4).forEach((file, index) => {
             if (index === 3 && originalImages.length > 4) {
-                originalFilesHtml += `<div class="post-image-overlay"><img src="${file.data}" alt="Hình ảnh" class="post-image"><span>+${originalImages.length - 4}</span></div>`;
+                originalFilesHtml += `
+                <div class="post-image-overlay" data-index="${index}">
+                    <img
+                        src="${file.data}"
+                        class="post-image"
+                        data-index="${index}"
+                        alt="Hình ảnh"
+                    >
+                    <span>+${originalImages.length - 4}</span>
+                </div>
+                `;
             } else {
-                originalFilesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                originalFilesHtml += `
+                <img
+                    src="${file.data}"
+                    class="post-image"
+                    data-index="${index}"
+                    alt="Hình ảnh"
+                >
+                `;
             }
         });
+
         originalFilesHtml += `</div>`;
     }
+
+    /* ===== VIDEOS ===== */
     if (originalVideos.length > 0) {
-        originalFilesHtml += originalVideos.length === 1
-            ? `<video controls class="post-video"><source src="${originalVideos[0].data}" type="${originalVideos[0].contentType || 'video/mp4'}"></video>`
-            : '<div class="post-videos-grid">' + originalVideos.map(file => `<video controls class="post-video"><source src="${file.data}" type="${file.contentType || 'video/mp4'}"></video>`).join('') + '</div>';
-    }
-    
-    const originalPostTime = originalPost.createdAt ? new Date(originalPost.createdAt).toLocaleString() : '';
-    
-    return `
-        <div class="shared-post-container">
-            <div class="shared-post-header">
-                <img src="${originalAvatarUrl}" alt="Avatar" class="shared-post-avatar" ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')"` : ''}>
-                <div class="shared-post-info">
-                    <h5 ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')" style="cursor: pointer;"` : ''}>${originalAuthorName}</h5>
-                    ${originalPostTime ? `<span class="shared-post-time">${originalPostTime}</span>` : ''}
-                </div>
+        if (originalVideos.length === 1) {
+            originalFilesHtml += `
+            <video controls class="post-video">
+                <source src="${originalVideos[0].data}" type="${originalVideos[0].contentType || 'video/mp4'}">
+            </video>
+            `;
+        } else {
+            originalFilesHtml += `
+            <div class="post-videos-grid">
+                ${originalVideos
+                    .map(
+                        file => `
+                    <video controls class="post-video">
+                        <source src="${file.data}" type="${file.contentType || 'video/mp4'}">
+                    </video>
+                `
+                    )
+                    .join('')}
             </div>
-            <div class="shared-post-content">
-                ${originalPost.title ? `<p class="shared-post-title">${originalPost.title.replace(/\n/g, '<br>')}</p>` : ''}
-                ${originalFilesHtml ? `<div class="shared-post-files">${originalFilesHtml}</div>` : ''}
+            `;
+        }
+    }
+
+    const originalPostTime = originalPost.createdAt
+        ? new Date(originalPost.createdAt).toLocaleString()
+        : '';
+
+    return `
+    <div class="shared-post-container">
+        <div class="shared-post-header">
+            <img
+                src="${originalAvatarUrl}"
+                alt="Avatar"
+                class="shared-post-avatar"
+                ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')"` : ''}
+            >
+            <div class="shared-post-info">
+                <h5
+                    ${originalAuthorId ? `onclick="goToProfile('${originalAuthorId}')" style="cursor:pointer"` : ''}
+                >
+                    ${originalAuthorName}
+                </h5>
+                ${originalPostTime ? `<span class="shared-post-time">${originalPostTime}</span>` : ''}
             </div>
         </div>
+
+        <div class="shared-post-content">
+            ${
+                originalPost.title
+                    ? `<p class="shared-post-title">${originalPost.title.replace(/\n/g, '<br>')}</p>`
+                    : ''
+            }
+            ${
+                originalFilesHtml
+                    ? `<div class="shared-post-files">${originalFilesHtml}</div>`
+                    : ''
+            }
+        </div>
+    </div>
     `;
 }
 

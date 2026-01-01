@@ -539,24 +539,28 @@ window.prevImage = prevImage;
 window.nextImage = nextImage;  
 
 document.addEventListener("click", (e) => {
-    if (
-      e.target.classList.contains("post-image") ||
-      e.target.closest(".post-image-overlay")
-    ) {
-      const post = e.target.closest(".post");
-      const images = JSON.parse(post.dataset.images);
+    const img = e.target.closest(".post-image");
+    const overlay = e.target.closest(".post-image-overlay");
   
-      const index = Number(
-        e.target.dataset.index ||
-        e.target.closest(".post-image-overlay").dataset.index
-      );
+    if (!img && !overlay) return;
+
+    const container = e.target.closest("[data-images]");
+    if (!container) return;
   
-      openLightbox(images, index);
-    }
+    const images = JSON.parse(container.dataset.images || "[]");
+  
+    const index = Number(
+      img?.dataset.index ??
+      overlay?.dataset.index ??
+      0
+    );
+  
+    openLightbox(images, index);
   
     userList.style.display = "none";
-    searchInput.value = '';
-  });
+    searchInput.value = "";
+});
+  
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") prevImage();
