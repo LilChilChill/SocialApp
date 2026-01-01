@@ -54,7 +54,7 @@ const getPosts = async (req, res) => {
                     select: 'name avatar' 
                 }
             })
-            .populate('shares', 'name avatar')
+            // .populate('shares', 'name avatar')
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));
@@ -155,7 +155,7 @@ const commentPost = async (req, res) => {
 const sharePost = async (req, res) => {
   try {
     const { postId } = req.params;            
-    const { status, caption } = req.body;     
+    const { status, content } = req.body;     
     const user = req.user;
 
     const original = await Post.findById(postId);
@@ -173,7 +173,7 @@ const sharePost = async (req, res) => {
 
     const sharedPost = await Post.create({
       author: user._id,          
-      title: caption || '',      
+      title: content || '',      
       sharedFrom: original._id,  
       status: status || 'public' 
     });
@@ -237,16 +237,30 @@ const deletePost = async (req, res) => {
             return res.status(403).json({ message: 'Bạn không có quyền xóa bài viết này.' });
         }
 
-        for (const file of post.files) {
-            await deleteFileFromGCS(file.data);
+        if (post.sharedFrom) {
+            const originalPost = await Post.findById(post.sharedFrom);
+            if (originalPost) {
+                originalPost.shares = originalPost.shares.filter(
+                    uid => uid.toString() !== user._id.toString()
+                );
+                await originalPost.save();
+            }
         }
 
-        await Post.findByIdAndDelete(postId);
+        if (!post.sharedFrom && post.files?.length) {
+            for (const file of post.files) {
+                await deleteFileFromGCS(file.data);
+            }
+        }
+
+        await post.deleteOne();
+
         res.status(200).json({ message: 'Xóa bài viết thành công.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Lỗi máy chủ.', error: error.message });
     }
 };
+
 
 module.exports = { createPost, getPosts, deletePost, updatePost, likePost, commentPost, deleteComment, sharePost };

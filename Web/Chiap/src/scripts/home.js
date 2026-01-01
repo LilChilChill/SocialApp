@@ -278,6 +278,7 @@ document.querySelector('.close-share').addEventListener('click', () => {
 
 document.getElementById('confirmShare').addEventListener('click', async () => {
     const status = document.getElementById('shareStatus').value;
+    const content = document.getElementById('shareContent').value.trim();
     if (!currentSharePostId) return;
     try {
         const token = localStorage.getItem('token');
@@ -287,19 +288,17 @@ document.getElementById('confirmShare').addEventListener('click', async () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ status })
+            body: JSON.stringify({ status, content })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || 'Share thất bại');
         showToast('Đã chia sẻ bài viết!');
-        // Cập nhật count shares trên nút
         const btn = document.querySelector(`.share-btn[data-post-id="${currentSharePostId}"] .share-count`);
         if (btn && data.sharesCount !== undefined) {
             btn.textContent = data.sharesCount;
         } else if (btn) {
             btn.textContent = Number(btn.textContent) + 1;
         }
-        // Reload posts để hiển thị bài viết đã share
         postsContainer.innerHTML = '';
         currentPage = 1;
         hasMorePost = true;

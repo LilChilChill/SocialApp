@@ -234,19 +234,39 @@
     </ul>
   </div>
     
-    <div id="shareModal" class="share-modal hidden">
-      <div class="share-modal-content">
-        <span class="close-share">&times;</span>
+  <div id="shareModal" class="share-modal hidden">
+    <div class="share-modal-content">
+  
+      <div class="share-header">
         <h3>Chia sẻ bài viết</h3>
-        <label>Chế độ hiển thị:</label>
+        <span class="close-share">&times;</span>
+      </div>
+  
+      <div class="share-body">
+        <!-- Ô nhập nội dung -->
+        <textarea 
+          id="shareContent"
+          placeholder="Hãy viết cảm nghĩ của bạn..."
+          rows="4"
+        ></textarea>
+  
+        <!-- Chế độ hiển thị -->
+        <label for="shareStatus">Chế độ hiển thị</label>
         <select id="shareStatus">
           <option value="public">Công khai</option>
           <option value="friends">Bạn bè</option>
           <option value="private">Riêng tư</option>
         </select>
-        <button id="confirmShare">Chia sẻ</button>
       </div>
+  
+      <div class="share-footer">
+        <button class="share-cancel">Hủy</button>
+        <button id="confirmShare" class="share-confirm">Chia sẻ</button>
+      </div>
+  
     </div>
+  </div>
+  
 
 
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
