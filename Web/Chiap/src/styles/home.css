@@ -257,10 +257,13 @@ body, ul, li, a{
     color: #65676b;
   }
 
-  .shared-post-content {
+  /* .shared-post-content {
     padding: 0 12px 12px 12px;
-  }
+  } */
+  .shared-post-title {
+    padding: 0 12px 12px 12px;
 
+  }
   .shared-post-title {
     margin: 8px 0;
     font-size: 15px;

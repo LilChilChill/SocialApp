@@ -15,7 +15,7 @@
     <div class="logo"><a href="home.html">Chiap</a></div>
     <div style="display: flex; align-items: center;">
       <input type="text" class="search-bar" id="searchInput" placeholder="Tìm kiếm...">
-      <a href="#" id="searchButton" style="text-decoration: none; color: #000; position: absolute; right: 42%;">
+      <a href="#" id="searchButton" style="text-decoration: none; color: #000; position: absolute; right: 43%;">
         <i class="fa-solid fa-magnifying-glass" ></i>
       </a>
     </div>
@@ -99,24 +99,19 @@
       </div>
   </div>
   
-  <!-- <div class="loading">
-    <svg viewBox="25 25 50 50">
-      <circle r="20" cy="50" cx="50"></circle>
-    </svg>
-  </div> -->
   <div id="toast" class="toast"></div>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-  <!-- Load settings.js đầu tiên để apply theme ngay lập tức -->
-  <script type="module" src="/src/scripts/settings.js"></script>
-  <!-- Load profile.js sau -->
   <script type="module" src="/src/scripts/profile.js"></script>
-  <!-- Load các file khác sau, nếu có lỗi sẽ không ảnh hưởng -->
   <script type="module">
-    // Wrap các file khác trong try-catch để không ảnh hưởng
     try {
       import('/src/scripts/function.js').catch(err => console.warn('function.js load error:', err));
     } catch (e) {
       console.warn('Error loading function.js:', e);
+    }
+    try {
+      import('/src/scripts/settings.js').catch(err => console.warn('settings.js load error:', err));
+    } catch (e) {
+      console.warn('Error loading settings.js:', e);
     }
   </script>
 
