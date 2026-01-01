@@ -1,3 +1,33 @@
+:root {
+  --pure-white: #ffffff;
+  --pure-black: #000000;
+  --white-color: #000000;
+  --black-color: #ffffff;
+  --background-color: #ffffff;
+  --text-color: #000619;
+  --post-content-color: #333;
+  --navbar-background-color: #2573e0;
+  --navbar-text-color: #ffffff;
+  --navbar-icon-color: #feffff;
+  --sidebar-background-color: #ffffff;
+  --sidebar-hover-background-color: #e4e6eb;
+  --sidebar-text-color: #010611;
+  --sidebar-icon-color: #000401;
+  --chat-header-background-color: #007bff;
+  --feed-background-color: #ffffff;
+  --post-comments-color: #f9f9f9;
+  --post-comments-input: #fff;
+  --post-comments-input-focus: #007bff;
+  --box-shadow: #0000004d;
+  --profile-bg-color: #f0f2f5;
+  --post-form-bg-color: #f9f9f9;
+  --post-form-txt-area-bg-color: #fff;
+  --form-color: #C6C6C4;
+  --link-color: #683097;
+  --text-area-color: #e4e6eb;
+  --icon-color: #000;
+  --message-bg-color: #3872fa;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;

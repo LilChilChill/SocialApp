@@ -21,28 +21,40 @@ const bucket = storage.bucket(bucketName);
 
 const uploadFileToGCS = async (file, folder = 'uploads') => {
   if (!file || !file.buffer) {
-    throw new Error('No file provided or file buffer is missing');
+    throw new Error('File không hợp lệ');
+  }
+
+  const MAX_FILE_SIZE = 25 * 1024 * 1024;
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error('File quá lớn (tối đa 25MB)');
+  }
+
+  const ALLOWED_TYPES = [
+    'image/',
+    'video/',
+    'application/pdf'
+  ];
+
+  if (!ALLOWED_TYPES.some(t => file.mimetype.startsWith(t))) {
+    throw new Error('Loại file không được hỗ trợ');
   }
 
   const fileExt = path.extname(file.originalname);
   const fileName = `${folder}/${uuidv4()}${fileExt}`;
   const blob = bucket.file(fileName);
 
-  let fileBuffer = file.buffer;
+  let buffer = file.buffer;
   let contentType = file.mimetype;
 
   if (file.mimetype.startsWith('image/')) {
-    fileBuffer = await sharp(file.buffer)
+    buffer = await sharp(file.buffer)
       .resize({ width: 1920, height: 1080, fit: 'inside' })
       .jpeg({ quality: 80 })
       .toBuffer();
     contentType = 'image/jpeg';
   }
 
-  await blob.save(fileBuffer, {
-    metadata: { contentType }
-  });
-
+  await blob.save(buffer, { metadata: { contentType } });
   await blob.makePublic();
 
   return `https://storage.googleapis.com/${bucketName}/${fileName}`;
@@ -65,3 +77,4 @@ const deleteFileFromGCS = async (fileUrl) => {
 };
 
 module.exports = { uploadFileToGCS, deleteFileFromGCS };
+

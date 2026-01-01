@@ -170,6 +170,46 @@ const postContent = document.getElementById('postContent');
 const postStatus = document.getElementById('postStatus');
 const postFiles = document.getElementById('postImage');
 
+// ===== VALIDATE FILES WHEN SELECT =====
+postFiles.addEventListener('change', () => {
+    const files = Array.from(postFiles.files);
+
+    const MAX_TOTAL = 12;
+    const MAX_IMAGES = 8;
+    const MAX_VIDEOS = 1;
+    const MAX_DOCS = 3;
+
+    if (files.length > MAX_TOTAL) {
+        showToast(`Tối đa ${MAX_TOTAL} file cho mỗi bài viết`);
+        postFiles.value = '';
+        return;
+    }
+
+    const images = files.filter(f => f.type.startsWith('image/'));
+    const videos = files.filter(f => f.type.startsWith('video/'));
+    const docs = files.filter(
+        f => !f.type.startsWith('image/') && !f.type.startsWith('video/')
+    );
+
+    if (images.length > MAX_IMAGES) {
+        showToast(`Tối đa ${MAX_IMAGES} ảnh`);
+        postFiles.value = '';
+        return;
+    }
+
+    if (videos.length > MAX_VIDEOS) {
+        showToast(`Chỉ được upload ${MAX_VIDEOS} video`);
+        postFiles.value = '';
+        return;
+    }
+
+    if (docs.length > MAX_DOCS) {
+        showToast(`Tối đa ${MAX_DOCS} tài liệu`);
+        postFiles.value = '';
+        return;
+    }
+});
+
 // Kiểm tra các element
 console.log('Elements check:', {
     postsContainer: !!postsContainer,
@@ -306,6 +346,11 @@ const displayPosts = (posts) => {
         console.log(`Rendering post ${index + 1}/${posts.length}:`, post._id);
         const postElement = document.createElement('div');
         postElement.className = 'post';
+        const images = post.files
+            ? post.files.filter(f => f.fileType === 'image').map(f => f.data)
+            : [];
+
+        postElement.dataset.images = JSON.stringify(images);
         const currentUserId = localStorage.getItem('userId'); 
         const isLiked = post.likes.includes(currentUserId); 
         const likeClass = isLiked ? 'fa-solid' : 'fa-regular'; 
@@ -338,17 +383,23 @@ const displayPosts = (posts) => {
                 filesHtml += `<div class="post-images-grid ${gridClass}">`;
               
                 images.slice(0, 4).forEach((file, index) => {
-                  if (index === 3 && images.length > 4) {
-                    filesHtml += `
-                      <div class="post-image-overlay">
-                        <img src="${file.data}" alt="Hình ảnh" class="post-image">
-                        <span>+${images.length - 4}</span>
-                      </div>
-                    `;
-                  } else {
-                    filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
-                  }
-                });
+                    if (index === 3 && images.length > 4) {
+                      filesHtml += `
+                        <div class="post-image-overlay" data-index="${index}">
+                          <img src="${file.data}" class="post-image" data-index="${index}">
+                          <span>+${images.length - 4}</span>
+                        </div>
+                      `;
+                    } else {
+                      filesHtml += `
+                        <img 
+                          src="${file.data}" 
+                          class="post-image"
+                          data-index="${index}"
+                        >
+                      `;
+                    }
+                  });
               
                 filesHtml += `</div>`;
               }

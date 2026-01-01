@@ -117,6 +117,11 @@ const displayPosts = async (posts) => {
 
             const postElement = document.createElement('div');
             postElement.className = 'post';
+            const images = post.files
+                ? post.files.filter(f => f.fileType === 'image').map(f => f.data)
+                : [];
+
+            postElement.dataset.images = JSON.stringify(images);
 
             // Kiểm tra nếu đây là bài viết share
             const isSharedPost = post.sharedFrom && post.sharedFrom._id;
@@ -137,11 +142,22 @@ const displayPosts = async (posts) => {
                     filesHtml += `<div class="post-images-grid ${gridClass}">`;
                     images.slice(0, 4).forEach((file, index) => {
                         if (index === 3 && images.length > 4) {
-                            filesHtml += `<div class="post-image-overlay"><img src="${file.data}" alt="Hình ảnh" class="post-image"><span>+${images.length - 4}</span></div>`;
+                          filesHtml += `
+                            <div class="post-image-overlay" data-index="${index}">
+                              <img src="${file.data}" class="post-image" data-index="${index}">
+                              <span>+${images.length - 4}</span>
+                            </div>
+                          `;
                         } else {
-                            filesHtml += `<img src="${file.data}" alt="Hình ảnh" class="post-image">`;
+                          filesHtml += `
+                            <img 
+                              src="${file.data}" 
+                              class="post-image"
+                              data-index="${index}"
+                            >
+                          `;
                         }
-                    });
+                      });
                     filesHtml += `</div>`;
                 }
                 if (videos.length > 0) {

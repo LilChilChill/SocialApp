@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const validatePostFiles = require('../middleware/validatePostFiles');
 const { 
     createPost, 
     deletePost, 
@@ -15,9 +16,11 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/posts', authMiddleware, upload.array('files', 5), createPost);
+// router.post('/posts', authMiddleware, upload.array('files', 5), createPost);
+router.post('/posts', authMiddleware, upload.array('files', 12), validatePostFiles, createPost);
 router.get('/posts', getPosts);
-router.put('/posts/:postId', authMiddleware, upload.array('files', 5), updatePost);
+// router.put('/posts/:postId', authMiddleware, upload.array('files', 5), updatePost);
+router.put('/posts/:postId', authMiddleware, upload.array('files', 12), validatePostFiles, updatePost);
 router.delete('/posts/:postId', authMiddleware, deletePost);
 router.post('/posts/:postId/like', authMiddleware, likePost);
 router.post('/posts/:postId/comment', authMiddleware, commentPost);

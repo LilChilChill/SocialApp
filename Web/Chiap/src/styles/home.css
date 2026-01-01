@@ -284,10 +284,10 @@ body, ul, li, a{
 
   .shared-post-files img,
   .shared-post-files video {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
   }
-
   
   .List{
     display: flex;
@@ -452,18 +452,11 @@ body, ul, li, a{
     margin-bottom: 20px;
   }
   
-  /* .post-image {
-    width: 240px;
-    height: 300px;
-    object-fit: cover; 
-    cursor: pointer;
-    
-  }  */
   .post-image {
     width: 100%;
-    max-height: 100%;
+    aspect-ratio: 1 / 1;   /* hoặc 1 / 1 */
     object-fit: cover;
-    border-radius: 8px;
+    max-height: 500px;
   }
   
   .post-video {
@@ -510,7 +503,7 @@ body, ul, li, a{
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.6);
-    color: var(--white-color);
+    color: white;
     padding: 10px 20px;
     border-radius: 10px;
     font-weight: bold;

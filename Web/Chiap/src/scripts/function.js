@@ -479,15 +479,15 @@ document.addEventListener("keydown", function(event) {
 let currentIndex = 0;
 let currentImages = [];
 
-const openLightbox = (src, images) => {
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImage = document.getElementById("lightboxImage");
+const openLightbox = (images, index) => {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
   
-  currentImages = images;
-  currentIndex = images.indexOf(src);
-
-  lightboxImage.src = src;
-  lightbox.classList.add("show");
+    currentImages = images;
+    currentIndex = index;
+  
+    lightboxImage.src = currentImages[currentIndex];
+    lightbox.classList.add("show");
 };
 
 const closeLightbox = () => {
@@ -517,29 +517,46 @@ const downloadImage = async () => {
 window.downloadImage = downloadImage;
     
 const prevImage = () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    document.getElementById("lightboxImage").src = currentImages[currentIndex];
-  }
-};
+    if (!currentImages.length) return;
+  
+    currentIndex =
+      (currentIndex - 1 + currentImages.length) % currentImages.length;
+  
+    document.getElementById("lightboxImage").src =
+      currentImages[currentIndex];
+  };
 window.prevImage = prevImage;
-
-const nextImage = () => {
-  if (currentIndex < currentImages.length - 1) {
-    currentIndex++;
-    document.getElementById("lightboxImage").src = currentImages[currentIndex];
-  }
-};
-window.nextImage = nextImage;
+  
+  const nextImage = () => {
+    if (!currentImages.length) return;
+  
+    currentIndex =
+      (currentIndex + 1) % currentImages.length;
+  
+    document.getElementById("lightboxImage").src =
+      currentImages[currentIndex];
+  };
+window.nextImage = nextImage;  
 
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("post-image")) {
-    const images = Array.from(e.target.closest(".post-images-grid").querySelectorAll("img")).map(img => img.src);
-    openLightbox(e.target.src, images);
+    if (
+      e.target.classList.contains("post-image") ||
+      e.target.closest(".post-image-overlay")
+    ) {
+      const post = e.target.closest(".post");
+      const images = JSON.parse(post.dataset.images);
+  
+      const index = Number(
+        e.target.dataset.index ||
+        e.target.closest(".post-image-overlay").dataset.index
+      );
+  
+      openLightbox(images, index);
     }
+  
     userList.style.display = "none";
     searchInput.value = '';
-});
+  });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") prevImage();
