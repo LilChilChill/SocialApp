@@ -15,7 +15,6 @@ const sendMessage = (io) => async (req, res) => {
     try {
         let files = [];
 
-        // Nếu gửi 1 hoặc nhiều file
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const uploaded = await uploadImageToGCS(file, 'messages');
@@ -117,7 +116,6 @@ const deleteChatHistory = async (req, res) => {
             ]
         });
 
-        // Xóa tất cả file trong các message
         for (const msg of messages) {
             for (const f of msg.files) {
                 await deleteFileFromGCS(f.url);

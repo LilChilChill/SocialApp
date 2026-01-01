@@ -1,6 +1,6 @@
 const { Storage } = require('@google-cloud/storage');
 const path = require('path');
-const sharp = require('sharp'); // Thư viện nén ảnh
+const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 
 let storage;
@@ -32,7 +32,6 @@ const uploadImageToGCS = async (file, folder = 'uploads') => {
     let bufferToUpload;
     let contentType = file.mimetype;
 
-    // Nếu là ảnh thì nén nếu dung lượng > 25MB
     if (file.mimetype.startsWith('image/')) {
       const originalSizeMB = file.buffer.length / 1024 / 1024;
       if (originalSizeMB > 25) {

@@ -5,13 +5,11 @@ const path = require('path');
 const storage = new Storage({ keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS });
 const bucket = storage.bucket(process.env.GOOGLE_CLOUD_BUCKET);
 
-// Cấu hình Multer để xử lý file upload
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // Giới hạn 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-// Hàm upload file lên GCS
 const uploadToGCS = (file, folder = 'uploads') => {
   return new Promise((resolve, reject) => {
     if (!file) return reject('No file provided');

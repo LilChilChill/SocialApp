@@ -38,8 +38,6 @@ module.exports = (io) => {
             hours = hours < 10 ? `0${hours}` : hours;
             minutes = minutes < 10 ? `0${minutes}` : minutes;
             messageData.date = `${hours}:${minutes}`;
-
-            // const { chatType, receiverId, groupId, sender, content, fileUrl, fileType } = messageData;
             const { chatType, receiverId, groupId, sender, content, files } = messageData;
 
 

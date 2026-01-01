@@ -104,9 +104,6 @@ const socketHandler = require('./socket.js');
 const app = express();
 module.exports = app;
 
-// ================================
-// 🔥 GLOBAL CORS FIX – MUST BE TOP
-// ================================
 const allowedOrigins = [
   "https://chi404.id.vn",
   "https://www.chi404.id.vn",
@@ -124,15 +121,12 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   }
 
-  // Trả lời OPTIONS ngay lập tức (preflight)
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
 
   next();
 });
-// =================================
-
 
 // JSON Middleware
 app.use(express.json());

@@ -1,7 +1,6 @@
-const FriendRequest = require('../Models/friendModel') // Model cho lời mời kết bạn
-const User = require('../Models/userModel') // Model cho người dùng
+const FriendRequest = require('../Models/friendModel')
+const User = require('../Models/userModel') 
 
-// Gửi lời mời kết bạn
 const sendFriendRequest = async (req, res) => {
     const { receiverId } = req.body
     const senderId = req.user._id
@@ -28,7 +27,6 @@ const sendFriendRequest = async (req, res) => {
     }
 }
 
-// Chấp nhận lời mời kết bạn
 const acceptFriendRequest = async (req, res) => {
     const { id } = req.params
     const userId = req.user._id
@@ -65,7 +63,6 @@ const acceptFriendRequest = async (req, res) => {
     }
 }
 
-// Từ chối lời mời kết bạn
 const declineFriendRequest = async (req, res) => {
     const { id } = req.params
     const userId = req.user._id
@@ -84,7 +81,6 @@ const declineFriendRequest = async (req, res) => {
     }
 }
 
-// Lấy danh sách lời mời kết bạn
 const getFriendRequests = async (req, res) => {
     const userId = req.user._id
 

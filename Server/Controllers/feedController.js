@@ -163,17 +163,14 @@ const sharePost = async (req, res) => {
       return res.status(404).json({ message: 'Không tìm thấy bài viết gốc.' });
     }
 
-    // Kiểm tra nếu user là chủ bài viết thì không cho share
     if (original.author.toString() === user._id.toString()) {
       return res.status(400).json({ message: 'Bạn không thể chia sẻ bài viết của chính mình.' });
     }
 
-    // Kiểm tra xem user đã share bài viết này chưa
     if (original.shares && original.shares.includes(user._id)) {
       return res.status(400).json({ message: 'Bạn đã chia sẻ bài viết này rồi.' });
     }
 
-    // Tạo bài viết share mới
     const sharedPost = await Post.create({
       author: user._id,          
       title: caption || '',      
@@ -181,7 +178,6 @@ const sharePost = async (req, res) => {
       status: status || 'public' 
     });
 
-    // Cập nhật số lượng shares của bài viết gốc
     if (!original.shares) {
       original.shares = [];
     }

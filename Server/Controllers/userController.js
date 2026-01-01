@@ -99,7 +99,7 @@ const updateUser = async (req, res) => {
                 await updateAvatar(user.avatar);
             }
 
-            const { url } = await uploadImageToGCS(req.file, 'avatars'); // chỉ lấy url
+            const { url } = await uploadImageToGCS(req.file, 'avatars');
             updateFields.avatar = url;
         }
 
@@ -143,7 +143,6 @@ const changePassword = async (req, res) => {
             return res.status(401).json({ message: 'Mật khẩu hiện tại không đúng' });
         }
 
-        // Kiểm tra nếu mật khẩu mới trùng với mật khẩu cũ
         const isSamePassword = await bcrypt.compare(newPassword, user.password);
         if (isSamePassword) {
             return res.status(400).json({ message: 'Mật khẩu mới không được trùng với mật khẩu cũ' });
@@ -173,14 +172,12 @@ const forgotPassword = async (req, res) => {
             return res.status(404).json({ message: 'Email không tồn tại' });
         }
 
-        // Tạo token ngẫu nhiên
         const resetToken = crypto.randomBytes(32).toString('hex');
         user.resetPasswordToken = resetToken;
-        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 phút
+        user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; 
 
         await user.save();
 
-        // Gửi email
         const resetLink = `${link}/components/resetPassword.html?token=${resetToken}`;
         await sendResetPasswordEmail(email, resetLink);
 
@@ -230,16 +227,13 @@ const searchUsers = async (req, res) => {
       return res.status(400).json({ message: 'Query không được để trống' });
     }
 
-    // Lấy user hiện tại cùng danh sách bạn bè
     const currentUser = await userModel.findById(req.user._id).select('friends');
     const myFriends = currentUser.friends.map(f => f.toString());
 
-    // Lấy toàn bộ user (trừ mật khẩu)
     const users = await userModel.find().select('-password');
 
     const normalizedQuery = removeAccents(query.toLowerCase());
 
-    // Lọc theo tên
     const filteredUsers = users
       .filter(u => {
         const normalizedName = removeAccents(u.name.toLowerCase());
@@ -270,32 +264,6 @@ const getUsers = async (req, res) => {
 }
 
 const removeAccents = require('remove-accents');
-
-// const searchUsers = async (req, res) => {
-//     const { query } = req.query;
-//     try {
-//         if (!query) {
-//             return res.status(400).json({ message: 'Query không được để trống' });
-//         }
-
-//         const users = await userModel.find().select('-password -friends') // Lấy toàn bộ user
-        
-//         const normalizedQuery = removeAccents(query.toLowerCase());
-
-//         const filteredUsers = users.filter(user => {
-//             const normalizedName = removeAccents(user.name.toLowerCase());
-//             return normalizedName.includes(normalizedQuery);
-//         });
-
-//         res.status(200).json(filteredUsers);
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ message: 'Server error' });
-//     }
-// };
-
-
-
 
 const getFriends = async (req, res) => {
     const userId = req.user._id
