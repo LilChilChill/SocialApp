@@ -122,6 +122,14 @@
         <button class="prev-btn" onclick="prevImage()">⮜</button>
         <button class="next-btn" onclick="nextImage()">⮞</button>
     </div>
+    <div id="videoPopup" class="video-popup">
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <a id="downloadBtn" class="download-btn" download>⬇</a>
+        <video id="popupVideo" controls autoplay></video>
+        <button class="prev-btn" onclick="prevImage()">⮜</button>
+        <button class="next-btn" onclick="nextImage()">⮞</button>
+    </div>
+
     
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>

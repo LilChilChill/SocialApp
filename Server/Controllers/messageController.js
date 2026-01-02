@@ -82,27 +82,60 @@ const getMessages = async (req, res) => {
 };
 
 
-const getChatImages = async (req, res) => {
+// const getChatImages = async (req, res) => {
+//     const userId = req.user._id;
+//     const friendId = req.params.friendId;
+
+//     try {
+//         const images = await Message.find({
+//             $or: [
+//                 { sender: userId, receiver: friendId },
+//                 { sender: friendId, receiver: userId }
+//             ],
+//             "files.mimeType": { $regex: /^image\// }
+//         })
+//         .sort('-timestamp')
+//         .select('files date');
+
+//         res.status(200).json({ images });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Có lỗi xảy ra khi lấy ảnh', error: error.message });
+//     }
+// };
+const getChatFiles = async (req, res) => {
     const userId = req.user._id;
     const friendId = req.params.friendId;
-
+  
     try {
-        const images = await Message.find({
-            $or: [
-                { sender: userId, receiver: friendId },
-                { sender: friendId, receiver: userId }
-            ],
-            "files.mimeType": { $regex: /^image\// }
-        })
-        .sort('-timestamp')
+      const messages = await Message.find({
+        $or: [
+          { sender: userId, receiver: friendId },
+          { sender: friendId, receiver: userId }
+        ],
+        files: { $exists: true, $ne: [] }
+      })
+        .sort({ timestamp: 1 })
         .select('files date');
-
-        res.status(200).json({ images });
+  
+      // ✅ FLATTEN FILES
+      const files = messages.flatMap(msg =>
+        msg.files.map(f => ({
+          fileUrl: f.url,
+          fileType: f.mimeType,
+          fileName: f.fileName,
+          date: msg.date
+        }))
+      );
+  
+      res.status(200).json({ files });
     } catch (error) {
-        res.status(500).json({ message: 'Có lỗi xảy ra khi lấy ảnh', error: error.message });
+      res.status(500).json({
+        message: 'Lỗi khi lấy file chat',
+        error: error.message
+      });
     }
-};
-
+  };
+  
 
 const deleteChatHistory = async (req, res) => {
     try {
@@ -139,4 +172,4 @@ const deleteChatHistory = async (req, res) => {
 };
 
 
-module.exports = { sendMessage, getMessages, getChatImages, deleteChatHistory };
+module.exports = { sendMessage, getMessages, deleteChatHistory,getChatFiles };

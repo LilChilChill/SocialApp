@@ -12,6 +12,9 @@ let imagesFetched = false;
 let tempImages = [];
 let currentImageIndex = 0;
 let hasMoreImages = true;
+let mediaIndexes = [];      
+let currentMediaPos = 0;
+
 
 let localStream;
 let peerConnection;
@@ -108,6 +111,20 @@ function getFriends() {
 }
 
 function openChat(friendId, name, avatar, page = 1) {
+    // ===== RESET SIDE MENU STATE =====
+    cachedImages = [];
+    currentImageIndex = 0;
+
+    const imgBox = document.getElementById('fileImageDisplay');
+    const otherBox = document.getElementById('fileOtherDisplay');
+    if (imgBox) imgBox.innerHTML = '';
+    if (otherBox) otherBox.innerHTML = '';
+
+    // ===== SET CHAT INFO =====
+    friendName = name;
+    friendAvatar = avatar;
+    currentFriendId = friendId;
+
     friendName = name;
     friendAvatar = avatar;
     document.getElementById('username').textContent = friendName;
@@ -154,7 +171,17 @@ function openChat(friendId, name, avatar, page = 1) {
                         if (file.mimeType.startsWith('image/')) {
                             filePreviewHtml += `<img src="${file.url}" class="imgContent" onclick="openImage('${file.url}')"/>`;
                         } else if (file.mimeType.startsWith('video/')) {
-                            filePreviewHtml += `<video controls class="videoContent"><source src="${file.url}" type="${file.mimeType}">Trình duyệt không hỗ trợ video.</video>`;
+                            filePreviewHtml += `
+                                                <video 
+                                                    class="videoContent"
+                                                    controls
+                                                    preload="metadata"
+                                                    playsinline
+                                                >
+                                                    <source src="${file.url}" type="${file.mimeType}">
+                                                    Trình duyệt không hỗ trợ video.
+                                                </video>
+                                                `;
                         } else if (file.mimeType === 'application/pdf') {
                             filePreviewHtml += `<a href="${file.url}" target="_blank" class="fileLink">📄 Xem PDF</a>`;
                         } else {
@@ -191,14 +218,22 @@ function openChat(friendId, name, avatar, page = 1) {
                 <a href="#"><i class="fa-solid fa-magnifying-glass"></i></a>
             </div>
         `;
-
         fileData.innerHTML = `
-            <a href="#" onclick="fileToggle()"><p>File phương tiện & file</p></a>
-            <div style="display: none" id="fileDisplay">
-                <a href="#" onclick="toggleImages()"><p>- File phương tiện</p></a>
-                <div style="display: none" id="fileImageDisplay"></div>
-                <a href="#"><p>- File</p></a>
-            </div>
+        <a href="#" onclick="fileToggle()">
+            <p>File phương tiện & file</p>
+        </a>
+    
+        <div style="display:none" id="fileDisplay">
+            <a href="#" onclick="toggleImages()">
+                <p>- Hình ảnh / Video</p>
+            </a>
+            <div style="display:none" id="fileImageDisplay"></div>
+    
+            <a href="#" onclick="toggleOtherFiles()">
+                <p>- Tệp khác</p>
+            </a>
+            <div style="display:none" id="fileOtherDisplay"></div>
+        </div>
         `;
 
         deleteBtn.innerHTML = `
@@ -461,10 +496,13 @@ socket.on("receiveMessage", (messageData) => {
             }
             else if (type.startsWith("video/")) {
                 fileHtml += `
-                    <video controls class="videoContent">
+                    <video class="videoContent" muted onclick="openVideo('${url}')">
                         <source src="${url}" type="${type}">
-                    </video>`;
+                        Trình duyệt không hỗ trợ video.
+                    </video>
+                `;
             }
+            
             else if (type === "application/pdf") {
                 fileHtml += `
                     <a href="${url}" target="_blank" class="fileLink">
@@ -613,9 +651,16 @@ function loadOlderMessages() {
                     }
                     else if (file.mimeType.startsWith("video/")) {
                         filePreviewHtml += `
-                            <video controls class="videoContent">
-                                <source src="${file.url}" type="${file.mimeType}">
-                            </video>`;
+                                            <video 
+                                                class="videoContent"
+                                                controls
+                                                preload="metadata"
+                                                playsinline
+                                            >
+                                                <source src="${file.url}" type="${file.mimeType}">
+                                                Trình duyệt không hỗ trợ video.
+                                            </video>
+                                            `;
                     }
                     else if (file.mimeType === "application/pdf") {
                         filePreviewHtml += `
@@ -687,79 +732,19 @@ function imgFileToggle(){
 
 // --- Side menu toggle và render file/ảnh ---
 function sideMenu() {
-    const side = document.getElementById('sideMenu');
-    const icon = document.getElementById('icon');
+    if (!currentFriendId) {
+        alert("Vui lòng chọn cuộc trò chuyện trước");
+        return;
+    }
 
-    // Toggle side menu
+    const side = document.getElementById('sideMenu');
     side.style.display = side.style.display === 'none' ? 'flex' : 'none';
-    icon.style.left = icon.style.left === '65%' ? '86%' : '65%';
 
     if (side.style.display === 'flex') {
-        // Render sau khi menu mở
-        if (!imagesFetched) {
-            fetchAllImages().then(() => renderFilesInSideMenu());
-        } else {
-            renderFilesInSideMenu();
-        }
+        fetchAllImages();
     }
 }
-
-// Hàm render files trong side menu
-function renderFilesInSideMenu() {
-    const fileContainer = document.getElementById('file');
-    fileContainer.innerHTML = '';
-
-    // Tạo tiêu đề
-    const mediaTitle = document.createElement('p');
-    mediaTitle.textContent = 'Hình ảnh / Video';
-    fileContainer.appendChild(mediaTitle);
-
-    const mediaDiv = document.createElement('div');
-    mediaDiv.classList.add('file-section');
-    fileContainer.appendChild(mediaDiv);
-
-    const otherTitle = document.createElement('p');
-    otherTitle.textContent = 'Tệp khác';
-    fileContainer.appendChild(otherTitle);
-
-    const otherDiv = document.createElement('div');
-    otherDiv.classList.add('file-section');
-    fileContainer.appendChild(otherDiv);
-
-    cachedImages.forEach(file => {
-        if (!file.fileUrl) return;
-    
-        let el;
-        if (file.fileType.startsWith('image/')) {
-            el = document.createElement('img');
-            el.src = file.fileUrl;
-            el.classList.add('file-thumb');
-            el.onclick = () => openImage(file.fileUrl);
-            mediaDiv.appendChild(el);
-        } else if (file.fileType.startsWith('video/')) {
-            el = document.createElement('video');
-            el.src = file.fileUrl;
-            el.controls = true;
-            el.classList.add('file-thumb');
-            mediaDiv.appendChild(el);
-        } else {
-            el = document.createElement('div');
-            el.classList.add('file-attachment');
-            el.innerHTML = `
-                <div class="file-icon">📎</div>
-                <div class="file-info">
-                    <span class="file-name">${file.fileName || 'Tệp đính kèm'}</span>
-                    <a href="${file.fileUrl}" download class="download-btn">Tải xuống</a>
-                </div>
-            `;
-            otherDiv.appendChild(el);
-        }
-    });
-    
-}
-
 window.sideMenu = sideMenu;
-
 
 function emojiToggle(){
     document.getElementById('emoji').style.display = document.getElementById('emoji').style.display === 'none'? 'flex' : 'none';
@@ -770,130 +755,251 @@ function fileToggle(){
 window.fileToggle = fileToggle
 
 function fetchAllImages() {
+    if (!currentFriendId) return;
+
     return fetch(`${API_URL}/api/messages/images/${currentFriendId}`, {
-        method: 'GET',
         headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Lỗi khi lấy ảnh');
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-        return response.json();
     })
+    .then(res => res.json())
     .then(data => {
-        cachedImages = data.images || []; 
-        imagesFetched = true;
-        renderImages();
+        cachedImages = data.files || [];
+        buildMediaIndexes();
     })
-    .catch(error => {
-        console.error('Lỗi khi tải ảnh:', error);
-        document.getElementById('fileImageDisplay').innerHTML = '<p>Lỗi khi tải ảnh.</p>';
+    .catch(() => {
+        cachedImages = [];
+        mediaIndexes = [];
     });
 }
 
+function buildMediaIndexes() {
+    mediaIndexes = [];
+
+    cachedImages.forEach((file, index) => {
+        if (
+            file.fileType?.startsWith('image/') ||
+            file.fileType?.startsWith('video/')
+        ) {
+            mediaIndexes.push(index);
+        }
+    });
+}
+
+
 function toggleImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-    
-    if (fileImageDisplay.style.display === 'block') {
-        fileImageDisplay.style.display = 'none';
-        return;
+    const box = document.getElementById('fileImageDisplay');
+    box.style.display = box.style.display === 'none' ? 'grid' : 'none';
+
+    if (box.style.display === 'grid') {
+        renderImages();
     }
-    
-    fileImageDisplay.style.display = 'block';
-    fileImageDisplay.innerHTML = '<p>Đang tải ảnh...</p>';
-    
-    // if (!imagesFetched) {
-    //     fetchAllImages();
-    // } else {
-    //     renderImages();
-    // }
-    renderImages()
 }
 
 function renderImages() {
-    const fileImageDisplay = document.getElementById('fileImageDisplay');
-    fileImageDisplay.innerHTML = '';
-    
-    if (cachedImages.length === 0) {
-        fileImageDisplay.innerHTML = '<p>Không có ảnh nào.</p>';
+    const box = document.getElementById('fileImageDisplay');
+    box.innerHTML = '';
+
+    const media = cachedImages.filter(f =>
+        f.fileType?.startsWith('image/') ||
+        f.fileType?.startsWith('video/')
+    );
+
+    if (media.length === 0) {
+        box.innerHTML = '<p>Không có hình ảnh hoặc video</p>';
         return;
     }
-    
-    const imageContainer = document.createElement('div');
-    imageContainer.classList.add('image-container');
-    
-    cachedImages.forEach(image => {
-        if (!image.fileUrl) return;
-        
-        const imgElement = document.createElement('img');
-        imgElement.src = image.fileUrl;
-        imgElement.onclick = () => openImage(image.fileUrl);
-        imageContainer.appendChild(imgElement);
+
+    media.forEach(file => {
+        // IMAGE
+        if (file.fileType.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = file.fileUrl;
+            img.className = 'file-thumb';
+            img.onclick = () => openImage(file.fileUrl);
+            box.appendChild(img);
+        }
+        // VIDEO
+        else {
+            const video = document.createElement('video');
+            video.src = file.fileUrl;
+            video.muted = true;
+            video.preload = 'metadata';
+            video.className = 'file-thumb';
+            video.onclick = () => openVideo(file.fileUrl);
+            box.appendChild(video);
+        }
     });
-    
-    
-    fileImageDisplay.appendChild(imageContainer);
+}
+
+
+function toggleOtherFiles() {
+    const box = document.getElementById('fileOtherDisplay');
+    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+
+    if (box.style.display === 'block') {
+        renderOtherFiles();
+    }
+}
+
+function renderOtherFiles() {
+    const box = document.getElementById('fileOtherDisplay');
+    box.innerHTML = '';
+
+    const files = cachedImages.filter(f =>
+        !f.fileType?.startsWith('image/') &&
+        !f.fileType?.startsWith('video/')
+    );
+
+    if (files.length === 0) {
+        box.innerHTML = '<p>Không có tệp khác</p>';
+        return;
+    }
+
+    files.forEach(file => {
+        const div = document.createElement('div');
+        div.className = 'fileAttachment';
+        div.innerHTML = `
+            <span>${file.fileName || 'Tệp đính kèm'}</span>
+            <a href="${file.fileUrl}" download>Tải xuống</a>
+        `;
+        box.appendChild(div);
+    });
 }
 
 function openImage(src) {
-    document.getElementById('popupImage').src = src;
-    document.getElementById('imagePopup').style.display = 'block';
-    currentImageIndex = cachedImages.findIndex(image => image.fileUrl === src);
+    const fileIndex = cachedImages.findIndex(f => f.fileUrl === src);
+    const mediaPos = mediaIndexes.indexOf(fileIndex);
 
-    updateImage();
+    if (mediaPos === -1) return;
 
+    currentMediaPos = mediaPos;
+    updateMedia();
 }
 
 function closeImage() {
     document.getElementById('imagePopup').style.display = 'none';
 }
 
+function openVideo(src) {
+    const fileIndex = cachedImages.findIndex(f => f.fileUrl === src);
+    const mediaPos = mediaIndexes.indexOf(fileIndex);
+
+    if (mediaPos === -1) return;
+
+    currentMediaPos = mediaPos;
+    updateMedia();
+}
+
+function closeVideo() {
+    const popup = document.getElementById("videoPopup");
+    const video = document.getElementById("popupVideo");
+
+    video.pause();
+    video.src = "";
+    popup.style.display = "none";
+}
+
+
+window.openVideo = openVideo;
+window.closeVideo = closeVideo;
+
 function prevImage() {
-    if (currentImageIndex > 0) {
-        currentImageIndex--;
-        updateImage();
+    if (currentMediaPos > 0) {
+        currentMediaPos--;
+        updateMedia();
     }
 }
 
 function nextImage() {
-    if (currentImageIndex < cachedImages.length - 1) {
-        currentImageIndex++;
-        updateImage();
+    if (currentMediaPos < mediaIndexes.length - 1) {
+        currentMediaPos++;
+        updateMedia();
     }
 }
 
-function updateImage() {
-    const image = cachedImages[currentImageIndex];
-    if (!image) return;
+function updateMedia() {
+    const fileIndex = mediaIndexes[currentMediaPos];
+    const media = cachedImages[fileIndex];
+    if (!media) return;
 
-    const fileUrl = image.fileUrl
-    
-    if(fileUrl){
-        document.getElementById('popupImage').src = fileUrl
-        updateDownloadLink();
+    const imagePopup = document.getElementById('imagePopup');
+    const videoPopup = document.getElementById('videoPopup');
+    const imgEl = document.getElementById('popupImage');
+    const videoEl = document.getElementById('popupVideo');
+
+    // RESET
+    imgEl.style.display = 'none';
+    videoEl.style.display = 'none';
+    videoEl.pause();
+    videoEl.src = '';
+
+    imagePopup.style.display = 'none';
+    videoPopup.style.display = 'none';
+
+    // IMAGE
+    if (media.fileType.startsWith('image/')) {
+        imgEl.src = media.fileUrl;
+        imgEl.style.display = 'block';
+        imagePopup.style.display = 'flex';
     }
-    
-    document.querySelector('.prev-btn').style.display = currentImageIndex === 0 ? 'none' : 'block';
-    document.querySelector('.next-btn').style.display = currentImageIndex === cachedImages.length - 1 ? 'none' : 'block';
-}
 
-function updateDownloadLink() {
-    const downloadBtn = document.getElementById('downloadBtn');
-    const imageUrl = document.getElementById('popupImage').src;
+    // VIDEO
+    else if (media.fileType.startsWith('video/')) {
+        videoEl.src = media.fileUrl;
+        videoEl.style.display = 'block';
+        videoEl.load();
+        videoPopup.style.display = 'flex';
+    }
 
-    fetch(imageUrl)
-        .then(response => response.blob())  
-        .then(blob => {
-            const blobUrl = URL.createObjectURL(blob);
-            downloadBtn.href = blobUrl;
-            downloadBtn.setAttribute('download', `image_${currentImageIndex + 1}.jpg`);
-        })
-        .catch(error => console.error("Lỗi khi tải ảnh:", error));
+    updateDownloadLink(media);
+    updateNavButtons();
 }
 
 
+function updateNavButtons() {
+    document.querySelector('.prev-btn').style.display =
+        currentMediaPos === 0 ? 'none' : 'block';
+
+    document.querySelector('.next-btn').style.display =
+        currentMediaPos === mediaIndexes.length - 1 ? 'none' : 'block';
+}
+
+function updateDownloadLink(media) {
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    const fileName =
+        media.fileName ||
+        `file.${media.fileType.startsWith("image/") ? "jpg" : "mp4"}`;
+
+    downloadBtn.onclick = (e) => {
+        e.preventDefault();
+        forceDownload(media.fileUrl, fileName);
+    };
+}
+
+
+async function forceDownload(url, filename = "file") {
+    try {
+        const response = await fetch(url, { mode: "cors" });
+        const blob = await response.blob();
+
+        const blobUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+        console.error("Download failed:", err);
+        alert("Không thể tải file");
+    }
+}
+
+window.toggleOtherFiles = toggleOtherFiles;
 window.toggleImages = toggleImages;
 window.closeImage = closeImage;
 window.prevImage = prevImage;
@@ -903,12 +1009,14 @@ window.nextImage = nextImage;
 document.addEventListener("click", function (event) {
     if (event.target.id === "imagePopup") {
         closeImage();
+        closeVideo();
     }
 });
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
         closeImage();
+        closeVideo();
     }
     if (event.key === "ArrowLeft") {
         prevImage();
