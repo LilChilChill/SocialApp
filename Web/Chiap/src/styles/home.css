@@ -99,7 +99,7 @@ body, ul, li, a{
     position: fixed;
     right: 0%;
     top: 55px;
-    z-index: 2;
+    z-index: 3;
   }
   .sidebar-2 ul li {
     padding: 10px 10px;
