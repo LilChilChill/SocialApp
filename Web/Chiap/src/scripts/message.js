@@ -923,7 +923,7 @@ function updateMedia() {
     const media = cachedImages[fileIndex];
     if (!media) return;
 
-    const imagePopup = document.getElementById('imagePopup');
+    const imagePopup = document.getElementById('imagePopup');   
     const videoPopup = document.getElementById('videoPopup');
     const imgEl = document.getElementById('popupImage');
     const videoEl = document.getElementById('popupVideo');

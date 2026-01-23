@@ -83,3 +83,18 @@ const signUpButton = document.getElementById('signUp');
         console.error('Error:', error);
       }
     });
+
+const mobileSignUp = document.getElementById("mobileSignUp");
+const mobileSignIn = document.getElementById("mobileSignIn");
+
+if (mobileSignUp) {
+  mobileSignUp.addEventListener("click", () => {
+    container.classList.add("right-panel-active");
+  });
+}
+
+if (mobileSignIn) {
+  mobileSignIn.addEventListener("click", () => {
+    container.classList.remove("right-panel-active");
+  });
+}

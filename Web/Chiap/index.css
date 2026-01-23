@@ -250,3 +250,126 @@ footer a {
     color: #3c97bf;
     text-decoration: none;
 }
+@media (max-width: 1280px){
+	.mobile-switch{
+		display: none;
+	}
+}
+/* =======================
+   RESPONSIVE – MOBILE
+   ======================= */
+   @media (max-width: 768px) {
+
+	body {
+	  margin: 0;
+	  padding: 0;
+	  height: auto;
+	  background: #f6f5f7;
+	}
+  
+	.container {
+	  width: 100%;
+	  min-height: 100vh;
+	  border-radius: 0;
+	  box-shadow: none;
+	  overflow: visible;
+	}
+  
+	/* Ẩn overlay desktop */
+	.overlay-container {
+	  display: none;
+	}
+  
+	/* Form wrapper */
+	.form-container {
+	  position: relative;
+	  width: 100%;
+	  height: auto;
+	  opacity: 1 !important;
+	  transform: none !important;
+	}
+  
+	.sign-in-container,
+	.sign-up-container {
+	  width: 100%;
+	  left: 0;
+	}
+  
+	/* Mặc định chỉ hiện Login */
+	.sign-up-container {
+	  display: none;
+	}
+  
+	.container.right-panel-active .sign-up-container {
+	  display: block;
+	}
+  
+	.container.right-panel-active .sign-in-container {
+	  display: none;
+	}
+  
+	/* ===== FORM ===== */
+	.auth-form {
+	  padding: 32px 24px;
+	  min-height: 100vh;
+	  justify-content: flex-start;
+	  position: relative;
+	  z-index: 1;
+	}
+  
+	.auth-form h1 {
+	  font-size: 26px;
+	  margin-bottom: 12px;
+	}
+  
+	.auth-form span {
+	  font-size: 13px;
+	  color: #666;
+	  margin-bottom: 20px;
+	}
+  
+	input {
+	  font-size: 16px;
+	  padding: 14px;
+	  border-radius: 10px;
+	}
+  
+	button {
+	  width: 100%;
+	  padding: 14px;
+	  font-size: 15px;
+	  border-radius: 30px;
+	  margin-top: 10px;
+	}
+  
+	/* Social icons */
+	.social-container {
+	  margin: 16px 0;
+	}
+  
+	.social-container a {
+	  width: 36px;
+	  height: 36px;
+	}
+  
+	/* ===== MOBILE SWITCH ===== */
+	.mobile-switch {
+	  display: flex;
+	  text-align: center;
+	  font-size: 14px;
+	  margin: 16px 0;
+	  justify-content: center;
+	}
+  
+	.mobile-switch span {
+	  color: #FF4B2B;
+	  font-weight: 600;
+	  margin-left: 5px;
+	  cursor: pointer;
+	}
+  
+	.mobile-switch span:active {
+	  opacity: 0.7;
+	}
+  }
+  
