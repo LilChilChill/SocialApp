@@ -80,16 +80,16 @@ const updatePost = async (req, res) => {
         }
 
         let uploadedFiles = post.files;
-        if (req.files) {
-            for (const file of post.files) {
-                await deleteFileFromGCS(file.data);
-            }
-
+        if (req.files && req.files.length > 0) {
             uploadedFiles = await Promise.all(req.files.map(async (file) => ({
                 fileType: file.mimetype.startsWith('image/') ? 'image' : file.mimetype.startsWith('video/') ? 'video' : 'document',
                 data: await uploadFileToGCS(file, 'posts'),
                 contentType: file.mimetype
             })));
+
+            for (const file of post.files) {
+                await deleteFileFromGCS(file.data);
+            }
         }
 
         post.title = title || post.title;

@@ -2,7 +2,6 @@ const userModel = require('../Models/userModel')
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const { authMiddleware, createToken} = require('../middleware/authMiddleware')
-const { options } = require('..')
 const { uploadImageToGCS, updateAvatar } = require('../services/gcsService');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
