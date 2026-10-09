@@ -1,3 +1,15 @@
-# Local Netlify folder
-.netlify
+# Dependencies & build output
+node_modules/
+dist/
+
+# Secrets & local config
+.env
+.env.*
 Server/service-account.json
+.netlify
+.vscode/
+
+# Data exports & junk
+Server/mongo_export.json
+*.exe
+scoped_dir*/
