@@ -1,0 +1,52 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Đường dẫn gọn cho các trang (thay cho public/_redirects)
+[[redirects]]
+  from = "/home"
+  to = "/components/home.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/components/profile.html"
+  status = 200
+
+[[redirects]]
+  from = "/message"
+  to = "/components/message.html"
+  status = 200
+
+[[redirects]]
+  from = "/user"
+  to = "/components/user.html"
+  status = 200
+
+[[redirects]]
+  from = "/friendNoti"
+  to = "/components/friendNoti.html"
+  status = 200
+
+[[redirects]]
+  from = "/resetPassword"
+  to = "/components/resetPassword.html"
+  status = 200
+
+[[redirects]]
+  from = "/forgotPassword"
+  to = "/components/forgotPassword.html"
+  status = 200
+
+[[redirects]]
+  from = "/userSettings"
+  to = "/components/userSettings.html"
+  status = 200
+
+[[redirects]]
+  from = "/notification"
+  to = "/components/notification.html"
+  status = 200
